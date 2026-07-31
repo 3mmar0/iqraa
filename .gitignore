@@ -31,3 +31,13 @@ Thumbs.db
 _laravel_tmp/
 _laravel12_tmp/
 _laravel_new/
+
+# Deploy / CI secrets (do not commit)
+.ci-yatmaen-key.pem
+.ci-yatmaen-key.README.txt
+_ssh_inspect_out.txt
+deploy_yatmaen*.py
+_do_ssh_deploy_fix.py
+
+_ssh_inspect.py
+

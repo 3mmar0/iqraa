@@ -56,6 +56,21 @@ jobs:
           SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
           SSH_USER: ${{ secrets.YATMAEN_SSH_USER }}
         run: |
+          # Remote script restarts queue workers via:
+          # sudo supervisorctl restart 'yatmaen-queue:*' || true
           ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
             "${SSH_USER}@${SSH_HOST}" \
             'sudo /usr/local/bin/deploy-yatmaen.sh'
+
+      - name: Healthcheck
+        run: |
+          for i in 1 2 3 4 5; do
+            code=$(curl -sS -o /dev/null -w "%{http_code}" https://yatmaen.ammarelgndy.cloud || true)
+            echo "Attempt $i: HTTP $code"
+            if [ "$code" = "200" ] || [ "$code" = "302" ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Healthcheck failed"
+          exit 1
