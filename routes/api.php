@@ -1,0 +1,21 @@
+<?php
+
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\Student\CourseController as StudentCourseController;
+use App\Http\Controllers\Api\V1\Student\CourseRequestController as StudentCourseRequestController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('v1')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
+
+        Route::prefix('student')->group(function () {
+            Route::get('/courses', [StudentCourseController::class, 'index']);
+            Route::get('/course-requests', [StudentCourseRequestController::class, 'index']);
+            Route::post('/course-requests', [StudentCourseRequestController::class, 'store']);
+        });
+    });
+});

@@ -1,0 +1,20 @@
+includes:
+    - app
+    - modules
+    - database
+    - routes
+
+parameters:
+    level: 5
+    paths:
+        - app
+        - modules
+        - database
+        - routes
+    excludePaths:
+        - bootstrap
+        - storage
+        - vendor
+        - node_modules
+
+    checkMissingIterableValueType: false

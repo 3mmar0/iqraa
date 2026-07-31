@@ -1,0 +1,61 @@
+name: Deploy Yatmaen
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-yatmaen
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.YATMAEN_SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Rsync application
+        env:
+          SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
+          SSH_USER: ${{ secrets.YATMAEN_SSH_USER }}
+        run: |
+          rsync -az --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.cursor/' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='vendor/' \
+            --exclude='node_modules/' \
+            --exclude='storage/logs/' \
+            --exclude='storage/framework/cache/' \
+            --exclude='storage/framework/sessions/' \
+            --exclude='storage/framework/views/' \
+            --exclude='storage/app/private/' \
+            --exclude='database/*.sqlite' \
+            --exclude='tests/' \
+            --exclude='specs/' \
+            --exclude='.specify/' \
+            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes" \
+            ./ "${SSH_USER}@${SSH_HOST}:/var/www/clients/yatmaen.ammarelgndy.cloud/"
+
+      - name: Remote deploy script
+        env:
+          SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
+          SSH_USER: ${{ secrets.YATMAEN_SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+            "${SSH_USER}@${SSH_HOST}" \
+            'sudo /usr/local/bin/deploy-yatmaen.sh'

@@ -1,0 +1,8 @@
+@extends('layouts.app')
+
+@section('title', 'الإعدادات')
+
+@section('content')
+    <h1 class="mb-6 text-2xl font-bold text-teal-900">الإعدادات</h1>
+    <x-empty-state message="إعدادات المحاضر قيد التجهيز." />
+@endsection
