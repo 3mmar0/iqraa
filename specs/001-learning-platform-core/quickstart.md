@@ -115,6 +115,20 @@ curl /api/v1/me -H "Authorization: Bearer …"
 
 ---
 
+## Scenario G — Super Admin control plane
+
+Login as `admin@example.com` / `password`.
+
+1. Open `/admin` — confirm KPI cards and recent activity load within a few seconds.
+2. Open **الطلاب** (`/admin/students`) — search, open a student profile tabs, optional suspend/activate.
+3. Open a course show page — switch tabs (Lessons / Students / Settings).
+4. Open **الإعدادات** — switch a tab (e.g. Platform) and save.
+5. Open **سجلات النظام** — view Audit / Activity channels.
+
+**Pass**: Full nav reachable; privileged actions write audit/activity logs; Finance deep-link overview still points to dedicated `/finance` dashboard.
+
+---
+
 ## Automated checks (when implemented)
 
 ```bash

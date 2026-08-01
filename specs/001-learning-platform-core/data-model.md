@@ -240,6 +240,27 @@ requester_id, type, format (`pdf` \| `xlsx` \| `csv`), status (`queued` \| `runn
 ### Achievement / UserAchievement
 optional ranking/achievements for student progress
 
+### Category
+name, slug unique, description, status (`active` \| `archived`), position — SoftDeletes
+
+### AcademicYear / Semester / Group
+Academic year periods; semesters belong to a year; groups optionally scoped to year/semester; `group_user` pivot for members
+
+### Order / OrderItem
+Admin commerce orders (`pending` \| `approved` \| `rejected` \| `refunded`); items link optional course
+
+### TelegramGroup
+title, chat_id, optional course_id, invite_link + expiry, status
+
+### Assignment / AssignmentSubmission
+course/lesson scoped assignments with student submissions
+
+### PlatformSetting
+key/value bag for Super Admin Settings tabs
+
+### ActivityLog
+channel (`activity` \| `authentication` \| `payment` \| `errors` \| `queue` \| `mail`), event, message, context JSON
+
 ---
 
 ## Validation highlights (from spec)

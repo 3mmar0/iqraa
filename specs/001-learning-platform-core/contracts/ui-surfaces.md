@@ -44,3 +44,25 @@ Each High-priority page from the spec matrices must render:
 3. Permission-denied state when role lacks access
 
 Course-request queue UI must appear on **any** staff dashboard whose role has `enrollments.approve` (shared partial/component), not only Super Admin.
+
+---
+
+## Super Admin (`/admin/*`)
+
+Full control-plane nav (Arabic RTL). Page specs live under `specs/001-learning-platform-core/pages/admin/` using the 13-section template.
+
+| Area | Route prefix | Notes |
+|------|--------------|-------|
+| Home | `admin.home` | KPI cards, charts, quick actions, recent activity, exports |
+| Students | `admin.students.*` | Table, filters, bulk, profile tabs, impersonation |
+| Courses / Lessons / Categories | `admin.courses.*` / `lessons.*` / `categories.*` | Tabbed course/lesson detail |
+| Quizzes / Assignments | `admin.quizzes.*` / `assignments.*` | |
+| Orders / Payments / Coupons | `admin.orders.*` / `payments.*` / `coupons.*` | Manual payment ops; gateways Phase 2 |
+| Teachers / Academic / Groups | `admin.teachers.*` / `academic-years.*` / `semesters.*` / `groups.*` | |
+| Telegram / Announcements | `admin.telegram.*` / `announcements.*` | |
+| Reports + overviews | `admin.reports.*`, `marketing`, `support`, `team`, `finance` | Finance/Marketing/Team/Support are overviews + deep-links |
+| Settings / System Logs | `admin.settings.*`, `system-logs.*` | Tabbed settings; multi-channel logs |
+| Roles / Ops / Security | existing baseline routes | |
+
+Permissions: `super_admin` (Gate bypass) plus granular `admin.*` slugs in `RbacSeeder`.
+

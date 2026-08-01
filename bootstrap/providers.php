@@ -17,4 +17,6 @@ return [
     Modules\Notifications\Providers\NotificationsServiceProvider::class,
     Modules\Reports\Providers\ReportsServiceProvider::class,
     Modules\Admin\Providers\AdminServiceProvider::class,
+    Modules\Students\Providers\StudentsServiceProvider::class,
+    Modules\Settings\Providers\SettingsServiceProvider::class,
 ];

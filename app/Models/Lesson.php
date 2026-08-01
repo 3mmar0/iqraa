@@ -13,7 +13,16 @@ class Lesson extends Model
 
     protected $fillable = [
         'course_id', 'title', 'description', 'position', 'status',
+        'is_locked', 'published_at', 'quiz_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_locked' => 'boolean',
+            'published_at' => 'datetime',
+        ];
+    }
 
     public function course(): BelongsTo
     {
@@ -23,5 +32,10 @@ class Lesson extends Model
     public function mediaAssets(): HasMany
     {
         return $this->hasMany(MediaAsset::class);
+    }
+
+    public function quiz(): BelongsTo
+    {
+        return $this->belongsTo(Quiz::class);
     }
 }

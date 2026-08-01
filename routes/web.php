@@ -1,16 +1,37 @@
 <?php
 
+use App\Http\Controllers\Web\Admin\AcademicYearController as AdminAcademicYearController;
+use App\Http\Controllers\Web\Admin\AnnouncementController as AdminAnnouncementController;
+use App\Http\Controllers\Web\Admin\AssignmentController as AdminAssignmentController;
 use App\Http\Controllers\Web\Admin\AuditLogController;
+use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Web\Admin\CommsController;
+use App\Http\Controllers\Web\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Web\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Web\Admin\DashboardExportController;
 use App\Http\Controllers\Web\Admin\EnrollmentRequestController as AdminEnrollmentRequestController;
+use App\Http\Controllers\Web\Admin\FinanceOverviewController;
+use App\Http\Controllers\Web\Admin\GroupController as AdminGroupController;
 use App\Http\Controllers\Web\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Web\Admin\ImpersonationController;
 use App\Http\Controllers\Web\Admin\LessonController as AdminLessonController;
+use App\Http\Controllers\Web\Admin\MarketingOverviewController;
 use App\Http\Controllers\Web\Admin\OpsController;
+use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Web\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Web\Admin\QuizController as AdminQuizController;
+use App\Http\Controllers\Web\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Web\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Web\Admin\SecurityController;
+use App\Http\Controllers\Web\Admin\SemesterController as AdminSemesterController;
+use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Web\Admin\StudentBulkController;
+use App\Http\Controllers\Web\Admin\StudentController as AdminStudentController;
+use App\Http\Controllers\Web\Admin\SupportOverviewController;
+use App\Http\Controllers\Web\Admin\SystemLogController;
+use App\Http\Controllers\Web\Admin\TeacherController as AdminTeacherController;
+use App\Http\Controllers\Web\Admin\TeamOverviewController;
+use App\Http\Controllers\Web\Admin\TelegramController as AdminTelegramController;
 use App\Http\Controllers\Web\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Web\Auth\NewPasswordController;
@@ -224,6 +245,9 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('dashboard:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminHomeController::class, 'index'])->name('home');
+        Route::post('/dashboard/export/pdf', [DashboardExportController::class, 'exportPdf'])->name('dashboard.export.pdf');
+        Route::post('/dashboard/export/excel', [DashboardExportController::class, 'exportExcel'])->name('dashboard.export.excel');
+
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
         Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
@@ -232,6 +256,25 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/{user}/impersonate', [ImpersonationController::class, 'start'])->name('users.impersonate');
 
+        Route::get('/students/bulk/export', [StudentBulkController::class, 'export'])->name('students.bulk.export');
+        Route::post('/students/bulk/destroy', [StudentBulkController::class, 'destroy'])->name('students.bulk.destroy');
+        Route::post('/students/bulk/activate', [StudentBulkController::class, 'activate'])->name('students.bulk.activate');
+        Route::post('/students/bulk/deactivate', [StudentBulkController::class, 'deactivate'])->name('students.bulk.deactivate');
+        Route::post('/students/bulk/assign-course', [StudentBulkController::class, 'assignCourse'])->name('students.bulk.assign-course');
+        Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
+        Route::get('/students/create', [AdminStudentController::class, 'create'])->name('students.create');
+        Route::post('/students', [AdminStudentController::class, 'store'])->name('students.store');
+        Route::get('/students/{student}', [AdminStudentController::class, 'show'])->name('students.show');
+        Route::get('/students/{student}/edit', [AdminStudentController::class, 'edit'])->name('students.edit');
+        Route::put('/students/{student}', [AdminStudentController::class, 'update'])->name('students.update');
+        Route::delete('/students/{student}', [AdminStudentController::class, 'destroy'])->name('students.destroy');
+        Route::post('/students/{student}/suspend', [AdminStudentController::class, 'suspend'])->name('students.suspend');
+        Route::post('/students/{student}/activate', [AdminStudentController::class, 'activate'])->name('students.activate');
+        Route::post('/students/{student}/reset-password', [AdminStudentController::class, 'resetPassword'])->name('students.reset-password');
+        Route::post('/students/{student}/assign-course', [AdminStudentController::class, 'assignCourse'])->name('students.assign-course');
+        Route::post('/students/{student}/remove-course', [AdminStudentController::class, 'removeCourse'])->name('students.remove-course');
+        Route::post('/students/{student}/impersonate', [ImpersonationController::class, 'start'])->name('students.impersonate');
+
         Route::get('/courses', [AdminCourseController::class, 'index'])->name('courses.index');
         Route::get('/courses/create', [AdminCourseController::class, 'create'])->name('courses.create');
         Route::post('/courses', [AdminCourseController::class, 'store'])->name('courses.store');
@@ -239,19 +282,157 @@ Route::middleware('auth')->group(function () {
         Route::get('/courses/{course}/edit', [AdminCourseController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [AdminCourseController::class, 'update'])->name('courses.update');
         Route::delete('/courses/{course}', [AdminCourseController::class, 'destroy'])->name('courses.destroy');
+        Route::post('/courses/{course}/archive', [AdminCourseController::class, 'archive'])->name('courses.archive');
+        Route::post('/courses/{course}/duplicate', [AdminCourseController::class, 'duplicate'])->name('courses.duplicate');
+        Route::post('/courses/{course}/publish', [AdminCourseController::class, 'publish'])->name('courses.publish');
+        Route::post('/courses/{course}/hide', [AdminCourseController::class, 'hide'])->name('courses.hide');
+        Route::post('/courses/{course}/assign-teacher', [AdminCourseController::class, 'assignTeacher'])->name('courses.assign-teacher');
+        Route::post('/courses/{course}/assign-semester', [AdminCourseController::class, 'assignSemester'])->name('courses.assign-semester');
+
+        Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{category}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
+        Route::post('/categories/{category}/merge', [AdminCategoryController::class, 'merge'])->name('categories.merge');
+        Route::post('/categories/{category}/archive', [AdminCategoryController::class, 'archive'])->name('categories.archive');
+        Route::post('/categories/{category}/restore', [AdminCategoryController::class, 'restore'])->name('categories.restore');
 
         Route::get('/lessons', [AdminLessonController::class, 'index'])->name('lessons.index');
         Route::get('/lessons/create', [AdminLessonController::class, 'create'])->name('lessons.create');
         Route::post('/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');
+        Route::post('/lessons/reorder', [AdminLessonController::class, 'reorder'])->name('lessons.reorder');
+        Route::get('/lessons/{lesson}', [AdminLessonController::class, 'show'])->name('lessons.show');
         Route::get('/lessons/{lesson}/edit', [AdminLessonController::class, 'edit'])->name('lessons.edit');
         Route::put('/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('lessons.update');
         Route::delete('/lessons/{lesson}', [AdminLessonController::class, 'destroy'])->name('lessons.destroy');
+        Route::post('/lessons/{lesson}/lock', [AdminLessonController::class, 'lock'])->name('lessons.lock');
+        Route::post('/lessons/{lesson}/unlock', [AdminLessonController::class, 'unlock'])->name('lessons.unlock');
+        Route::post('/lessons/{lesson}/duplicate', [AdminLessonController::class, 'duplicate'])->name('lessons.duplicate');
+        Route::post('/lessons/{lesson}/schedule-publish', [AdminLessonController::class, 'schedulePublish'])->name('lessons.schedule-publish');
+        Route::post('/lessons/{lesson}/attach-quiz', [AdminLessonController::class, 'attachQuiz'])->name('lessons.attach-quiz');
+
+        Route::get('/quizzes', [AdminQuizController::class, 'index'])->name('quizzes.index');
+        Route::get('/quizzes/create', [AdminQuizController::class, 'create'])->name('quizzes.create');
+        Route::post('/quizzes', [AdminQuizController::class, 'store'])->name('quizzes.store');
+        Route::get('/quizzes/{quiz}', [AdminQuizController::class, 'show'])->name('quizzes.show');
+        Route::get('/quizzes/{quiz}/edit', [AdminQuizController::class, 'edit'])->name('quizzes.edit');
+        Route::put('/quizzes/{quiz}', [AdminQuizController::class, 'update'])->name('quizzes.update');
+        Route::delete('/quizzes/{quiz}', [AdminQuizController::class, 'destroy'])->name('quizzes.destroy');
+        Route::post('/quizzes/{quiz}/duplicate', [AdminQuizController::class, 'duplicate'])->name('quizzes.duplicate');
+        Route::post('/quizzes/{quiz}/publish', [AdminQuizController::class, 'publish'])->name('quizzes.publish');
+        Route::post('/quizzes/{quiz}/unpublish', [AdminQuizController::class, 'unpublish'])->name('quizzes.unpublish');
+        Route::post('/quizzes/{quiz}/assign-course', [AdminQuizController::class, 'assignCourse'])->name('quizzes.assign-course');
+        Route::post('/quizzes/{quiz}/assign-lesson', [AdminQuizController::class, 'assignLesson'])->name('quizzes.assign-lesson');
+        Route::post('/quizzes/{quiz}/randomize', [AdminQuizController::class, 'randomize'])->name('quizzes.randomize');
+
+        Route::get('/assignments', [AdminAssignmentController::class, 'index'])->name('assignments.index');
+        Route::get('/assignments/create', [AdminAssignmentController::class, 'create'])->name('assignments.create');
+        Route::post('/assignments', [AdminAssignmentController::class, 'store'])->name('assignments.store');
+        Route::get('/assignments/{assignment}', [AdminAssignmentController::class, 'show'])->name('assignments.show');
+        Route::get('/assignments/{assignment}/edit', [AdminAssignmentController::class, 'edit'])->name('assignments.edit');
+        Route::put('/assignments/{assignment}', [AdminAssignmentController::class, 'update'])->name('assignments.update');
+        Route::delete('/assignments/{assignment}', [AdminAssignmentController::class, 'destroy'])->name('assignments.destroy');
+
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/export', [AdminOrderController::class, 'export'])->name('orders.export');
+        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+        Route::get('/orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
+        Route::post('/orders/{order}/approve', [AdminOrderController::class, 'approve'])->name('orders.approve');
+        Route::post('/orders/{order}/reject', [AdminOrderController::class, 'reject'])->name('orders.reject');
+        Route::post('/orders/{order}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
+
+        Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+        Route::get('/payments/export', [AdminPaymentController::class, 'export'])->name('payments.export');
+        Route::post('/payments', [AdminPaymentController::class, 'store'])->name('payments.store');
+        Route::post('/payments/{payment}/verify', [AdminPaymentController::class, 'verify'])->name('payments.verify');
+        Route::post('/payments/{payment}/approve', [AdminPaymentController::class, 'approve'])->name('payments.approve');
+        Route::post('/payments/{payment}/reject', [AdminPaymentController::class, 'reject'])->name('payments.reject');
+        Route::post('/payments/{payment}/refund', [AdminPaymentController::class, 'refund'])->name('payments.refund');
+
+        Route::get('/coupons', [AdminCouponController::class, 'index'])->name('coupons.index');
+        Route::get('/coupons/create', [AdminCouponController::class, 'create'])->name('coupons.create');
+        Route::post('/coupons', [AdminCouponController::class, 'store'])->name('coupons.store');
+        Route::post('/coupons/generate', [AdminCouponController::class, 'generate'])->name('coupons.generate');
+        Route::get('/coupons/{coupon}/edit', [AdminCouponController::class, 'edit'])->name('coupons.edit');
+        Route::put('/coupons/{coupon}', [AdminCouponController::class, 'update'])->name('coupons.update');
+        Route::delete('/coupons/{coupon}', [AdminCouponController::class, 'destroy'])->name('coupons.destroy');
+        Route::post('/coupons/{coupon}/activate', [AdminCouponController::class, 'activate'])->name('coupons.activate');
+        Route::post('/coupons/{coupon}/deactivate', [AdminCouponController::class, 'deactivate'])->name('coupons.deactivate');
+        Route::post('/coupons/{coupon}/duplicate', [AdminCouponController::class, 'duplicate'])->name('coupons.duplicate');
+        Route::post('/coupons/{coupon}/limit-usage', [AdminCouponController::class, 'limitUsage'])->name('coupons.limit-usage');
+        Route::post('/coupons/{coupon}/assign-course', [AdminCouponController::class, 'assignCourse'])->name('coupons.assign-course');
+
+        Route::get('/teachers', [AdminTeacherController::class, 'index'])->name('teachers.index');
+        Route::get('/teachers/create', [AdminTeacherController::class, 'create'])->name('teachers.create');
+        Route::post('/teachers', [AdminTeacherController::class, 'store'])->name('teachers.store');
+        Route::get('/teachers/{teacher}', [AdminTeacherController::class, 'show'])->name('teachers.show');
+        Route::get('/teachers/{teacher}/edit', [AdminTeacherController::class, 'edit'])->name('teachers.edit');
+        Route::get('/teachers/{teacher}/analytics', [AdminTeacherController::class, 'analytics'])->name('teachers.analytics');
+        Route::put('/teachers/{teacher}', [AdminTeacherController::class, 'update'])->name('teachers.update');
+        Route::delete('/teachers/{teacher}', [AdminTeacherController::class, 'destroy'])->name('teachers.destroy');
+        Route::post('/teachers/{teacher}/suspend', [AdminTeacherController::class, 'suspend'])->name('teachers.suspend');
+        Route::post('/teachers/{teacher}/assign-courses', [AdminTeacherController::class, 'assignCourses'])->name('teachers.assign-courses');
+
+        Route::get('/academic-years', [AdminAcademicYearController::class, 'index'])->name('academic-years.index');
+        Route::get('/academic-years/create', [AdminAcademicYearController::class, 'create'])->name('academic-years.create');
+        Route::post('/academic-years', [AdminAcademicYearController::class, 'store'])->name('academic-years.store');
+        Route::get('/academic-years/{academicYear}/edit', [AdminAcademicYearController::class, 'edit'])->name('academic-years.edit');
+        Route::put('/academic-years/{academicYear}', [AdminAcademicYearController::class, 'update'])->name('academic-years.update');
+        Route::delete('/academic-years/{academicYear}', [AdminAcademicYearController::class, 'destroy'])->name('academic-years.destroy');
+
+        Route::get('/semesters', [AdminSemesterController::class, 'index'])->name('semesters.index');
+        Route::get('/semesters/create', [AdminSemesterController::class, 'create'])->name('semesters.create');
+        Route::post('/semesters', [AdminSemesterController::class, 'store'])->name('semesters.store');
+        Route::get('/semesters/{semester}/edit', [AdminSemesterController::class, 'edit'])->name('semesters.edit');
+        Route::put('/semesters/{semester}', [AdminSemesterController::class, 'update'])->name('semesters.update');
+        Route::delete('/semesters/{semester}', [AdminSemesterController::class, 'destroy'])->name('semesters.destroy');
+
+        Route::get('/groups', [AdminGroupController::class, 'index'])->name('groups.index');
+        Route::get('/groups/create', [AdminGroupController::class, 'create'])->name('groups.create');
+        Route::post('/groups', [AdminGroupController::class, 'store'])->name('groups.store');
+        Route::get('/groups/{group}', [AdminGroupController::class, 'show'])->name('groups.show');
+        Route::get('/groups/{group}/edit', [AdminGroupController::class, 'edit'])->name('groups.edit');
+        Route::put('/groups/{group}', [AdminGroupController::class, 'update'])->name('groups.update');
+        Route::delete('/groups/{group}', [AdminGroupController::class, 'destroy'])->name('groups.destroy');
+        Route::post('/groups/{group}/attach', [AdminGroupController::class, 'attachMember'])->name('groups.attach');
+        Route::delete('/groups/{group}/members/{user}', [AdminGroupController::class, 'detachMember'])->name('groups.detach');
+
+        Route::get('/telegram', [AdminTelegramController::class, 'index'])->name('telegram.index');
+        Route::post('/telegram', [AdminTelegramController::class, 'store'])->name('telegram.store');
+        Route::post('/telegram/{telegramGroup}/attach-course', [AdminTelegramController::class, 'attachCourse'])->name('telegram.attach-course');
+        Route::post('/telegram/{telegramGroup}/generate-invite', [AdminTelegramController::class, 'generateInvite'])->name('telegram.generate-invite');
+        Route::post('/telegram/{telegramGroup}/expire-link', [AdminTelegramController::class, 'expireLink'])->name('telegram.expire-link');
+        Route::post('/telegram/{telegramGroup}/send-announcement', [AdminTelegramController::class, 'sendAnnouncement'])->name('telegram.send-announcement');
+
+        Route::get('/announcements', [AdminAnnouncementController::class, 'index'])->name('announcements.index');
+        Route::get('/announcements/create', [AdminAnnouncementController::class, 'create'])->name('announcements.create');
+        Route::post('/announcements', [AdminAnnouncementController::class, 'store'])->name('announcements.store');
+        Route::get('/announcements/{announcement}/edit', [AdminAnnouncementController::class, 'edit'])->name('announcements.edit');
+        Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update'])->name('announcements.update');
+        Route::delete('/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy'])->name('announcements.destroy');
+        Route::post('/announcements/{announcement}/draft', [AdminAnnouncementController::class, 'draft'])->name('announcements.draft');
+        Route::post('/announcements/{announcement}/schedule', [AdminAnnouncementController::class, 'schedule'])->name('announcements.schedule');
+        Route::post('/announcements/{announcement}/publish', [AdminAnnouncementController::class, 'publish'])->name('announcements.publish');
+        Route::post('/announcements/{announcement}/pin', [AdminAnnouncementController::class, 'pin'])->name('announcements.pin');
+        Route::post('/announcements/{announcement}/archive', [AdminAnnouncementController::class, 'archive'])->name('announcements.archive');
+        Route::post('/announcements/{announcement}/notify', [AdminAnnouncementController::class, 'sendNotification'])->name('announcements.notify');
+
+        Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+        Route::post('/reports', [AdminReportController::class, 'store'])->name('reports.store');
+        Route::get('/marketing', [MarketingOverviewController::class, 'index'])->name('marketing.index');
+        Route::get('/support', [SupportOverviewController::class, 'index'])->name('support.index');
+        Route::get('/team', [TeamOverviewController::class, 'index'])->name('team.index');
+        Route::get('/finance', [FinanceOverviewController::class, 'index'])->name('finance.index');
+
+        Route::get('/settings/{tab?}', [AdminSettingsController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+        Route::get('/system-logs', [SystemLogController::class, 'index'])->name('system-logs.index');
 
         Route::get('/enrollment-requests', [AdminEnrollmentRequestController::class, 'index'])->name('enrollment-requests.index');
         Route::post('/enrollment-requests/{courseAccessRequest}/approve', [AdminEnrollmentRequestController::class, 'approve'])->name('enrollment-requests.approve');
         Route::post('/enrollment-requests/{courseAccessRequest}/reject', [AdminEnrollmentRequestController::class, 'reject'])->name('enrollment-requests.reject');
-
-        Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
 
         Route::get('/roles', [AdminRoleController::class, 'index'])->name('roles.index');
         Route::put('/roles/{role}', [AdminRoleController::class, 'update'])->name('roles.update');

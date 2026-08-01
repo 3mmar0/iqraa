@@ -29,3 +29,26 @@ php artisan serve
 ## ملاحظة
 
 واجهة عربية بالكامل — لا يوجد مبدّل لغة.
+
+## لوحة Super Admin (وحدات)
+
+المسار `/admin` (دور `super_admin` فقط). المنطق موزّع على وحدات تحت `modules/`:
+
+| وحدة | مسؤولية |
+|------|---------|
+| `Admin` | الصفحة الرئيسية، الإحصائيات، الهيكل العام |
+| `Students` | إدارة الطلاب والعمليات الجماعية |
+| `Catalog` | المقررات / الدروس / التصنيفات |
+| `Quizzes` | الاختبارات الإدارية |
+| `Finance` | الطلبات والمدفوعات (مع لوحة Finance المستقلة) |
+| `Marketing` | الكوبونات والحملات (مع لوحة Marketing) |
+| `Teaching` | المعلمون |
+| `Notifications` | تيليجرام / إعلانات |
+| `Reports` | تقارير الإدارة |
+| `Settings` | إعدادات المنصة المبوّبة |
+| `Team` / `Support` | روابط نظرة عامة فقط |
+
+مواصفات الصفحات: `specs/001-learning-platform-core/pages/admin/`  
+قالب الصفحة: `specs/001-learning-platform-core/admin-page-template.md`
+
+للإنتاج شغّل أيضاً: `php artisan queue:work` وScheduler عبر Cron.

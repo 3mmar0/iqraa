@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RbacSeeder::class,
             DemoPersonaSeeder::class,
             LearningDemoSeeder::class,
+            AdminDemoSeeder::class,
         ]);
     }
 }

@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,8 +24,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'avatar_path',
         'university',
+        'gender',
+        'academic_year_id',
+        'semester_id',
+        'group_id',
         'creation_source',
         'status',
+        'last_login_at',
     ];
 
     protected $hidden = [
@@ -35,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -81,8 +89,33 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Achievement::class, 'user_achievements')->withTimestamps();
     }
 
-    public function instructedCourses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function instructedCourses(): HasMany
     {
         return $this->hasMany(Course::class, 'instructor_user_id');
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function semester(): BelongsTo
+    {
+        return $this->belongsTo(Semester::class);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_user')->withTimestamps();
     }
 }

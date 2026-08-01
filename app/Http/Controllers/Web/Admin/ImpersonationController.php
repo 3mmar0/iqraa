@@ -23,6 +23,10 @@ class ImpersonationController extends Controller
             return back()->with('error', 'لا يمكن الدخول كحساب غير نشط.');
         }
 
+        if ($request->input('context') === 'student' && ! $user->hasRole('student')) {
+            return back()->with('error', 'المستخدم المحدد ليس طالباً.');
+        }
+
         if (session()->has('impersonator_id')) {
             return back()->with('error', 'أنت بالفعل تتصفح بحساب آخر. عد أولاً لحساب المدير.');
         }
@@ -32,7 +36,8 @@ class ImpersonationController extends Controller
         $request->session()->regenerate();
 
         if (class_exists(AuditLogger::class)) {
-            app(AuditLogger::class)->log($admin, 'user.impersonate.start', 'user', $user->id, [
+            $action = $user->hasRole('student') ? 'student.impersonate.start' : 'user.impersonate.start';
+            app(AuditLogger::class)->log($admin, $action, User::class, $user->id, [
                 'as' => $user->email,
             ]);
         }

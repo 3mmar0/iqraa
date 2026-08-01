@@ -26,7 +26,25 @@
         <select id="status" name="status" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
             <option value="draft" @selected(old('status', $l?->status ?? 'draft') === 'draft')>مسودة</option>
             <option value="published" @selected(old('status', $l?->status) === 'published')>منشور</option>
+            <option value="scheduled" @selected(old('status', $l?->status) === 'scheduled')>مجدول</option>
             <option value="archived" @selected(old('status', $l?->status) === 'archived')>مؤرشف</option>
         </select>
     </div>
+    <div>
+        <label class="mb-1 block text-sm font-medium" for="published_at">تاريخ النشر</label>
+        <input id="published_at" type="datetime-local" name="published_at" value="{{ old('published_at', $l?->published_at?->format('Y-m-d\TH:i')) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+    </div>
+    <div>
+        <label class="mb-1 block text-sm font-medium" for="quiz_id">الاختبار المرتبط</label>
+        <select id="quiz_id" name="quiz_id" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+            <option value="">بدون اختبار</option>
+            @foreach ($quizzes ?? [] as $quiz)
+                <option value="{{ $quiz->id }}" @selected((string) old('quiz_id', $l?->quiz_id) === (string) $quiz->id)>{{ $quiz->title }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+<div class="flex items-center gap-2">
+    <input id="is_locked" type="checkbox" name="is_locked" value="1" @checked(old('is_locked', $l?->is_locked)) class="rounded border-slate-300">
+    <label for="is_locked" class="text-sm">قفل الدرس (غير مرئي للطلاب)</label>
 </div>

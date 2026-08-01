@@ -12,9 +12,17 @@ class Course extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'title', 'description', 'instructor_user_id', 'image_path',
-        'hours', 'status', 'schedule_text', 'term_label',
+        'title', 'description', 'instructor_user_id', 'category_id',
+        'academic_year_id', 'semester_id', 'image_path',
+        'hours', 'price', 'status', 'schedule_text', 'term_label',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+        ];
+    }
 
     public function instructor(): BelongsTo
     {
@@ -34,5 +42,25 @@ class Course extends Model
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function semester(): BelongsTo
+    {
+        return $this->belongsTo(Semester::class);
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
     }
 }

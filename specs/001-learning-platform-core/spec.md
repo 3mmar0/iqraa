@@ -443,6 +443,7 @@ Visitors use the Public Website to discover the platform/offering, register or s
 | Backups | Backup operations | Super Admin | High |
 | Security | Security controls/overview | Super Admin | High |
 | Monitoring | System health monitoring | Super Admin | High |
+> **Note:** The table above is the high-level Super Admin surface (Users, Roles, Permissions, ops tooling). The implemented admin console expands beyond this matrix with full sidebar navigation (catalog, students, finance, marketing, support, settings, and more). See `specs/001-learning-platform-core/pages/admin/` (per-page specs) and `specs/001-learning-platform-core/admin-page-template.md` for the expanded nav and page inventory.
 
 ## Detailed Page Specs (Student reference depth)
 

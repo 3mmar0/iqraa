@@ -17,6 +17,22 @@ class RbacSeeder extends Seeder
             'support.tickets' => 'إدارة التذاكر',
             'admin.users' => 'إدارة المستخدمين',
             'admin.roles' => 'إدارة الأدوار والصلاحيات',
+            'admin.students.manage' => 'إدارة الطلاب',
+            'admin.courses.manage' => 'إدارة المقررات من لوحة الإدارة',
+            'admin.lessons.manage' => 'إدارة الدروس',
+            'admin.categories.manage' => 'إدارة التصنيفات',
+            'admin.quizzes.manage' => 'إدارة الاختبارات',
+            'admin.assignments.manage' => 'إدارة الواجبات',
+            'admin.orders.manage' => 'إدارة الطلبات',
+            'admin.payments.manage' => 'إدارة المدفوعات',
+            'admin.coupons.manage' => 'إدارة الكوبونات',
+            'admin.teachers.manage' => 'إدارة المعلمين',
+            'admin.academic.manage' => 'إدارة السنوات والفصول والمجموعات',
+            'admin.telegram.manage' => 'إدارة تيليجرام',
+            'admin.announcements.manage' => 'إدارة الإعلانات',
+            'admin.reports.view' => 'عرض تقارير الإدارة',
+            'admin.settings.manage' => 'إدارة إعدادات المنصة',
+            'admin.logs.view' => 'عرض سجلات النظام',
         ];
 
         foreach ($permissions as $slug => $nameAr) {

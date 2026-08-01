@@ -1,12 +1,13 @@
 # Tasks: Learning Platform Core
 
-**Input**: Design documents from `/specs/001-learning-platform-core/`
+**Input**: Design documents from `/specs/001-learning-platform-core/`  
+**Context**: Stakeholder Super Admin Dashboard depth (full control plane + modular page template) provided to `/speckit-tasks`
 
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/, quickstart.md
 
 **Tests**: Not included — feature specification did not explicitly request TDD/contract test tasks. Validate via `quickstart.md` scenarios during polish.
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story. Phases 1–12 are the completed baseline (T001–T104). Phase 13 expands **US8 Super Admin** to the full platform control plane described by the stakeholder (Dashboard Home cards/charts, Students→System Logs navigation, page-spec template, module boundaries). Finance remains its own dashboard (US4); Super Admin links/overviews only—no duplicate Finance rebuild.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -17,6 +18,8 @@
 ## Path Conventions
 
 - Laravel modular monolith per `plan.md`: `app/`, `modules/`, `resources/views/`, `routes/`, `database/`, `tests/`
+- Super Admin UI under `resources/views/admin/` and `app/Http/Controllers/Web/Admin/`
+- Domain logic in `modules/{Students,Catalog,Quizzes,Finance,Marketing,Team,Admin,Reports}/`
 
 ---
 
@@ -214,13 +217,13 @@
 
 ---
 
-## Phase 10: User Story 8 — Super Admin Platform Control (Priority: P3)
+## Phase 10: User Story 8 — Super Admin Platform Control — Baseline (Priority: P3)
 
 **Goal**: Super Admin controls users, roles, permissions, logs, settings, storage/queues/jobs, notifications/emails, audit, backups, security, monitoring
 
 **Independent Test**: Admin creates student; assigns `enrollments.approve` to a role; audit log records the change; ops pages show queue/job health
 
-### Implementation for User Story 8
+### Implementation for User Story 8 (baseline — completed)
 
 - [x] T084 [US8] Build Users CRUD (including admin-created students + invite/activation) in `app/Http/Controllers/Web/Admin/UserController.php` and `resources/views/admin/users/`
 - [x] T085 [US8] Build Roles & Permissions UI (assign `enrollments.approve`) in `app/Http/Controllers/Web/Admin/RoleController.php` and `resources/views/admin/roles/`
@@ -231,7 +234,7 @@
 - [x] T090 [US8] Build Backups + Security overview actions/pages under `resources/views/admin/security/`
 - [x] T091 [US8] Register `/admin/*` routes locked to super_admin in `routes/web.php`
 
-**Checkpoint**: Control plane can provision users and permissions used by other stories
+**Checkpoint**: Control plane baseline can provision users and permissions
 
 ---
 
@@ -252,7 +255,7 @@
 
 ---
 
-## Phase 12: Polish & Cross-Cutting Concerns
+## Phase 12: Polish & Cross-Cutting Concerns (Baseline)
 
 **Purpose**: Reports, notifications channels, scheduler, hardening, quickstart validation
 
@@ -266,105 +269,251 @@
 - [x] T103 Run and document `quickstart.md` Scenarios A-F; fix gaps found - automated quickstart smoke passed (browser UAT still recommended)
 - [x] T104 [P] Update README with setup, queue worker, and Arabic RTL notes in `README.md`
 
+**Checkpoint**: Baseline platform production-ready for MVP surfaces
+
+---
+
+## Phase 13: User Story 8 — Super Admin Dashboard Expansion (Priority: P3) 🎯 Next Wave
+
+**Goal**: Make Super Admin the full platform control plane so one role can manage Students, Courses, Categories, Lessons, Quizzes, Assignments, Orders, Payments, Coupons, Teachers, Academic Years, Semesters, Groups, Telegram, Announcements, Reports, Marketing overview, Support overview, Team overview, Settings (tabbed), and System Logs—without needing other dashboards for day-to-day ops. Finance stays a dedicated dashboard (US4); Admin provides deep-link/overview only. Every Admin page follows a fixed 13-section page template. Code is organized by independent modules.
+
+**Independent Test**: Super Admin can open `/admin` and within ~30s read platform health (cards + charts); CRUD a student with filters/bulk actions; manage a course with tabbed detail; create category/lesson/quiz; verify payment/order actions; configure settings tabs; inspect system logs—all without leaving `/admin/*`. Non–super-admin roles still denied.
+
+### Foundational for expansion (module shell + page template + nav)
+
+- [x] T105 [US8] Add `modules/Students/` PSR-4 module (Provider + empty Services) and map in `composer.json` / `bootstrap/providers.php`
+- [x] T106 [P] [US8] Add `modules/Settings/` PSR-4 module (Provider + Services) and map in `composer.json` / `bootstrap/providers.php`
+- [x] T107 [US8] Create Super Admin page-spec template markdown at `specs/001-learning-platform-core/admin-page-template.md` (Purpose, Navigation, Permissions, UI Components, Actions, Filters & Search, Validation Rules, Business Rules, Notifications, Reports, Database Tables, Audit Logs, Future Enhancements)
+- [x] T108 [US8] Build shared Admin RTL layout + sidebar nav (Dashboard→System Logs) in `resources/views/layouts/admin.blade.php` and `resources/views/admin/partials/sidebar.blade.php`
+- [x] T109 [P] [US8] Build reusable Admin UI primitives (data table, filter bar, KPI card, chart shell, bulk-action bar, tab nav, empty/forbidden states) under `resources/views/components/admin/`
+- [x] T110 [US8] Expand Super Admin page matrix in `specs/001-learning-platform-core/spec.md` and route inventory in `contracts/ui-surfaces.md` to match stakeholder nav list
+- [x] T111 [P] [US8] Seed Super Admin permissions (`admin.students.*`, `admin.courses.*`, `admin.settings.*`, etc.) in `database/seeders/RbacSeeder.php`
+
+### Schema for Admin-managed catalog entities
+
+- [x] T112 [P] [US8] Create migrations for `categories`, `academic_years`, `semesters`, `groups`, `group_user` in `database/migrations/`
+- [x] T113 [P] [US8] Create migrations for `orders`, `order_items`, `telegram_groups`, `assignments`, `assignment_submissions` (if missing) in `database/migrations/`
+- [x] T114 [P] [US8] Add FK columns on `courses`/`users` for `category_id`, `academic_year_id`, `semester_id`, `group_id` (nullable) in `database/migrations/`
+- [x] T115 [P] [US8] Create models `Category`, `AcademicYear`, `Semester`, `Group`, `Order`, `TelegramGroup`, `Assignment` in `app/Models/`
+- [x] T116 [US8] Document new entities in `specs/001-learning-platform-core/data-model.md`
+
+### Dashboard Home (overview in <30s)
+
+- [x] T117 [US8] Implement `AdminDashboardStatsService` (students, courses, categories, lessons, videos, orders, subscriptions, revenue totals/today/month, quizzes, DAU, tickets, unread notifications) with Redis cache in `modules/Admin/Services/AdminDashboardStatsService.php`
+- [x] T118 [US8] Expand `app/Http/Controllers/Web/Admin/HomeController.php` + `resources/views/admin/home.blade.php` with KPI cards, Alpine/Chart.js charts (Revenue, Student Growth, Sales, DAU, Quiz Attempts, Subscriptions), quick actions, recent activity feeds
+- [x] T119 [P] [US8] Add Home actions: refresh, date filter, enqueue PDF/Excel export in `app/Http/Controllers/Web/Admin/DashboardExportController.php` and `app/Jobs/ExportAdminDashboardJob.php`
+- [x] T120 [US8] Write page spec for Admin Home using template sections in `specs/001-learning-platform-core/pages/admin/dashboard.md`
+
+### Students Module
+
+- [x] T121 [US8] Implement `StudentAdminService` (search, filters, suspend/activate, reset password, assign/remove course, discount, notify/email, bulk ops) in `modules/Students/Services/StudentAdminService.php`
+- [x] T122 [US8] Build Students index table (avatar, name, phone, email, university, group, status, registered_at, last_login, subscription) with search/filters in `app/Http/Controllers/Web/Admin/StudentController.php` and `resources/views/admin/students/index.blade.php`
+- [x] T123 [P] [US8] Add Student Form Requests + Policies in `app/Http/Requests/Admin/Student*` and `app/Policies/StudentAdminPolicy.php`
+- [x] T124 [US8] Implement student actions (Add/Edit/View/Delete/Suspend/Activate/Reset Password/Login As/Send Notification/Email/Assign Course/Remove Course/Add Discount/Export CSV/Excel) under `app/Http/Controllers/Web/Admin/StudentController.php` and `app/Http/Controllers/Web/Admin/ImpersonationController.php`
+- [x] T125 [US8] Build Student Profile tabs (Overview, Courses, Payments, Quizzes, Progress, Attendance, Notifications, Orders, Activity Logs, Notes) in `resources/views/admin/students/show.blade.php` and tab partials under `resources/views/admin/students/tabs/`
+- [x] T126 [P] [US8] Implement bulk actions endpoint in `app/Http/Controllers/Web/Admin/StudentBulkController.php`
+- [x] T127 [US8] Write Students page spec in `specs/001-learning-platform-core/pages/admin/students.md` and audit-log sensitive student actions via `app/Services/AuditLogger.php`
+
+### Courses Module
+
+- [x] T128 [US8] Extend `modules/Catalog/Services/` (or Teaching service) with admin course ops: archive, duplicate, publish, hide, assign teacher/semester in `modules/Catalog/Services/CourseAdminService.php`
+- [x] T129 [US8] Expand Courses table + CRUD actions in `app/Http/Controllers/Web/Admin/CourseController.php` and `resources/views/admin/courses/` (name, image, term, year, teacher, price, student/lesson counts, status)
+- [x] T130 [US8] Build Course detail tabs (General, Lessons, Files, Videos, Quizzes, Assignments, Students, Analytics, Reviews, Settings) under `resources/views/admin/courses/show.blade.php` and `resources/views/admin/courses/tabs/`
+- [x] T131 [P] [US8] Write Courses page spec in `specs/001-learning-platform-core/pages/admin/courses.md`
+
+### Lessons Module
+
+- [x] T132 [US8] Expand Lesson admin service (lock/unlock, move, duplicate, reorder, schedule publish, attach quiz, upload video/PDF/files) in `modules/Catalog/Services/LessonAdminService.php`
+- [x] T133 [US8] Expand Lessons CRUD + actions in `app/Http/Controllers/Web/Admin/LessonController.php` and `resources/views/admin/lessons/`
+- [x] T134 [US8] Build Lesson detail sections (General, Video, Files, Resources, Quiz, Notes, Comments, Settings) under `resources/views/admin/lessons/show.blade.php`
+- [x] T135 [P] [US8] Write Lessons page spec in `specs/001-learning-platform-core/pages/admin/lessons.md`
+
+### Categories
+
+- [x] T136 [P] [US8] Build Categories CRUD + merge/archive/restore in `app/Http/Controllers/Web/Admin/CategoryController.php`, `modules/Catalog/Services/CategoryService.php`, and `resources/views/admin/categories/`
+- [x] T137 [P] [US8] Write Categories page spec in `specs/001-learning-platform-core/pages/admin/categories.md`
+
+### Quizzes Module
+
+- [x] T138 [US8] Implement quiz admin ops (duplicate, publish/unpublish, assign course/lesson, import/export questions, randomize) in `modules/Quizzes/Services/QuizAdminService.php`
+- [x] T139 [US8] Build Quizzes list + actions in `app/Http/Controllers/Web/Admin/QuizController.php` and `resources/views/admin/quizzes/`
+- [x] T140 [US8] Build Quiz detail tabs (Questions, Attempts, Statistics, Settings, Results, Leaderboard) under `resources/views/admin/quizzes/show.blade.php`
+- [x] T141 [P] [US8] Write Quizzes page spec in `specs/001-learning-platform-core/pages/admin/quizzes.md`
+
+### Assignments
+
+- [x] T142 [P] [US8] Build Assignments admin CRUD + review list in `app/Http/Controllers/Web/Admin/AssignmentController.php` and `resources/views/admin/assignments/`
+- [x] T143 [P] [US8] Write Assignments page spec in `specs/001-learning-platform-core/pages/admin/assignments.md`
+
+### Orders & Payments (Admin ops; Finance dashboard remains system of record for deep finance)
+
+- [x] T144 [US8] Implement Order admin actions (approve/reject/refund/invoice PDF/export) in `modules/Finance/Services/OrderAdminService.php` and `app/Http/Controllers/Web/Admin/OrderController.php` + `resources/views/admin/orders/`
+- [x] T145 [US8] Expand Payments admin (verify/approve/reject/refund/manual payment/filter/export) in `app/Http/Controllers/Web/Admin/PaymentController.php` and `resources/views/admin/payments/`
+- [x] T146 [P] [US8] Write Orders + Payments page specs in `specs/001-learning-platform-core/pages/admin/orders.md` and `pages/admin/payments.md`
+- [x] T147 [US8] Add Admin → Finance deep-link overview card (no duplicate Finance UI) in `resources/views/admin/finance/overview.blade.php` and `app/Http/Controllers/Web/Admin/FinanceOverviewController.php`
+
+### Coupons (Admin + Marketing module shared service)
+
+- [x] T148 [US8] Build Coupons admin actions (create/edit/delete/activate/deactivate/generate/duplicate/limit/assign course/student) reusing `MarketingService` in `app/Http/Controllers/Web/Admin/CouponController.php` and `resources/views/admin/coupons/`
+- [x] T149 [P] [US8] Write Coupons page spec in `specs/001-learning-platform-core/pages/admin/coupons.md`
+
+### Teachers
+
+- [x] T150 [US8] Build Teachers admin (add/edit/delete/suspend/assign courses/lessons/view analytics) in `app/Http/Controllers/Web/Admin/TeacherController.php`, `modules/Teaching/Services/TeacherAdminService.php`, and `resources/views/admin/teachers/`
+- [x] T151 [P] [US8] Write Teachers page spec in `specs/001-learning-platform-core/pages/admin/teachers.md`
+
+### Academic Years, Semesters, Groups
+
+- [x] T152 [P] [US8] Build Academic Years CRUD in `app/Http/Controllers/Web/Admin/AcademicYearController.php` and `resources/views/admin/academic-years/`
+- [x] T153 [P] [US8] Build Semesters CRUD in `app/Http/Controllers/Web/Admin/SemesterController.php` and `resources/views/admin/semesters/`
+- [x] T154 [US8] Build Groups CRUD + member attach in `app/Http/Controllers/Web/Admin/GroupController.php` and `resources/views/admin/groups/`
+- [x] T155 [P] [US8] Write Academic Years/Semesters/Groups page specs under `specs/001-learning-platform-core/pages/admin/`
+
+### Telegram & Announcements
+
+- [x] T156 [US8] Build Telegram admin (create/attach group, generate/expire invite, send announcement) in `app/Http/Controllers/Web/Admin/TelegramController.php`, `modules/Notifications/Services/TelegramAdminService.php`, and `resources/views/admin/telegram/`
+- [x] T157 [US8] Build Announcements admin (create/schedule/publish/draft/delete/notify/pin/archive) in `app/Http/Controllers/Web/Admin/AnnouncementController.php` and `resources/views/admin/announcements/`
+- [x] T158 [P] [US8] Write Telegram + Announcements page specs under `specs/001-learning-platform-core/pages/admin/`
+
+### Reports, Marketing overview, Support overview, Team overview
+
+- [x] T159 [US8] Build Admin Reports hub (Students/Revenue/Course/Quiz/Teacher/Attendance/Activity/Finance) with PDF/Excel/schedule/email in `app/Http/Controllers/Web/Admin/ReportController.php`, `modules/Reports/Services/AdminReportService.php`, and `resources/views/admin/reports/`
+- [x] T160 [P] [US8] Build Marketing overview (referral/campaigns/coupons/discounts/landing/UTM/analytics/conversion + campaign pause/resume) in `app/Http/Controllers/Web/Admin/MarketingOverviewController.php` and `resources/views/admin/marketing/`
+- [x] T161 [P] [US8] Build Support overview (tickets queue deep-link + unread counts) in `app/Http/Controllers/Web/Admin/SupportOverviewController.php` and `resources/views/admin/support/`
+- [x] T162 [P] [US8] Build Team overview (members/tasks/roles/meetings/performance/goals deep-links) in `app/Http/Controllers/Web/Admin/TeamOverviewController.php` and `resources/views/admin/team/`
+- [x] T163 [P] [US8] Write Reports/Marketing/Support/Team Admin page specs under `specs/001-learning-platform-core/pages/admin/`
+
+### Settings Module (tabbed)
+
+- [x] T164 [US8] Implement `PlatformSettingsService` (get/set typed settings + audit) in `modules/Settings/Services/PlatformSettingsService.php` and `platform_settings` migration/model
+- [x] T165 [US8] Build Settings page with tabs (General, Platform, Authentication, Email, Telegram, Payments, Media, Storage, Cache, Queue, SEO, Theme, Languages note: Arabic-fixed, Security, Backup, Maintenance, Logs) in `app/Http/Controllers/Web/Admin/SettingsController.php` and `resources/views/admin/settings/`
+- [x] T166 [P] [US8] Write Settings page spec in `specs/001-learning-platform-core/pages/admin/settings.md`
+
+### System Logs
+
+- [x] T167 [US8] Expand System Logs hub (Activity, Authentication, Payment, Errors, Queue, Mail, Audit) in `app/Http/Controllers/Web/Admin/SystemLogController.php` and `resources/views/admin/system-logs/`
+- [x] T168 [P] [US8] Ensure log writers exist for auth/payment/mail/queue failures under `app/Services/Logging/` and wire AuditLogger for privileged Admin mutations
+- [x] T169 [P] [US8] Write System Logs page spec in `specs/001-learning-platform-core/pages/admin/system-logs.md`
+
+### Routes & wiring
+
+- [x] T170 [US8] Register all new `/admin/*` routes (Students→System Logs) with `dashboard:admin` middleware in `routes/web.php`
+- [x] T171 [US8] Update Admin sidebar active states + Arabic labels for full nav in `resources/views/admin/partials/sidebar.blade.php`
+- [x] T172 [US8] Seed demo Admin data (categories, years, semesters, groups, sample orders) in `database/seeders/AdminDemoSeeder.php` and wire into `DatabaseSeeder.php`
+
+**Checkpoint**: Super Admin can operate the full platform control plane from `/admin` alone; Finance/Marketing/Team deep work still available on their dedicated dashboards
+
+---
+
+## Phase 14: Polish — Super Admin Expansion
+
+**Purpose**: Cross-cutting polish for the expanded Admin surface
+
+- [x] T173 Cache Admin dashboard aggregates with scheduled refresh in `routes/console.php` and `modules/Admin/Services/AdminDashboardStatsService.php`
+- [x] T174 [P] Add N+1 guards / eager loads on Admin Students/Courses/Quizzes index controllers
+- [x] T175 [P] Ensure all privileged Admin mutations write AuditLog entries (spot-check Students, Roles, Settings, Payments)
+- [x] T176 Queue large Admin exports (dashboard PDF/Excel, student CSV, reports) via existing `GenerateReportJob` / dedicated jobs under `app/Jobs/`
+- [x] T177 [P] Arabic empty/forbidden/pending states on every new Admin index page using `resources/views/components/empty-state.blade.php`
+- [x] T178 Update `specs/001-learning-platform-core/quickstart.md` with Super Admin Scenario G (home cards → student CRUD → course tabs → settings → logs)
+- [x] T179 Run Scenario G smoke path and fix gaps; update `README.md` Admin module map
+
 ---
 
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
 
-- **Setup (Phase 1)**: No dependencies — start immediately
-- **Foundational (Phase 2)**: Depends on Setup — **BLOCKS all user stories**
-- **User Stories (Phases 3–11)**: Depend on Foundational
-  - Prefer P1 order: US1 → US2 → US3, then P2 (US4–US7), then P3 (US8–US9)
-  - US8 (admin user/permission UI) helps operations but US1 can use seeded `enrollments.approve` from Foundational until US8 lands
-- **Polish (Phase 12)**: After desired stories complete (minimum: Setup + Foundational + US1)
+- **Setup (Phase 1)**: Complete
+- **Foundational (Phase 2)**: Complete — blocked all stories
+- **User Stories US1–US9 (Phases 3–11)**: Complete (baseline)
+- **Polish baseline (Phase 12)**: Complete
+- **Phase 13 (US8 expansion)**: Depends on Phases 1–12; **BLOCKS** remaining Admin depth
+  - T105–T111 before page implementations
+  - T112–T116 before entity-backed CRUD pages
+  - Dashboard Home (T117–T120) can start after T108–T109
+  - Students/Courses/Lessons/Quizzes can proceed in parallel after schema + primitives
+  - Settings + System Logs can proceed in parallel with catalog pages
+- **Phase 14**: Depends on Phase 13 completion (or last desired Admin pages)
 
 ### User Story Dependencies
 
 | Story | Depends on | Notes |
 |-------|------------|-------|
-| US1 Student | Foundational | MVP; uses seeded approver permission |
-| US2 Instructor | Foundational (+ Course/Lesson schema from US1 ideally) | Can start after T021–T024 if parallelizing carefully |
-| US3 RBAC hardening | Foundational + dashboard route groups existing | Best after US1/US2 routes exist |
-| US4 Finance | Foundational | Independent domain tables |
-| US5 Marketing | Foundational | Independent |
-| US6 Team | Foundational | Independent |
-| US7 Support | Foundational; integrates student tickets from US1 | |
-| US8 Super Admin | Foundational | Enhances ops for all |
-| US9 Public | Foundational auth pages | Catalog benefits from Course model (US1) |
+| US1 Student | Foundational | MVP — complete |
+| US2 Instructor | Foundational + Course schema | Complete |
+| US3 RBAC hardening | Foundational + routes | Complete |
+| US4 Finance | Foundational | Complete — remains dedicated dashboard |
+| US5 Marketing | Foundational | Complete — Admin reuses services |
+| US6 Team | Foundational | Complete — Admin overview only |
+| US7 Support | Foundational + US1 tickets | Complete — Admin overview only |
+| US8 Super Admin | Foundational; expansion uses US4–US7 services | Baseline complete; **Phase 13 is next** |
+| US9 Public | Foundational | Complete |
 
-### Within Each User Story
+### Within Phase 13
 
-- Models/migrations before services
-- Services before controllers/views
-- Routes after controllers
-- Story complete before next priority when staffing is serial
+1. Modules + layout + page template + permissions  
+2. Schema/models  
+3. Parallel page groups (Students ‖ Courses/Lessons/Categories ‖ Quizzes/Assignments ‖ Orders/Payments/Coupons ‖ Teachers/Years/Semesters/Groups ‖ Telegram/Announcements ‖ Reports/overviews ‖ Settings/Logs)  
+4. Routes + seeder  
 
 ### Parallel Opportunities
 
-- Phase 1: T002–T005 in parallel
-- Phase 2: T010, T014, T016, T017 in parallel after T009
-- US1: T021–T024 models/migrations in parallel; T034–T035 views in parallel
-- After Foundational: US4, US5, US6 can proceed in parallel by different developers
-- Polish: T097–T098, T104 in parallel
-
----
-
-## Parallel Example: User Story 1
-
 ```bash
-# Parallel migrations/models:
-Task: "T021 Create learning/enrollment migrations in database/migrations/"
-Task: "T022 Create quiz/calendar/announcement migrations in database/migrations/"
-Task: "T023 Create Course/Enrollment/Lesson models in app/Models/"
-Task: "T024 Create Quiz/Attempt models in app/Models/"
-
-# Later parallel student pages:
-Task: "T034 Build Progress/Notifications/Calendar pages under resources/views/student/"
-Task: "T035 Build Profile + Settings under resources/views/student/"
+# After T105–T116 + T108–T109:
+Task: "T121–T127 Students module UI"
+Task: "T128–T135 Courses + Lessons"
+Task: "T136–T137 Categories"
+Task: "T138–T143 Quizzes + Assignments"
+Task: "T144–T149 Orders/Payments/Coupons"
+Task: "T150–T155 Teachers + Academic structure"
+Task: "T156–T158 Telegram + Announcements"
+Task: "T159–T163 Reports + overviews"
+Task: "T164–T169 Settings + System Logs"
 ```
 
 ---
 
-## Parallel Example: Staff dashboards (after Foundational)
+## Parallel Example: User Story 8 Expansion
 
 ```bash
-Task: "US4 Finance migrations + pages (T057–T064)"
-Task: "US5 Marketing migrations + pages (T065–T071)"
-Task: "US6 Team migrations + pages (T072–T077)"
+# Schema in parallel:
+Task: "T112 Create categories/academic_years/semesters/groups migrations"
+Task: "T113 Create orders/telegram_groups/assignments migrations"
+Task: "T115 Create Category/AcademicYear/Semester/Group/Order models"
+
+# Later parallel Admin pages:
+Task: "T122 Build Students index under resources/views/admin/students/"
+Task: "T129 Expand Courses admin under resources/views/admin/courses/"
+Task: "T139 Build Quizzes admin under resources/views/admin/quizzes/"
+Task: "T165 Build Settings tabs under resources/views/admin/settings/"
 ```
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+### MVP First (already delivered)
 
-1. Complete Phase 1: Setup  
-2. Complete Phase 2: Foundational  
-3. Complete Phase 3: US1 Student Learning Loop  
-4. **STOP and VALIDATE** using `quickstart.md` Scenarios B–C  
-5. Demo Student request/approve + lesson/quiz loop  
+1. Phases 1–3 complete → Student learning MVP  
+2. Remaining baseline stories complete → multi-surface platform  
 
-### Incremental Delivery
+### Next incremental delivery (recommended)
 
-1. Setup + Foundational → foundation ready  
-2. US1 → MVP learning platform  
-3. US2 → teaching content ops  
-4. US3 → security hardening  
-5. US4–US7 → staff dashboards (parallelizable)  
-6. US8 → admin control plane  
-7. US9 → public acquisition polish  
-8. Phase 12 polish → production readiness  
+1. Phase 13 foundational (T105–T116) → Admin shell + schema  
+2. Dashboard Home + Students (T117–T127) → first expanded demo  
+3. Courses + Lessons + Categories + Quizzes → content control plane  
+4. Orders/Payments/Coupons + Teachers/Academic structure → commerce & org  
+5. Settings + System Logs + Reports → ops maturity  
+6. Phase 14 polish → Scenario G validated  
 
 ### Parallel Team Strategy
 
-1. Team completes Setup + Foundational together  
-2. Dev A: US1 → US3  
-3. Dev B: US2  
-4. Dev C: US4/US5  
-5. Dev D: US6/US7  
-6. Then US8/US9 + polish  
+1. Dev A: Students module (T121–T127)  
+2. Dev B: Catalog (Courses/Lessons/Categories)  
+3. Dev C: Quizzes/Assignments + Teachers/Academic  
+4. Dev D: Orders/Payments/Coupons + Finance overview  
+5. Dev E: Settings + System Logs + Telegram/Announcements  
+6. Shared: T105–T111 shell, then T170–T172 routes/seeder  
 
 ---
 
@@ -372,8 +521,10 @@ Task: "US6 Team migrations + pages (T072–T077)"
 
 - [P] = different files, no incomplete-task dependencies
 - [USn] maps to spec user stories for traceability
-- All UI Arabic RTL; never add a language switcher
+- All UI Arabic RTL; never add a language switcher (Settings “Languages” tab documents Arabic-fixed policy only)
 - Private media only via authorized controllers (`local_private`)
-- Payment gateways intentionally out of task scope (Phase 2 product)
+- Payment gateways remain Phase 2 product; Admin Payments = manual verify/approve/refund of recorded payments
+- Finance Dashboard (US4) is intentionally separate — Admin Finance nav is overview/deep-link only
+- Every new Admin page must ship with a page-spec file using the 13-section template (T107)
 - Commit after each task or logical group
 - Stop at checkpoints to validate independently
