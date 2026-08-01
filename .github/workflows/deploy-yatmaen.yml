@@ -31,7 +31,7 @@ jobs:
           SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
           SSH_USER: ${{ secrets.YATMAEN_SSH_USER }}
         run: |
-          rsync -az --delete \
+          rsync -az --delete --checksum \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.cursor/' \
@@ -51,26 +51,42 @@ jobs:
             -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes" \
             ./ "${SSH_USER}@${SSH_HOST}:/var/www/clients/yatmaen.ammarelgndy.cloud/"
 
-      - name: Remote deploy script
+      - name: Confirm Blade landed on server
         env:
           SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
           SSH_USER: ${{ secrets.YATMAEN_SSH_USER }}
         run: |
-          # Remote script restarts queue workers via:
-          # sudo supervisorctl restart 'yatmaen-queue:*' || true
           ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
             "${SSH_USER}@${SSH_HOST}" \
-            'sudo /usr/local/bin/deploy-yatmaen.sh'
+            'grep -Fq "المقررات المتاحة" /var/www/clients/yatmaen.ammarelgndy.cloud/resources/views/public/home.blade.php && grep -Fq "sidebarOpen" /var/www/clients/yatmaen.ammarelgndy.cloud/resources/views/layouts/dashboard.blade.php && echo OK_FILES_ON_DISK'
 
-      - name: Healthcheck
+      - name: Install & run deploy script from synced repo
+        env:
+          SSH_HOST: ${{ secrets.YATMAEN_SSH_HOST }}
+          SSH_USER: ${{ secrets.YATMAEN_SSH_USER }}
         run: |
-          for i in 1 2 3 4 5; do
-            code=$(curl -sS -o /dev/null -w "%{http_code}" https://yatmaen.ammarelgndy.cloud || true)
-            echo "Attempt $i: HTTP $code"
-            if [ "$code" = "200" ] || [ "$code" = "302" ]; then
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+            "${SSH_USER}@${SSH_HOST}" \
+            'sudo cp /var/www/clients/yatmaen.ammarelgndy.cloud/scripts/deploy-yatmaen.sh /usr/local/bin/deploy-yatmaen.sh && sudo chmod 755 /usr/local/bin/deploy-yatmaen.sh && sudo /usr/local/bin/deploy-yatmaen.sh'
+
+      - name: Verify homepage HTML is the new release
+        run: |
+          for i in 1 2 3 4 5 6 7 8; do
+            stamp=$(date +%s)
+            body=$(curl -sS -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "https://yatmaen.ammarelgndy.cloud/?v=${stamp}")
+            code=$(curl -sS -o /dev/null -w "%{http_code}" -H 'Cache-Control: no-cache' "https://yatmaen.ammarelgndy.cloud/?v=${stamp}" || true)
+            echo "Attempt $i: HTTP $code, bytes=${#body}"
+            if echo "$body" | grep -Fq 'المقررات المتاحة'; then
+              echo "Homepage marker found — deploy is live."
               exit 0
             fi
-            sleep 5
+            if echo "$body" | grep -Fq 'site-brand'; then
+              echo "Homepage redesign marker found — deploy is live."
+              exit 0
+            fi
+            sleep 4
           done
-          echo "Healthcheck failed"
+          echo "Homepage still stale after deploy. Snippet:"
+          printf '%s' "$body" | head -c 1000
+          echo
           exit 1
