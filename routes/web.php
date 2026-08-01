@@ -49,8 +49,12 @@ use App\Http\Controllers\Web\Marketing\CouponController;
 use App\Http\Controllers\Web\Marketing\HomeController as MarketingHomeController;
 use App\Http\Controllers\Web\Marketing\LeadController;
 use App\Http\Controllers\Web\Marketing\ReferralController;
+use App\Http\Controllers\Web\Public\ContactController;
 use App\Http\Controllers\Web\Public\CourseCatalogController;
+use App\Http\Controllers\Web\Public\FaqController as PublicFaqController;
 use App\Http\Controllers\Web\Public\HomeController as PublicHomeController;
+use App\Http\Controllers\Web\Public\InstructorDirectoryController;
+use App\Http\Controllers\Web\Public\PageController;
 use App\Http\Controllers\Web\Staff\CourseRequestController as StaffCourseRequestController;
 use App\Http\Controllers\Web\Student\AchievementController;
 use App\Http\Controllers\Web\Student\CalendarController as StudentCalendarController;
@@ -84,6 +88,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PublicHomeController::class, 'index'])->name('home');
 Route::get('/courses', [CourseCatalogController::class, 'index'])->name('public.courses.index');
 Route::get('/courses/{course}', [CourseCatalogController::class, 'show'])->name('public.courses.show');
+Route::get('/about', [PageController::class, 'about'])->name('public.about');
+Route::get('/how-it-works', [PageController::class, 'howItWorks'])->name('public.how-it-works');
+Route::get('/instructors', [InstructorDirectoryController::class, 'index'])->name('public.instructors');
+Route::get('/faq', [PublicFaqController::class, 'index'])->name('public.faq');
+Route::get('/contact', [ContactController::class, 'create'])->name('public.contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('public.contact.store');
+Route::get('/privacy', [PageController::class, 'privacy'])->name('public.privacy');
+Route::get('/terms', [PageController::class, 'terms'])->name('public.terms');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

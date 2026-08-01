@@ -76,6 +76,10 @@ jobs:
             body=$(curl -sS -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "https://yatmaen.ammarelgndy.cloud/?v=${stamp}")
             code=$(curl -sS -o /dev/null -w "%{http_code}" -H 'Cache-Control: no-cache' "https://yatmaen.ammarelgndy.cloud/?v=${stamp}" || true)
             echo "Attempt $i: HTTP $code, bytes=${#body}"
+          if echo "$body" | grep -Fq 'مسارك على المنصة'; then
+              echo "Homepage sections marker found — deploy is live."
+              exit 0
+            fi
             if echo "$body" | grep -Fq 'المقررات المتاحة'; then
               echo "Homepage marker found — deploy is live."
               exit 0

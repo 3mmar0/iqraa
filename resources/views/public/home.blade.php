@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="relative overflow-hidden bg-[var(--color-ink)] text-white">
-        <div class="pointer-events-none absolute inset-0 opacity-40" style="background:
+        <div class="pointer-events-none absolute inset-0 opacity-50 hero-wash" style="background:
             radial-gradient(ellipse 70% 50% at 20% 20%, rgba(20,184,166,0.35), transparent 55%),
             radial-gradient(ellipse 50% 60% at 90% 80%, rgba(15,118,110,0.45), transparent 50%),
             linear-gradient(160deg, #0c1f1c 0%, #163530 55%, #0f766e 120%);"></div>
@@ -16,7 +16,6 @@
                 <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-teal-400 px-5 py-3 text-sm font-semibold text-[var(--color-ink)] hover:bg-teal-300">تصفّح المقررات</a>
                 @guest
                     <a href="{{ route('register') }}" class="rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-medium text-white hover:bg-white/10">إنشاء حساب</a>
-                    <a href="{{ route('login') }}" class="rounded-xl px-5 py-3 text-sm font-medium text-teal-100/80 hover:text-white">لدي حساب</a>
                 @else
                     <a href="{{ route('dashboard.redirect') }}" class="rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-medium text-white hover:bg-white/10">الذهاب إلى لوحتي</a>
                 @endguest
@@ -55,18 +54,98 @@
     </section>
 
     <section class="border-y border-[var(--color-line)] bg-white">
-        <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-3">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+            <h2 class="text-2xl font-bold text-[var(--color-ink)]">مسارك على المنصة</h2>
+            <p class="mt-2 max-w-2xl text-slate-600">أربع خطوات بسيطة من الاكتشاف حتى التعلم المستمر.</p>
+            <ol class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach ([
+                    ['title' => 'أنشئ حسابك', 'text' => 'تسجيل سريع بالعربية وبدء فوري.'],
+                    ['title' => 'اختر مقرراً', 'text' => 'تصفّح الكتالوج واقرأ تفاصيل كل مقرر.'],
+                    ['title' => 'اطلب الالتحاق', 'text' => 'يرسل النظام طلبك لمراجعة الفريق.'],
+                    ['title' => 'تعلّم وتقدّم', 'text' => 'دروس، اختبارات، ومتابعة في لوحتك.'],
+                ] as $i => $step)
+                    <li>
+                        <p class="site-brand text-3xl font-bold text-teal-700/80">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</p>
+                        <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ $step['title'] }}</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ $step['text'] }}</p>
+                    </li>
+                @endforeach
+            </ol>
+            <a href="{{ route('public.how-it-works') }}" class="mt-10 inline-block text-sm font-medium text-teal-800 hover:underline">تفاصيل أكثر عن آلية العمل</a>
+        </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-                <h2 class="text-lg font-semibold text-[var(--color-ink)]">كيف تبدأ؟</h2>
-                <p class="mt-2 text-sm leading-relaxed text-slate-600">أنشئ حساباً، تصفّح المقررات المنشورة، ثم أرسل طلب التحاق ليراجعه الفريق.</p>
+                <h2 class="text-2xl font-bold text-[var(--color-ink)]">صُممت للطالب العربي</h2>
+                <p class="mt-3 text-slate-600 leading-relaxed">واجهة من اليمين لليسار، محتوى مرتب، وإشعارات تُبقيك على المسار دون تشتيت. المحاضر يتابع، والدعم قريب عند الحاجة.</p>
+                <ul class="mt-6 space-y-3 text-sm text-slate-700">
+                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"></span>دروس مرتبة وتقدّم واضح</li>
+                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"></span>طلبات التحاق بمراجعة بشرية</li>
+                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"></span>تقويم وإشعارات في مكان واحد</li>
+                </ul>
             </div>
-            <div>
-                <h2 class="text-lg font-semibold text-[var(--color-ink)]">محتوى منظّم</h2>
-                <p class="mt-2 text-sm leading-relaxed text-slate-600">دروس، تقدّم، اختبارات وإشعارات في لوحة واحدة للطالب.</p>
+            <div class="relative overflow-hidden rounded-3xl bg-[var(--color-ink)] px-8 py-12 text-white">
+                <div class="pointer-events-none absolute inset-0 opacity-40" style="background: radial-gradient(circle at 80% 20%, rgba(45,212,191,0.35), transparent 45%);"></div>
+                <p class="relative site-brand text-3xl font-bold text-teal-200">طمأنينة التعلم</p>
+                <p class="relative mt-4 max-w-sm text-teal-100/75 leading-relaxed">لا اندفاع ولا فوضى — مسار تعليمي هادئ يساعدك على الاستمرار حتى النهاية.</p>
+                <a href="{{ route('public.about') }}" class="relative mt-8 inline-block text-sm font-medium text-teal-300 hover:text-teal-200">اعرف المزيد عنا</a>
             </div>
+        </div>
+    </section>
+
+    @if ($instructors->isNotEmpty())
+        <section class="border-y border-[var(--color-line)] bg-white">
+            <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+                <div class="mb-8 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <h2 class="text-2xl font-bold text-[var(--color-ink)]">المحاضرون</h2>
+                        <p class="mt-1 text-slate-600">تعرّف على من يقدّم المحتوى على المنصة.</p>
+                    </div>
+                    <a href="{{ route('public.instructors') }}" class="text-sm font-medium text-teal-800 hover:underline">كل المحاضرين</a>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($instructors as $instructor)
+                        <div class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-sand)]/60 px-5 py-5">
+                            <p class="text-lg font-semibold text-slate-900">{{ $instructor->name }}</p>
+                            <p class="mt-1 text-sm text-slate-500">{{ $instructor->university ?: 'محاضر في المنصة' }}</p>
+                            <p class="mt-3 text-xs font-medium text-teal-800">{{ $instructor->published_courses_count }} مقرر منشور</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <h2 class="text-2xl font-bold text-[var(--color-ink)]">أسئلة متكررة</h2>
+        <p class="mt-2 text-slate-600">إجابات سريعة قبل أن تبدأ.</p>
+        <div class="mt-8 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]" x-data="{ open: 0 }">
+            @foreach ($faqs as $i => $faq)
+                <div>
+                    <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-right" @click="open = open === {{ $i }} ? -1 : {{ $i }}">
+                        <span class="font-medium text-slate-900">{{ $faq->title }}</span>
+                        <span class="text-teal-700" x-text="open === {{ $i }} ? '−' : '+'"></span>
+                    </button>
+                    <div x-show="open === {{ $i }}" class="pb-4 text-sm leading-relaxed text-slate-600" style="display: none;">
+                        {{ $faq->body }}
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <a href="{{ route('public.faq') }}" class="mt-6 inline-block text-sm font-medium text-teal-800 hover:underline">عرض كل الأسئلة</a>
+    </section>
+
+    <section class="bg-[var(--color-ink)] text-white">
+        <div class="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-4 py-16 sm:px-6 md:flex-row md:items-center">
             <div>
-                <h2 class="text-lg font-semibold text-[var(--color-ink)]">فريق يدعمك</h2>
-                <p class="mt-2 text-sm leading-relaxed text-slate-600">محاضرون ودعم ومتابعة حتى تكتمل رحلتك التعليمية بثقة.</p>
+                <h2 class="site-brand text-3xl font-bold text-teal-200 sm:text-4xl">جاهز للبداية؟</h2>
+                <p class="mt-2 max-w-lg text-teal-100/70">انضم الآن وتصفّح المقررات، أو راسلنا إن كان لديك سؤال قبل التسجيل.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('register') }}" class="rounded-xl bg-teal-400 px-5 py-3 text-sm font-semibold text-[var(--color-ink)] hover:bg-teal-300">إنشاء حساب</a>
+                <a href="{{ route('public.contact') }}" class="rounded-xl border border-white/20 px-5 py-3 text-sm font-medium text-white hover:bg-white/10">تواصل معنا</a>
             </div>
         </div>
     </section>

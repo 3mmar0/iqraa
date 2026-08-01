@@ -80,4 +80,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Achievement::class, 'user_achievements')->withTimestamps();
     }
+
+    public function instructedCourses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Course::class, 'instructor_user_id');
+    }
 }
