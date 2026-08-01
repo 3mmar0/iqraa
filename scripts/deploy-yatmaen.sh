@@ -3,8 +3,10 @@ set -euo pipefail
 APP=/var/www/clients/yatmaen.ammarelgndy.cloud
 cd "$APP"
 composer install --no-dev --optimize-autoloader --no-interaction
-npm ci --omit=dev || npm install --omit=dev
+# Vite and other build tools live in devDependencies; install them for the build, then prune.
+npm ci || npm install
 npm run build
+npm prune --omit=dev
 php artisan migrate --force
 php artisan storage:link || true
 php artisan config:cache
