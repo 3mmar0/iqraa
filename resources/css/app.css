@@ -5,14 +5,43 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/*
+ * هوية يَطْمَئِن
+ * Primary   #2A9D8F
+ * Secondary #4F8FBF
+ * Sage      #A8C3A0
+ * Surface   #F4F6F8
+ * Ink       #2F3A45
+ */
 @theme {
     --font-sans: 'IBM Plex Sans Arabic', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
-    --color-ink: #0c1f1c;
-    --color-ink-soft: #163530;
-    --color-sea: #0f766e;
-    --color-sea-bright: #14b8a6;
-    --color-sand: #f3f6f5;
-    --color-line: #d7e3df;
+
+    --color-ink: #2f3a45;
+    --color-ink-soft: #3d4a57;
+    --color-sea: #2a9d8f;
+    --color-sea-bright: #4f8fbf;
+    --color-sage: #a8c3a0;
+    --color-sand: #f4f6f8;
+    --color-line: #dce3ea;
+
+    /* إعادة ضبط teal لتتوافق مع اللون الأساسي للهوية */
+    --color-teal-50: #eef8f6;
+    --color-teal-100: #d5efeb;
+    --color-teal-200: #aee0d8;
+    --color-teal-300: #7cc9bd;
+    --color-teal-400: #4fb3a4;
+    --color-teal-500: #2a9d8f;
+    --color-teal-600: #228578;
+    --color-teal-700: #1c6b61;
+    --color-teal-800: #185650;
+    --color-teal-900: #154743;
+    --color-teal-950: #0a2a27;
+
+    /* الأزرق الثانوي للهوية */
+    --color-sky-400: #6aa5cc;
+    --color-sky-500: #4f8fbf;
+    --color-sky-600: #3d79a6;
+    --color-sky-700: #326288;
 }
 
 html {
@@ -21,6 +50,7 @@ html {
 
 body {
     font-family: var(--font-sans);
+    color: var(--color-ink);
 }
 
 @keyframes admin-fade-up {
@@ -44,7 +74,7 @@ body {
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.06em;
-    color: rgb(148 180 173 / 0.72);
+    color: rgb(168 195 160 / 0.75);
     text-transform: none;
 }
 
@@ -57,7 +87,7 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.25;
-    color: rgb(186 210 204);
+    color: rgb(196 208 218);
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -67,13 +97,13 @@ body {
 }
 
 .admin-nav-link.is-active {
-    background: linear-gradient(135deg, rgb(20 184 166 / 0.22), rgb(15 118 110 / 0.35));
+    background: linear-gradient(135deg, rgb(42 157 143 / 0.28), rgb(79 143 191 / 0.28));
     color: #fff;
-    box-shadow: inset 0 0 0 1px rgb(45 212 191 / 0.25);
+    box-shadow: inset 0 0 0 1px rgb(168 195 160 / 0.35);
 }
 
 .admin-nav-link:focus-visible {
-    outline: 2px solid #2dd4bf;
+    outline: 2px solid #2a9d8f;
     outline-offset: 2px;
 }
 

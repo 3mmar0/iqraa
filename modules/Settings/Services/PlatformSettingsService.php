@@ -28,7 +28,7 @@ class PlatformSettingsService
         'cache.driver' => 'redis',
         'queue.driver' => 'redis',
         'seo.meta_description' => '',
-        'theme.primary' => '#0d9488',
+        'theme.primary' => '#2A9D8F',
         'languages.ui' => 'ar',
         'security.force_https' => true,
         'backup.enabled' => true,

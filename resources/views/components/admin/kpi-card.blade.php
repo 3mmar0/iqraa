@@ -1,7 +1,7 @@
 @props(['label', 'value', 'href' => null, 'hint' => null])
 
 @php
-    $classes = 'rounded-2xl border border-[var(--color-line)] bg-white p-5 shadow-[0_8px_24px_-16px_rgba(12,31,28,0.45)]';
+    $classes = 'rounded-2xl border border-[var(--color-line)] bg-white p-5 shadow-[0_8px_24px_-16px_rgba(47,58,69,0.35)]';
     $classes .= $href ? ' group transition hover:-translate-y-0.5 hover:border-teal-300' : '';
 @endphp
 
