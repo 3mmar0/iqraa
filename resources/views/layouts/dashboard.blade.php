@@ -48,26 +48,41 @@
                 </button>
             </div>
 
-            <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-                @foreach ($dashboardNav as $item)
-                    @php
-                        $active = request()->routeIs($item['match']);
-                        if ($active && isset($item['query'])) {
-                            foreach ($item['query'] as $key => $value) {
-                                $current = request()->query($key, $key === 'type' ? 'students' : null);
-                                if ((string) $current !== (string) $value) {
-                                    $active = false;
-                                    break;
-                                }
-                            }
-                        }
-                        $url = isset($item['params']) ? route($item['route'], $item['params']) : route($item['route']);
-                    @endphp
-                    <a href="{{ $url }}" class="admin-nav-link {{ $active ? 'is-active' : '' }}" @click="sidebarOpen = false">
-                        @include('components.nav-icon', ['icon' => $item['icon'] ?? 'home'])
-                        <span>{{ $item['label'] }}</span>
-                    </a>
-                @endforeach
+            <nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="قائمة {{ $dashboardLabel }}">
+                @php
+                    $navIsGrouped = isset($dashboardNav[0]['items']);
+                    $navGroups = $navIsGrouped
+                        ? $dashboardNav
+                        : [['section' => null, 'items' => $dashboardNav]];
+                @endphp
+                <div class="space-y-5">
+                    @foreach ($navGroups as $group)
+                        <div class="space-y-1">
+                            @if (! empty($group['section']))
+                                <p class="admin-nav-section">{{ $group['section'] }}</p>
+                            @endif
+                            @foreach ($group['items'] as $item)
+                                @php
+                                    $active = request()->routeIs($item['match']);
+                                    if ($active && isset($item['query'])) {
+                                        foreach ($item['query'] as $key => $value) {
+                                            $current = request()->query($key, $key === 'type' ? 'students' : null);
+                                            if ((string) $current !== (string) $value) {
+                                                $active = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    $url = isset($item['params']) ? route($item['route'], $item['params']) : route($item['route']);
+                                @endphp
+                                <a href="{{ $url }}" class="admin-nav-link {{ $active ? 'is-active' : '' }}" @click="sidebarOpen = false">
+                                    @include('components.nav-icon', ['icon' => $item['icon'] ?? 'home'])
+                                    <span>{{ $item['label'] }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endforeach
+                </div>
             </nav>
 
             <div class="border-t border-white/10 p-4">

@@ -1,4 +1,4 @@
-# يُطْمَئِن — Learning Platform
+# يَطْمَئِن — Learning Platform
 
 منصة تعليمية عربية (RTL) مبنية بـ Laravel 12.
 

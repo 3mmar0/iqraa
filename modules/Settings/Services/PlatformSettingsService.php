@@ -13,7 +13,7 @@ class PlatformSettingsService
 
     /** @var array<string, mixed> */
     public const DEFAULTS = [
-        'general.site_name' => 'يطمئن',
+        'general.site_name' => 'يَطْمَئِن',
         'general.support_email' => '',
         'platform.maintenance_mode' => false,
         'platform.registration_open' => true,
