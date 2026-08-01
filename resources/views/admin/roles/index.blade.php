@@ -1,26 +1,41 @@
-@extends('layouts.app')
-@section('title', 'الأدوار')
+@extends('layouts.admin')
+
+@section('title', 'الأدوار والصلاحيات')
+@section('heading', 'الأدوار والصلاحيات')
+@section('subheading', 'تحكم في من يستطيع الموافقة على الالتحاق والوصول للوحات')
+
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">الأدوار والصلاحيات</h1>
-    @foreach ($roles as $role)
-        <div class="mb-6 rounded-xl border border-slate-200 bg-white p-4">
-            <h2 class="mb-3 font-semibold">{{ $role->name_ar }} ({{ $role->slug }})</h2>
-            @if (\Illuminate\Support\Facades\Route::has('admin.roles.update'))
-                <form method="POST" action="{{ route('admin.roles.update', $role) }}">
+    <div class="space-y-5">
+        @foreach ($roles as $role)
+            <section class="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white shadow-[0_8px_24px_-16px_rgba(12,31,28,0.3)]">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50/80 px-5 py-4">
+                    <div>
+                        <h2 class="text-base font-semibold text-slate-900">{{ $role->name_ar }}</h2>
+                        <p class="text-xs text-slate-500">{{ $role->slug }} · لوحة: {{ $role->dashboard_key ?: '—' }}</p>
+                    </div>
+                    <span class="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-800">{{ $role->permissions->count() }} صلاحية</span>
+                </div>
+                <form method="POST" action="{{ route('admin.roles.update', $role) }}" class="p-5">
                     @csrf
                     @method('PUT')
-                    <div class="mb-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach ($permissions as $permission)
-                            <label class="flex items-center gap-2 text-sm">
+                    <div class="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        @forelse ($permissions as $permission)
+                            <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm hover:border-teal-300 hover:bg-teal-50/30">
                                 <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
-                                    @checked($role->permissions->contains('id', $permission->id))>
-                                {{ $permission->name_ar ?? $permission->slug }}
+                                       @checked($role->permissions->contains('id', $permission->id))
+                                       class="mt-0.5 rounded border-slate-300 text-teal-700 focus:ring-teal-600">
+                                <span>
+                                    <span class="block font-medium text-slate-800">{{ $permission->name_ar }}</span>
+                                    <span class="block text-xs text-slate-500">{{ $permission->slug }}</span>
+                                </span>
                             </label>
-                        @endforeach
+                        @empty
+                            <p class="text-sm text-slate-500">لا توجد صلاحيات معرّفة بعد.</p>
+                        @endforelse
                     </div>
-                    <button type="submit" class="rounded bg-teal-700 px-3 py-1.5 text-sm text-white">حفظ</button>
+                    <button type="submit" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">حفظ صلاحيات {{ $role->name_ar }}</button>
                 </form>
-            @endif
-        </div>
-    @endforeach
+            </section>
+        @endforeach
+    </div>
 @endsection
