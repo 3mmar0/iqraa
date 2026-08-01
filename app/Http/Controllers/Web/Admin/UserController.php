@@ -17,7 +17,19 @@ class UserController extends Controller
 {
     public function index(Request $request): View
     {
+        $type = $request->query('type', 'students');
+        if (! in_array($type, ['students', 'staff'], true)) {
+            $type = 'students';
+        }
+
         $query = User::query()->with('roles')->latest();
+
+        if ($type === 'students') {
+            $query->whereHas('roles', fn ($q) => $q->where('slug', 'student'))
+                ->whereDoesntHave('roles', fn ($q) => $q->where('slug', '!=', 'student'));
+        } else {
+            $query->whereHas('roles', fn ($q) => $q->where('slug', '!=', 'student'));
+        }
 
         if ($search = trim((string) $request->query('q', ''))) {
             $query->where(function ($q) use ($search) {
@@ -36,16 +48,22 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(20)->withQueryString();
-        $roles = Role::query()->orderBy('name_ar')->get();
 
-        return view('admin.users.index', compact('users', 'roles'));
+        $roles = $type === 'students'
+            ? Role::query()->where('slug', 'student')->orderBy('name_ar')->get()
+            : Role::query()->where('slug', '!=', 'student')->orderBy('name_ar')->get();
+
+        $pageTitle = $type === 'students' ? 'الطلاب' : 'فريق العمل';
+
+        return view('admin.users.index', compact('users', 'roles', 'type', 'pageTitle'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $type = $request->query('type', 'students');
         $roles = Role::query()->orderBy('name_ar')->get();
 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles', 'type'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -59,6 +77,7 @@ class UserController extends Controller
             'status' => ['required', 'string', 'in:invited,active,disabled'],
             'roles' => ['nullable', 'array'],
             'roles.*' => ['integer', 'exists:roles,id'],
+            'type' => ['nullable', 'string', 'in:students,staff'],
         ], [
             'required' => 'هذا الحقل مطلوب.',
             'email.unique' => 'البريد مستخدم مسبقاً.',
@@ -95,15 +114,20 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.users.index')->with('status', 'تم إنشاء المستخدم بنجاح.');
+        $type = $validated['type'] ?? 'students';
+
+        return redirect()
+            ->route('admin.users.index', ['type' => $type])
+            ->with('status', 'تم إنشاء المستخدم بنجاح.');
     }
 
     public function edit(User $user): View
     {
         $user->load('roles');
         $roles = Role::query()->orderBy('name_ar')->get();
+        $type = $user->roles->contains(fn ($r) => $r->slug !== 'student') ? 'staff' : 'students';
 
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles', 'type'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -141,7 +165,11 @@ class UserController extends Controller
             app(AuditLogger::class)->log($request->user(), 'user.updated', 'user', $user->id);
         }
 
-        return redirect()->route('admin.users.index')->with('status', 'تم تحديث المستخدم.');
+        $type = $user->fresh()->roles->contains(fn ($r) => $r->slug !== 'student') ? 'staff' : 'students';
+
+        return redirect()
+            ->route('admin.users.index', ['type' => $type])
+            ->with('status', 'تم تحديث المستخدم.');
     }
 
     public function destroy(Request $request, User $user): RedirectResponse
@@ -154,6 +182,7 @@ class UserController extends Controller
             return back()->with('error', 'لا يمكن حذف آخر مدير نظام.');
         }
 
+        $type = $user->roles->contains(fn ($r) => $r->slug !== 'student') ? 'staff' : 'students';
         $id = $user->id;
         $user->roles()->detach();
         $user->delete();
@@ -162,6 +191,8 @@ class UserController extends Controller
             app(AuditLogger::class)->log($request->user(), 'user.deleted', 'user', $id);
         }
 
-        return redirect()->route('admin.users.index')->with('status', 'تم حذف المستخدم.');
+        return redirect()
+            ->route('admin.users.index', ['type' => $type])
+            ->with('status', 'تم حذف المستخدم.');
     }
 }

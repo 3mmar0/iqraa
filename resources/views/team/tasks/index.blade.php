@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.team')
 @section('title', 'المهام')
 @section('content')
     <h1 class="mb-6 text-2xl font-bold text-teal-900">مهام الفريق</h1>

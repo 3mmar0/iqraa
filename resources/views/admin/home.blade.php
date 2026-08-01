@@ -6,10 +6,10 @@
 
 @section('content')
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <a href="{{ route('admin.users.index') }}" class="group rounded-2xl border border-[var(--color-line)] bg-white p-5 shadow-[0_8px_24px_-16px_rgba(12,31,28,0.45)] transition hover:-translate-y-0.5 hover:border-teal-300">
+        <a href="{{ route('admin.users.index', ['type' => 'students']) }}" class="group rounded-2xl border border-[var(--color-line)] bg-white p-5 shadow-[0_8px_24px_-16px_rgba(12,31,28,0.45)] transition hover:-translate-y-0.5 hover:border-teal-300">
             <p class="text-sm text-slate-500">المستخدمون</p>
             <p class="mt-2 text-3xl font-bold text-slate-900">{{ number_format($stats['users']) }}</p>
-            <p class="mt-1 text-xs text-teal-700 group-hover:underline">عرض الكل</p>
+            <p class="mt-1 text-xs text-teal-700 group-hover:underline">الطلاب وفريق العمل</p>
         </a>
         <div class="rounded-2xl border border-[var(--color-line)] bg-white p-5 shadow-[0_8px_24px_-16px_rgba(12,31,28,0.45)]">
             <p class="text-sm text-slate-500">حسابات نشطة</p>
@@ -53,9 +53,13 @@
                 <h2 class="text-base font-semibold text-slate-900">اختصارات سريعة</h2>
             </div>
             <div class="grid gap-3 sm:grid-cols-2">
-                <a href="{{ route('admin.users.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">المستخدمون</a>
+                <a href="{{ route('admin.users.index', ['type' => 'students']) }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">الطلاب</a>
+                <a href="{{ route('admin.users.index', ['type' => 'staff']) }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">فريق العمل</a>
+                <a href="{{ route('admin.courses.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">المقررات</a>
+                <a href="{{ route('admin.lessons.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">الدروس</a>
+                <a href="{{ route('admin.enrollment-requests.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">طلبات الالتحاق</a>
+                <a href="{{ route('admin.payments.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">المدفوعات</a>
                 <a href="{{ route('admin.roles.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">الأدوار</a>
-                <a href="{{ route('admin.audit-logs.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">سجل التدقيق</a>
                 <a href="{{ route('admin.security.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">الأمان</a>
             </div>
             @if ($recentAudits->isNotEmpty())

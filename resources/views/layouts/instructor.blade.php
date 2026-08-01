@@ -1,0 +1,18 @@
+@php
+    $dashboardLabel = 'لوحة المدرب';
+    $dashboardHome = 'instructor.home';
+    $dashboardNav = [
+        ['label' => 'الرئيسية', 'route' => 'instructor.home', 'match' => 'instructor.home', 'icon' => 'home'],
+        ['label' => 'لوحة الأداء', 'route' => 'instructor.dashboard', 'match' => 'instructor.dashboard', 'icon' => 'chart'],
+        ['label' => 'المقررات', 'route' => 'instructor.courses.index', 'match' => 'instructor.courses.*', 'icon' => 'book'],
+        ['label' => 'الطلاب', 'route' => 'instructor.students.index', 'match' => 'instructor.students.*', 'icon' => 'student'],
+        ['label' => 'الواجبات', 'route' => 'instructor.assignments.index', 'match' => 'instructor.assignments.*', 'icon' => 'clipboard'],
+        ['label' => 'الإعلانات', 'route' => 'instructor.announcements.index', 'match' => 'instructor.announcements.*', 'icon' => 'megaphone'],
+        ['label' => 'الجلسات المباشرة', 'route' => 'instructor.live-sessions.index', 'match' => 'instructor.live-sessions.*', 'icon' => 'bell'],
+        ['label' => 'الرسائل', 'route' => 'instructor.messages.index', 'match' => 'instructor.messages.*', 'icon' => 'message'],
+        ['label' => 'التقارير', 'route' => 'instructor.reports.index', 'match' => 'instructor.reports.*', 'icon' => 'scroll'],
+        ['label' => 'التقويم', 'route' => 'instructor.calendar.index', 'match' => 'instructor.calendar.*', 'icon' => 'clipboard'],
+        ['label' => 'الإعدادات', 'route' => 'instructor.settings.index', 'match' => 'instructor.settings.*', 'icon' => 'lock'],
+    ];
+@endphp
+@extends('layouts.dashboard')

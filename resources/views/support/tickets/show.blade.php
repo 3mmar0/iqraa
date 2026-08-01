@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.support')
 @section('title', $ticket->subject)
 @section('content')
     <h1 class="mb-2 text-2xl font-bold text-teal-900">{{ $ticket->subject }}</h1>

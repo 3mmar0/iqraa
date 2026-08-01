@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Http\Controllers\Web\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\CourseAccessRequest;
+use App\Services\EnrollmentService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class EnrollmentRequestController extends Controller
+{
+    public function __construct(private EnrollmentService $enrollments)
+    {
+    }
+
+    public function index(Request $request): View
+    {
+        $query = CourseAccessRequest::query()->with(['user', 'course', 'reviewer'])->latest();
+
+        if ($status = $request->query('status', 'pending')) {
+            if ($status !== 'all') {
+                $query->where('status', $status);
+            }
+        }
+
+        $requests = $query->paginate(20)->withQueryString();
+
+        return view('admin.enrollment-requests.index', compact('requests'));
+    }
+
+    public function approve(Request $request, CourseAccessRequest $courseAccessRequest): RedirectResponse
+    {
+        $this->enrollments->approve($courseAccessRequest, $request->user(), $request->input('review_note'));
+
+        return back()->with('status', 'تمت الموافقة وإنشاء التسجيل.');
+    }
+
+    public function reject(Request $request, CourseAccessRequest $courseAccessRequest): RedirectResponse
+    {
+        $this->enrollments->reject($courseAccessRequest, $request->user(), $request->input('review_note'));
+
+        return back()->with('status', 'تم رفض الطلب.');
+    }
+}

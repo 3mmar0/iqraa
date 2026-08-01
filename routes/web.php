@@ -2,8 +2,13 @@
 
 use App\Http\Controllers\Web\Admin\AuditLogController;
 use App\Http\Controllers\Web\Admin\CommsController;
+use App\Http\Controllers\Web\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Web\Admin\EnrollmentRequestController as AdminEnrollmentRequestController;
 use App\Http\Controllers\Web\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Web\Admin\ImpersonationController;
+use App\Http\Controllers\Web\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Web\Admin\OpsController;
+use App\Http\Controllers\Web\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Web\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Web\Admin\SecurityController;
 use App\Http\Controllers\Web\Admin\UserController as AdminUserController;
@@ -97,6 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardPickerController::class, 'redirect'])->name('dashboard.redirect');
     Route::get('/dashboard-picker', [DashboardPickerController::class, 'redirect'])->name('dashboard.picker');
     Route::post('/dashboard-picker', [DashboardPickerController::class, 'choose'])->name('dashboard.choose');
+    Route::post('/impersonation/leave', [ImpersonationController::class, 'leave'])->name('impersonation.leave');
 
     Route::middleware('dashboard:student')->prefix('student')->name('student.')->group(function () {
         Route::get('/', [StudentHomeController::class, 'index'])->name('home');
@@ -212,6 +218,29 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
         Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+        Route::post('/users/{user}/impersonate', [ImpersonationController::class, 'start'])->name('users.impersonate');
+
+        Route::get('/courses', [AdminCourseController::class, 'index'])->name('courses.index');
+        Route::get('/courses/create', [AdminCourseController::class, 'create'])->name('courses.create');
+        Route::post('/courses', [AdminCourseController::class, 'store'])->name('courses.store');
+        Route::get('/courses/{course}', [AdminCourseController::class, 'show'])->name('courses.show');
+        Route::get('/courses/{course}/edit', [AdminCourseController::class, 'edit'])->name('courses.edit');
+        Route::put('/courses/{course}', [AdminCourseController::class, 'update'])->name('courses.update');
+        Route::delete('/courses/{course}', [AdminCourseController::class, 'destroy'])->name('courses.destroy');
+
+        Route::get('/lessons', [AdminLessonController::class, 'index'])->name('lessons.index');
+        Route::get('/lessons/create', [AdminLessonController::class, 'create'])->name('lessons.create');
+        Route::post('/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');
+        Route::get('/lessons/{lesson}/edit', [AdminLessonController::class, 'edit'])->name('lessons.edit');
+        Route::put('/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('lessons.update');
+        Route::delete('/lessons/{lesson}', [AdminLessonController::class, 'destroy'])->name('lessons.destroy');
+
+        Route::get('/enrollment-requests', [AdminEnrollmentRequestController::class, 'index'])->name('enrollment-requests.index');
+        Route::post('/enrollment-requests/{courseAccessRequest}/approve', [AdminEnrollmentRequestController::class, 'approve'])->name('enrollment-requests.approve');
+        Route::post('/enrollment-requests/{courseAccessRequest}/reject', [AdminEnrollmentRequestController::class, 'reject'])->name('enrollment-requests.reject');
+
+        Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+
         Route::get('/roles', [AdminRoleController::class, 'index'])->name('roles.index');
         Route::put('/roles/{role}', [AdminRoleController::class, 'update'])->name('roles.update');
         Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');

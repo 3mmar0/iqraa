@@ -1,18 +1,26 @@
 @extends('layouts.admin')
 
-@section('title', 'المستخدمون')
-@section('heading', 'المستخدمون')
-@section('subheading', 'بحث، تعديل، حذف وإدارة الحسابات')
+@section('title', $pageTitle)
+@section('heading', $pageTitle)
+@section('subheading', $type === 'students' ? 'إدارة حسابات الطلاب والدخول نيابةً عنهم' : 'إدارة فريق العمل والأدوار والدخول نيابةً عنهم')
 
 @section('header-actions')
-    <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800">
+    <a href="{{ route('admin.users.create', ['type' => $type]) }}" class="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        مستخدم جديد
+        {{ $type === 'students' ? 'طالب جديد' : 'عضو جديد' }}
     </a>
 @endsection
 
 @section('content')
+    <div class="mb-5 flex gap-2">
+        <a href="{{ route('admin.users.index', ['type' => 'students']) }}"
+           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'students' ? 'bg-teal-700 text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">الطلاب</a>
+        <a href="{{ route('admin.users.index', ['type' => 'staff']) }}"
+           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'staff' ? 'bg-teal-700 text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">فريق العمل</a>
+    </div>
+
     <form method="GET" action="{{ route('admin.users.index') }}" class="mb-5 grid gap-3 rounded-2xl border border-[var(--color-line)] bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <input type="hidden" name="type" value="{{ $type }}">
         <div class="sm:col-span-2">
             <label class="mb-1 block text-xs font-medium text-slate-500" for="q">بحث</label>
             <input id="q" type="search" name="q" value="{{ request('q') }}" placeholder="الاسم، البريد، الهاتف..."
@@ -38,7 +46,7 @@
         </div>
         <div class="flex items-end gap-2 sm:col-span-2 lg:col-span-4">
             <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800">تطبيق التصفية</button>
-            <a href="{{ route('admin.users.index') }}" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">مسح</a>
+            <a href="{{ route('admin.users.index', ['type' => $type]) }}" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">مسح</a>
         </div>
     </form>
 
@@ -89,6 +97,12 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex flex-wrap items-center gap-2">
+                                    @if ($user->id !== auth()->id() && $user->status === 'active')
+                                        <form method="POST" action="{{ route('admin.users.impersonate', $user) }}">
+                                            @csrf
+                                            <button type="submit" class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100">دخول كـ</button>
+                                        </form>
+                                    @endif
                                     <a href="{{ route('admin.users.edit', $user) }}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-white hover:shadow-sm">تعديل</a>
                                     <form method="POST" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('هل أنت متأكد من حذف هذا المستخدم؟');">
                                         @csrf

@@ -5,12 +5,13 @@
 @section('subheading', 'إضافة حساب جديد مع الأدوار المناسبة')
 
 @section('header-actions')
-    <a href="{{ route('admin.users.index') }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">رجوع</a>
+    <a href="{{ route('admin.users.index', ['type' => $type ?? 'students']) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">رجوع</a>
 @endsection
 
 @section('content')
     <form method="POST" action="{{ route('admin.users.store') }}" class="mx-auto max-w-3xl space-y-6">
         @csrf
+        <input type="hidden" name="type" value="{{ $type ?? 'students' }}">
         <section class="rounded-2xl border border-[var(--color-line)] bg-white p-5 sm:p-6">
             <h2 class="mb-4 text-base font-semibold text-slate-900">البيانات الأساسية</h2>
             <div class="grid gap-4 sm:grid-cols-2">

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.marketing')
 @section('title', 'الإحالات')
 @section('content')
     <h1 class="mb-6 text-2xl font-bold text-teal-900">الإحالات</h1>

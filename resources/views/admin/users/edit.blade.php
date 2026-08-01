@@ -5,7 +5,15 @@
 @section('subheading', $user->email)
 
 @section('header-actions')
-    <a href="{{ route('admin.users.index') }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">رجوع</a>
+    <div class="flex flex-wrap gap-2">
+        @if ($user->id !== auth()->id() && $user->status === 'active')
+            <form method="POST" action="{{ route('admin.users.impersonate', $user) }}">
+                @csrf
+                <button type="submit" class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-medium text-amber-900 hover:bg-amber-100">دخول كـ هذا المستخدم</button>
+            </form>
+        @endif
+        <a href="{{ route('admin.users.index', ['type' => $type ?? 'students']) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">رجوع</a>
+    </div>
 @endsection
 
 @section('content')
