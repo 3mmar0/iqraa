@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[var(--color-sand)] text-slate-900 antialiased" x-data="{ sidebarOpen: false }">
+<body class="min-h-screen bg-[var(--color-sand)] text-[var(--color-text)] antialiased" data-dashboard="{{ $dashboardTheme ?? 'student' }}" x-data="{ sidebarOpen: false }">
     @if (session()->has('impersonator_id'))
-        <div class="relative z-[60] bg-amber-500 px-4 py-2 text-center text-sm font-medium text-amber-950">
+        <div class="relative z-[60] bg-[var(--color-accent)] px-4 py-2 text-center text-sm font-medium text-amber-950">
             أنت تتصفح الآن كـ <strong>{{ auth()->user()->name }}</strong>
             <form method="POST" action="{{ route('impersonation.leave') }}" class="mr-3 inline">
                 @csrf
@@ -29,18 +29,18 @@
         ></div>
 
         <aside
-            class="fixed inset-y-0 right-0 z-50 flex w-72 translate-x-full flex-col bg-[var(--color-ink)] text-white transition-transform duration-300 ease-out lg:static lg:translate-x-0"
+            class="dashboard-sidebar fixed inset-y-0 right-0 z-50 flex w-72 translate-x-full flex-col text-white transition-transform duration-300 ease-out lg:static lg:translate-x-0"
             :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
             @if(session()->has('impersonator_id')) style="top: 2.5rem;" @endif
         >
             <div class="flex items-center justify-between border-b border-white/10 px-5 py-5">
                 <a href="{{ route($dashboardHome) }}" class="flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/20 text-teal-300 ring-1 ring-teal-400/30">
+                    <span class="dashboard-brand-badge flex h-10 w-10 items-center justify-center rounded-xl">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
                     </span>
                     <span>
                         <span class="block text-sm font-semibold tracking-wide">{{ config('app.name') }}</span>
-                        <span class="block text-xs text-teal-200/70">{{ $dashboardLabel }}</span>
+                        <span class="dashboard-brand-sub block text-xs">{{ $dashboardLabel }}</span>
                     </span>
                 </a>
                 <button type="button" class="rounded-lg p-2 text-teal-100 hover:bg-white/10 lg:hidden" @click="sidebarOpen = false" aria-label="إغلاق القائمة">

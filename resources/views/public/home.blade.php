@@ -3,17 +3,17 @@
 @section('title', 'الرئيسية')
 
 @section('content')
-    <section class="relative overflow-hidden bg-[var(--color-ink)] text-white">
-        <div class="pointer-events-none absolute inset-0 opacity-50 hero-wash" style="background:
-            radial-gradient(ellipse 70% 50% at 20% 20%, rgba(20,184,166,0.35), transparent 55%),
-            radial-gradient(ellipse 50% 60% at 90% 80%, rgba(15,118,110,0.45), transparent 50%),
-            linear-gradient(160deg, #0c1f1c 0%, #163530 55%, #0f766e 120%);"></div>
+    <section class="relative overflow-hidden text-white">
+        <div class="pointer-events-none absolute inset-0 hero-gradient"></div>
+        <div class="pointer-events-none absolute inset-0 opacity-40 hero-wash" style="background:
+            radial-gradient(ellipse 70% 50% at 20% 20%, rgba(20,184,166,0.45), transparent 55%),
+            radial-gradient(ellipse 50% 60% at 90% 80%, rgba(79,70,229,0.4), transparent 50%);"></div>
         <div class="relative mx-auto flex min-h-[78vh] max-w-6xl flex-col justify-end px-4 pb-16 pt-24 sm:px-6 sm:pb-20">
-            <p class="site-brand anim-rise mb-4 text-4xl font-bold text-teal-200 sm:text-6xl md:text-7xl">{{ config('app.name') }}</p>
+            <p class="site-brand anim-rise mb-4 text-4xl font-bold text-teal-100 sm:text-6xl md:text-7xl">{{ config('app.name') }}</p>
             <h1 class="anim-rise-delay max-w-2xl text-2xl font-semibold leading-relaxed text-white/95 sm:text-3xl">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</h1>
-            <p class="anim-rise-delay-2 mt-4 max-w-xl text-base text-teal-100/75 sm:text-lg">منصة عربية للمقررات والدروس والمتابعة — ابدأ من الكتالوج أو أنشئ حسابك اليوم.</p>
+            <p class="anim-rise-delay-2 mt-4 max-w-xl text-base text-teal-50/80 sm:text-lg">منصة عربية للمقررات والدروس والمتابعة — ابدأ من الكتالوج أو أنشئ حسابك اليوم.</p>
             <div class="anim-rise-delay-2 mt-8 flex flex-wrap gap-3">
-                <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-teal-400 px-5 py-3 text-sm font-semibold text-[var(--color-ink)] hover:bg-teal-300">تصفّح المقررات</a>
+                <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[var(--color-primary)] hover:bg-teal-50">تصفّح المقررات</a>
                 @guest
                     <a href="{{ route('register') }}" class="rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-medium text-white hover:bg-white/10">إنشاء حساب</a>
                 @else

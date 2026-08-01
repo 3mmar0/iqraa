@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة المدرب';
     $dashboardHome = 'instructor.home';
+    $dashboardTheme = 'instructor';
     $dashboardNav = [
         ['label' => 'الرئيسية', 'route' => 'instructor.home', 'match' => 'instructor.home', 'icon' => 'home'],
         ['label' => 'لوحة الأداء', 'route' => 'instructor.dashboard', 'match' => 'instructor.dashboard', 'icon' => 'chart'],

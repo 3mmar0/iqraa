@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة الفريق';
     $dashboardHome = 'team.home';
+    $dashboardTheme = 'team';
     $dashboardNav = [
         ['label' => 'الرئيسية', 'route' => 'team.home', 'match' => 'team.home', 'icon' => 'home'],
         ['label' => 'المهام', 'route' => 'team.tasks.index', 'match' => 'team.tasks.*', 'icon' => 'clipboard'],

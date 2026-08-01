@@ -7,41 +7,77 @@
 
 /*
  * هوية يَطْمَئِن
- * Primary   #2A9D8F
- * Secondary #4F8FBF
- * Sage      #A8C3A0
- * Surface   #F4F6F8
- * Ink       #2F3A45
+ * Teal = طمأنينة | Indigo = علم وثقة | Amber = أمل وإنجاز
  */
 @theme {
     --font-sans: 'IBM Plex Sans Arabic', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 
-    --color-ink: #2f3a45;
-    --color-ink-soft: #3d4a57;
-    --color-sea: #2a9d8f;
-    --color-sea-bright: #4f8fbf;
-    --color-sage: #a8c3a0;
-    --color-sand: #f4f6f8;
-    --color-line: #dce3ea;
+    /* Brand */
+    --color-primary: #0f766e;
+    --color-primary-hover: #115e59;
+    --color-primary-light: #ccfbf1;
+    --color-secondary: #4f46e5;
+    --color-secondary-hover: #4338ca;
+    --color-secondary-light: #eef2ff;
+    --color-accent: #f59e0b;
+    --color-accent-light: #fef3c7;
 
-    /* إعادة ضبط teal لتتوافق مع اللون الأساسي للهوية */
-    --color-teal-50: #eef8f6;
-    --color-teal-100: #d5efeb;
-    --color-teal-200: #aee0d8;
-    --color-teal-300: #7cc9bd;
-    --color-teal-400: #4fb3a4;
-    --color-teal-500: #2a9d8f;
-    --color-teal-600: #228578;
-    --color-teal-700: #1c6b61;
-    --color-teal-800: #185650;
-    --color-teal-900: #154743;
-    --color-teal-950: #0a2a27;
+    /* Compat aliases used across Blade */
+    --color-ink: #0f172a;
+    --color-ink-soft: #1e293b;
+    --color-sea: #0f766e;
+    --color-sea-bright: #4f46e5;
+    --color-sand: #f8fafc;
+    --color-line: #e2e8f0;
+    --color-surface: #ffffff;
+    --color-divider: #cbd5e1;
+    --color-text: #0f172a;
+    --color-text-secondary: #475569;
+    --color-muted: #94a3b8;
 
-    /* الأزرق الثانوي للهوية */
-    --color-sky-400: #6aa5cc;
-    --color-sky-500: #4f8fbf;
-    --color-sky-600: #3d79a6;
-    --color-sky-700: #326288;
+    /* Status */
+    --color-success: #16a34a;
+    --color-warning: #f59e0b;
+    --color-danger: #dc2626;
+    --color-info: #2563eb;
+
+    /* Charts */
+    --color-chart-revenue: #0f766e;
+    --color-chart-students: #4f46e5;
+    --color-chart-courses: #06b6d4;
+    --color-chart-quizzes: #f59e0b;
+    --color-chart-payments: #22c55e;
+
+    /* Teal scale aligned to primary */
+    --color-teal-50: #f0fdfa;
+    --color-teal-100: #ccfbf1;
+    --color-teal-200: #99f6e4;
+    --color-teal-300: #5eead4;
+    --color-teal-400: #2dd4bf;
+    --color-teal-500: #14b8a6;
+    --color-teal-600: #0f766e;
+    --color-teal-700: #115e59;
+    --color-teal-800: #134e4a;
+    --color-teal-900: #042f2e;
+    --color-teal-950: #022c22;
+
+    /* Indigo scale aligned to secondary */
+    --color-indigo-50: #eef2ff;
+    --color-indigo-100: #e0e7ff;
+    --color-indigo-200: #c7d2fe;
+    --color-indigo-300: #a5b4fc;
+    --color-indigo-400: #818cf8;
+    --color-indigo-500: #6366f1;
+    --color-indigo-600: #4f46e5;
+    --color-indigo-700: #4338ca;
+    --color-indigo-800: #3730a3;
+    --color-indigo-900: #312e81;
+
+    /* Amber accent */
+    --color-amber-100: #fef3c7;
+    --color-amber-400: #fbbf24;
+    --color-amber-500: #f59e0b;
+    --color-amber-600: #d97706;
 }
 
 html {
@@ -50,7 +86,90 @@ html {
 
 body {
     font-family: var(--font-sans);
-    color: var(--color-ink);
+    color: var(--color-text);
+    background-color: var(--color-sand);
+}
+
+/* Dashboard accent tokens (sidebar / icons) */
+[data-dashboard='student'] {
+    --dash-accent: #0f766e;
+    --dash-accent-soft: #14b8a6;
+    --dash-accent-ring: rgb(20 184 166 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+[data-dashboard='instructor'] {
+    --dash-accent: #4f46e5;
+    --dash-accent-soft: #6366f1;
+    --dash-accent-ring: rgb(99 102 241 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+[data-dashboard='finance'] {
+    --dash-accent: #059669;
+    --dash-accent-soft: #10b981;
+    --dash-accent-ring: rgb(16 185 129 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+[data-dashboard='marketing'] {
+    --dash-accent: #ea580c;
+    --dash-accent-soft: #f97316;
+    --dash-accent-ring: rgb(249 115 22 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+[data-dashboard='support'] {
+    --dash-accent: #2563eb;
+    --dash-accent-soft: #3b82f6;
+    --dash-accent-ring: rgb(59 130 246 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+[data-dashboard='team'] {
+    --dash-accent: #0f766e;
+    --dash-accent-soft: #14b8a6;
+    --dash-accent-ring: rgb(20 184 166 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+[data-dashboard='admin'] {
+    --dash-accent: #64748b;
+    --dash-accent-soft: #94a3b8;
+    --dash-accent-ring: rgb(148 163 184 / 0.35);
+    --dash-sidebar: #0f172a;
+}
+
+.dashboard-sidebar {
+    background: var(--dash-sidebar, var(--color-ink));
+}
+
+.dashboard-brand-badge {
+    background: color-mix(in srgb, var(--dash-accent, var(--color-primary)) 22%, transparent);
+    color: var(--dash-accent-soft, var(--color-teal-400));
+    box-shadow: inset 0 0 0 1px var(--dash-accent-ring, rgb(45 212 191 / 0.3));
+}
+
+.dashboard-brand-sub {
+    color: color-mix(in srgb, var(--dash-accent-soft, #99f6e4) 70%, transparent);
+}
+
+.hero-gradient {
+    background-image: linear-gradient(135deg, #0f766e 0%, #4f46e5 100%);
+}
+
+.hero-gradient-soft {
+    background-image: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+    background: var(--color-secondary);
+    color: #fff;
+}
+.btn-secondary:hover {
+    background: var(--color-secondary-hover);
 }
 
 @keyframes admin-fade-up {
@@ -74,7 +193,7 @@ body {
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.06em;
-    color: rgb(168 195 160 / 0.75);
+    color: rgb(148 163 184 / 0.8);
     text-transform: none;
 }
 
@@ -87,7 +206,7 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.25;
-    color: rgb(196 208 218);
+    color: rgb(203 213 225);
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -97,13 +216,13 @@ body {
 }
 
 .admin-nav-link.is-active {
-    background: linear-gradient(135deg, rgb(42 157 143 / 0.28), rgb(79 143 191 / 0.28));
+    background: color-mix(in srgb, var(--dash-accent, var(--color-primary)) 28%, transparent);
     color: #fff;
-    box-shadow: inset 0 0 0 1px rgb(168 195 160 / 0.35);
+    box-shadow: inset 0 0 0 1px var(--dash-accent-ring, rgb(20 184 166 / 0.3));
 }
 
 .admin-nav-link:focus-visible {
-    outline: 2px solid #2a9d8f;
+    outline: 2px solid var(--dash-accent, var(--color-primary));
     outline-offset: 2px;
 }
 

@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة الإدارة';
     $dashboardHome = 'admin.home';
+    $dashboardTheme = 'admin';
     $dashboardNav = [
         [
             'section' => null,

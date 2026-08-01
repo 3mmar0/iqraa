@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة الدعم';
     $dashboardHome = 'support.home';
+    $dashboardTheme = 'support';
     $dashboardNav = [
         ['label' => 'الرئيسية', 'route' => 'support.home', 'match' => 'support.home', 'icon' => 'home'],
         ['label' => 'التذاكر', 'route' => 'support.tickets.index', 'match' => 'support.tickets.*', 'icon' => 'ticket'],

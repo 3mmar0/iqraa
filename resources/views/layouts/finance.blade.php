@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة المالية';
     $dashboardHome = 'finance.home';
+    $dashboardTheme = 'finance';
     $dashboardNav = [
         ['label' => 'الرئيسية', 'route' => 'finance.home', 'match' => 'finance.home', 'icon' => 'home'],
         ['label' => 'المعاملات', 'route' => 'finance.transactions.index', 'match' => 'finance.transactions.*', 'icon' => 'payment'],

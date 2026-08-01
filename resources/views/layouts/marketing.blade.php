@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة التسويق';
     $dashboardHome = 'marketing.home';
+    $dashboardTheme = 'marketing';
     $dashboardNav = [
         ['label' => 'الرئيسية', 'route' => 'marketing.home', 'match' => 'marketing.home', 'icon' => 'home'],
         ['label' => 'الحملات', 'route' => 'marketing.campaigns.index', 'match' => 'marketing.campaigns.*', 'icon' => 'megaphone'],

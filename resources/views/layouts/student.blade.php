@@ -1,6 +1,7 @@
 @php
     $dashboardLabel = 'لوحة الطالب';
     $dashboardHome = 'student.home';
+    $dashboardTheme = 'student';
     $dashboardNav = [
         ['label' => 'الرئيسية', 'route' => 'student.home', 'match' => 'student.home', 'icon' => 'home'],
         ['label' => 'مقرراتي', 'route' => 'student.courses.index', 'match' => 'student.courses.*', 'icon' => 'book'],
