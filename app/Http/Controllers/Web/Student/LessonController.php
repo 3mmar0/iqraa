@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
+use App\Models\LessonProgress;
 use App\Services\EnrollmentService;
 use App\Services\LessonProgressService;
 use Illuminate\Http\RedirectResponse;
@@ -26,10 +27,19 @@ class LessonController extends Controller
         $siblings = $lesson->course->lessons()->where('status', 'published')->orderBy('position')->get();
         $index = $siblings->search(fn ($item) => $item->id === $lesson->id);
 
+        $isCompleted = LessonProgress::query()
+            ->where('user_id', $request->user()->id)
+            ->where('lesson_id', $lesson->id)
+            ->where('status', 'completed')
+            ->exists();
+
         return view('student.lessons.show', [
             'lesson' => $lesson,
+            'isCompleted' => $isCompleted,
             'previous' => $index !== false && $index > 0 ? $siblings[$index - 1] : null,
             'next' => $index !== false && $index < $siblings->count() - 1 ? $siblings[$index + 1] : null,
+            'position' => $index !== false ? $index + 1 : null,
+            'total' => $siblings->count(),
         ]);
     }
 

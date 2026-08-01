@@ -48,8 +48,26 @@ class CourseController extends Controller
     {
         abort_unless($this->enrollments->userHasActiveEnrollment($request->user(), $course->id), 403);
 
-        $course->load(['lessons', 'quizzes', 'instructor']);
+        $course->load(['lessons' => fn ($q) => $q->orderBy('position'), 'quizzes', 'instructor']);
 
-        return view('student.courses.show', compact('course'));
+        $lessonIds = $course->lessons->pluck('id');
+        $completedLessonIds = LessonProgress::query()
+            ->where('user_id', $request->user()->id)
+            ->whereIn('lesson_id', $lessonIds)
+            ->where('status', 'completed')
+            ->pluck('lesson_id')
+            ->all();
+
+        $lessonsCount = $lessonIds->count();
+        $completedCount = count($completedLessonIds);
+        $progressPercent = $lessonsCount > 0 ? (int) round(($completedCount / $lessonsCount) * 100) : 0;
+
+        return view('student.courses.show', compact(
+            'course',
+            'completedLessonIds',
+            'completedCount',
+            'lessonsCount',
+            'progressPercent',
+        ));
     }
 }

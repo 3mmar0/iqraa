@@ -18,6 +18,7 @@ class CalendarController extends Controller
             ->pluck('course_id');
 
         $events = CalendarEvent::query()
+            ->with('course')
             ->where(function ($q) use ($courseIds) {
                 $q->whereIn('course_id', $courseIds)->orWhereNull('course_id');
             })
