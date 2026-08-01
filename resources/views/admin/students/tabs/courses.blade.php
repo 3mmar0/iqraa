@@ -1,4 +1,4 @@
-<div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+﻿<div class="mb-4 flex flex-wrap items-end justify-between gap-3">
     <h3 class="text-sm font-semibold text-slate-900">المقررات المسجّلة</h3>
     <form method="POST" action="{{ route('admin.students.assign-course', $student) }}" class="flex flex-wrap items-end gap-2">
         @csrf
@@ -8,7 +8,7 @@
                 <option value="{{ $course->id }}">{{ $course->title }}</option>
             @endforeach
         </select>
-        <button type="submit" class="rounded-xl bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800">إسناد مقرر</button>
+        <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">إسناد مقرر</button>
     </form>
 </div>
 

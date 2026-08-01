@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'التسويق')
 @section('heading', 'نظرة عامة — التسويق')
@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('marketing.home') }}" class="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">
+        <a href="{{ route('marketing.home') }}" class="inline-flex rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">
             فتح لوحة التسويق
         </a>
     </div>
@@ -23,10 +23,10 @@
     <section class="mt-8 rounded-2xl border border-[var(--color-line)] bg-white p-6">
         <h2 class="text-base font-semibold text-slate-900">اختصارات</h2>
         <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <a href="{{ route('marketing.analytics.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">التحليلات</a>
-            <a href="{{ route('marketing.conversions.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">التحويلات</a>
-            <a href="{{ route('marketing.ambassadors.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">السفراء</a>
-            <a href="{{ route('admin.coupons.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">كوبونات الإدارة</a>
+            <a href="{{ route('marketing.analytics.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">التحليلات</a>
+            <a href="{{ route('marketing.conversions.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">التحويلات</a>
+            <a href="{{ route('marketing.ambassadors.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">السفراء</a>
+            <a href="{{ route('admin.coupons.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">كوبونات الإدارة</a>
         </div>
     </section>
 @endsection

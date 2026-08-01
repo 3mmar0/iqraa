@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $group->name)
 @section('heading', $group->name)
@@ -28,7 +28,7 @@
                     @endif
                 @endforeach
             </select>
-            <button class="rounded-xl bg-teal-700 px-4 py-2 text-sm text-white">إضافة</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm text-white">إضافة</button>
         </form>
     </div>
 

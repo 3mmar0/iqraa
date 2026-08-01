@@ -21,7 +21,7 @@
                     </div>
                 </fieldset>
             @endforeach
-            <button class="rounded-lg bg-teal-700 px-4 py-2 text-white">إرسال الإجابات</button>
+            <button class="rounded-lg bg-[var(--color-primary)] px-4 py-2 text-white">إرسال الإجابات</button>
         </form>
     @else
         <p class="mb-4 text-lg">الدرجة: <strong>{{ $attempt->score }}%</strong></p>
@@ -32,7 +32,7 @@
                     <p class="font-medium">{{ $question->body }}</p>
                     <p class="mt-1">نتيجتك: {{ $answer?->is_correct ? 'صحيحة' : 'غير صحيحة' }}</p>
                     @if ($attempt->quiz->show_correct_answers)
-                        <p class="text-teal-800">الإجابة الصحيحة:
+                        <p class="text-[var(--color-primary-hover)]">الإجابة الصحيحة:
                             {{ $question->options->where('is_correct', true)->pluck('body')->join('، ') }}
                         </p>
                     @endif

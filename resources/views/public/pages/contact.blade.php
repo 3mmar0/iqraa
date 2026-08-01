@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'تواصل معنا')
 
@@ -15,24 +15,24 @@
             @csrf
             <div>
                 <label for="name" class="mb-1 block text-sm font-medium text-slate-700">الاسم</label>
-                <input id="name" name="name" value="{{ old('name') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                <input id="name" name="name" value="{{ old('name') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
                 @error('name')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label for="email" class="mb-1 block text-sm font-medium text-slate-700">البريد</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
                 @error('email')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label for="phone" class="mb-1 block text-sm font-medium text-slate-700">الهاتف <span class="text-slate-400">(اختياري)</span></label>
-                <input id="phone" name="phone" value="{{ old('phone') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                <input id="phone" name="phone" value="{{ old('phone') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
             </div>
             <div>
                 <label for="message" class="mb-1 block text-sm font-medium text-slate-700">الرسالة</label>
-                <textarea id="message" name="message" rows="5" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">{{ old('message') }}</textarea>
+                <textarea id="message" name="message" rows="5" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">{{ old('message') }}</textarea>
                 @error('message')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
             </div>
-            <button type="submit" class="w-full rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-800">إرسال الرسالة</button>
+            <button type="submit" class="w-full rounded-xl bg-[var(--color-primary)] px-4 py-3 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">إرسال الرسالة</button>
         </form>
     </section>
 @endsection

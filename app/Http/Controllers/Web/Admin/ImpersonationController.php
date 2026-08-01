@@ -27,6 +27,10 @@ class ImpersonationController extends Controller
             return back()->with('error', 'المستخدم المحدد ليس طالباً.');
         }
 
+        if ($user->hasRole('super_admin')) {
+            return back()->with('error', 'لا يمكن الدخول كحساب مدير نظام آخر.');
+        }
+
         if (session()->has('impersonator_id')) {
             return back()->with('error', 'أنت بالفعل تتصفح بحساب آخر. عد أولاً لحساب المدير.');
         }

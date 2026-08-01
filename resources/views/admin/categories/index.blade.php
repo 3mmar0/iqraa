@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'التصنيفات')
 @section('heading', 'التصنيفات')
 @section('subheading', 'تنظيم المقررات في تصنيفات')
 
 @section('header-actions')
-    <a href="{{ route('admin.categories.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">تصنيف جديد</a>
+    <a href="{{ route('admin.categories.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">تصنيف جديد</a>
 @endsection
 
 @section('content')

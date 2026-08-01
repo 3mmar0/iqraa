@@ -12,7 +12,7 @@
                 <div class="mt-3 flex gap-2">
                     <form method="POST" action="{{ route('staff.course-requests.approve', $item) }}">
                         @csrf
-                        <button class="rounded bg-teal-700 px-3 py-1.5 text-sm text-white">موافقة</button>
+                        <button class="rounded bg-[var(--color-primary)] px-3 py-1.5 text-sm text-white">موافقة</button>
                     </form>
                     <form method="POST" action="{{ route('staff.course-requests.reject', $item) }}">
                         @csrf

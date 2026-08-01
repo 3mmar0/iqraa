@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'الشروط والأحكام')
 
@@ -14,7 +14,7 @@
             <p>الوصول إلى المقررات يتم عبر طلب وموافقة وفق قواعد المنصة. المحتوى محمي لصالح المنصة والمحاضرين ولا يجوز إعادة نشره دون إذن.</p>
             <h2 class="text-xl font-semibold text-slate-900">التعديلات</h2>
             <p>قد نحدّث هذه الشروط عند الحاجة. استمرارك في الاستخدام بعد التحديث يعني قبولك للنسخة الأحدث.</p>
-            <p>للاستفسار: <a href="{{ route('public.contact') }}" class="text-teal-800 hover:underline">تواصل معنا</a>.</p>
+            <p>للاستفسار: <a href="{{ route('public.contact') }}" class="text-[var(--color-primary-hover)] hover:underline">تواصل معنا</a>.</p>
         </div>
     </article>
 @endsection

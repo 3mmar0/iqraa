@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الأدوار والصلاحيات')
 @section('heading', 'الأدوار والصلاحيات')
@@ -13,17 +13,17 @@
                         <h2 class="text-base font-semibold text-slate-900">{{ $role->name_ar }}</h2>
                         <p class="text-xs text-slate-500">{{ $role->slug }} · لوحة: {{ $role->dashboard_key ?: '—' }}</p>
                     </div>
-                    <span class="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-800">{{ $role->permissions->count() }} صلاحية</span>
+                    <span class="rounded-full bg-[var(--color-primary-light)] px-3 py-1 text-xs font-medium text-[var(--color-primary-hover)]">{{ $role->permissions->count() }} صلاحية</span>
                 </div>
                 <form method="POST" action="{{ route('admin.roles.update', $role) }}" class="p-5">
                     @csrf
                     @method('PUT')
                     <div class="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                         @forelse ($permissions as $permission)
-                            <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm hover:border-teal-300 hover:bg-teal-50/30">
+                            <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]/30">
                                 <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                        @checked($role->permissions->contains('id', $permission->id))
-                                       class="mt-0.5 rounded border-slate-300 text-teal-700 focus:ring-teal-600">
+                                       class="mt-0.5 rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]">
                                 <span>
                                     <span class="block font-medium text-slate-800">{{ $permission->name_ar }}</span>
                                     <span class="block text-xs text-slate-500">{{ $permission->slug }}</span>
@@ -33,7 +33,7 @@
                             <p class="text-sm text-slate-500">لا توجد صلاحيات معرّفة بعد.</p>
                         @endforelse
                     </div>
-                    <button type="submit" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">حفظ صلاحيات {{ $role->name_ar }}</button>
+                    <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">حفظ صلاحيات {{ $role->name_ar }}</button>
                 </form>
             </section>
         @endforeach

@@ -1,9 +1,9 @@
-@extends('layouts.instructor')
+﻿@extends('layouts.instructor')
 
 @section('title', $course->title)
 
 @section('content')
-    <h1 class="mb-2 text-2xl font-bold text-teal-900">{{ $course->title }}</h1>
+    <h1 class="mb-2 text-2xl font-bold text-[var(--color-ink)]">{{ $course->title }}</h1>
     <p class="mb-6 text-sm text-slate-600">الحالة: {{ $course->status }}</p>
 
     <section class="mb-8">
@@ -30,7 +30,7 @@
                 <h3 class="font-medium">إضافة درس</h3>
                 <input type="text" name="title" required placeholder="عنوان الدرس" class="w-full rounded border border-slate-300 px-3 py-2">
                 <textarea name="description" rows="2" placeholder="وصف" class="w-full rounded border border-slate-300 px-3 py-2"></textarea>
-                <button type="submit" class="rounded bg-teal-700 px-3 py-1.5 text-sm text-white">إضافة</button>
+                <button type="submit" class="rounded bg-[var(--color-primary)] px-3 py-1.5 text-sm text-white">إضافة</button>
             </form>
         @endif
     </section>
@@ -53,7 +53,7 @@
                 <input type="text" name="title" required placeholder="عنوان الاختبار" class="w-full rounded border border-slate-300 px-3 py-2">
                 <input type="number" name="duration_minutes" placeholder="المدة بالدقائق" class="w-full rounded border border-slate-300 px-3 py-2">
                 <input type="text" name="question_body" placeholder="نص السؤال الأول (اختياري)" class="w-full rounded border border-slate-300 px-3 py-2">
-                <button type="submit" class="rounded bg-teal-700 px-3 py-1.5 text-sm text-white">إنشاء</button>
+                <button type="submit" class="rounded bg-[var(--color-primary)] px-3 py-1.5 text-sm text-white">إنشاء</button>
             </form>
         @endif
     </section>

@@ -1,7 +1,7 @@
-@extends('layouts.team')
+﻿@extends('layouts.team')
 @section('title', 'الحضور')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">الحضور</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">الحضور</h1>
     @if ($records->isEmpty())
         <x-empty-state message="لا سجلات حضور." />
     @else

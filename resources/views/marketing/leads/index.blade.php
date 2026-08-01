@@ -1,7 +1,7 @@
-@extends('layouts.marketing')
+﻿@extends('layouts.marketing')
 @section('title', 'العملاء المحتملون')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">العملاء المحتملون</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">العملاء المحتملون</h1>
     @if ($leads->isEmpty())
         <x-empty-state message="لا عملاء محتملين." />
     @else

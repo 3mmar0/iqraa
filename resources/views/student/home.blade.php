@@ -9,8 +9,8 @@
             <p class="text-sm text-slate-600">{{ $termLabel }}</p>
         </div>
         <div class="flex gap-2 text-sm">
-            <a href="{{ route('student.courses.index') }}" class="rounded-lg bg-teal-700 px-3 py-2 text-white">موادي</a>
-            <a href="{{ route('student.course-requests.index') }}" class="rounded-lg border border-teal-700 px-3 py-2 text-teal-800">طلب مقرر</a>
+            <a href="{{ route('student.courses.index') }}" class="rounded-lg bg-[var(--color-primary)] px-3 py-2 text-white">موادي</a>
+            <a href="{{ route('student.course-requests.index') }}" class="rounded-lg border border-[var(--color-primary)] px-3 py-2 text-[var(--color-primary-hover)]">طلب مقرر</a>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
             <h2 class="mb-2 font-semibold">آخر درس</h2>
             @if ($lastProgress?->lesson)
                 <p>{{ $lastProgress->lesson->title }}</p>
-                <a class="mt-2 inline-block text-teal-700 hover:underline" href="{{ route('student.lessons.show', $lastProgress->lesson) }}">متابعة</a>
+                <a class="mt-2 inline-block text-[var(--color-primary)] hover:underline" href="{{ route('student.lessons.show', $lastProgress->lesson) }}">متابعة</a>
             @else
                 <p class="text-sm text-slate-500">لا يوجد درس بعد.</p>
             @endif
@@ -30,7 +30,7 @@
             <ul class="space-y-2 text-sm">
                 @forelse ($enrollments as $enrollment)
                     <li>
-                        <a class="text-teal-700 hover:underline" href="{{ route('student.courses.show', $enrollment->course) }}">
+                        <a class="text-[var(--color-primary)] hover:underline" href="{{ route('student.courses.show', $enrollment->course) }}">
                             {{ $enrollment->course->title }}
                         </a>
                     </li>

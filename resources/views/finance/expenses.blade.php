@@ -1,7 +1,7 @@
-@extends('layouts.finance')
+﻿@extends('layouts.finance')
 @section('title', 'المصروفات')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">المصروفات</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">المصروفات</h1>
     @if ($expenses->isEmpty())
         <x-empty-state message="لا مصروفات." />
     @else

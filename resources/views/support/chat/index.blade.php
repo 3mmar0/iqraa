@@ -1,7 +1,7 @@
-@extends('layouts.support')
+﻿@extends('layouts.support')
 @section('title', 'المحادثة المباشرة')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">المحادثة المباشرة</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">المحادثة المباشرة</h1>
     @if ($messages->isEmpty())
         <x-empty-state message="لا رسائل محادثة مباشرة." />
     @else

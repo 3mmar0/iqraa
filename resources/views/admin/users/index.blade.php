@@ -1,22 +1,24 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $pageTitle)
 @section('heading', $pageTitle)
-@section('subheading', $type === 'students' ? 'إدارة حسابات الطلاب والدخول نيابةً عنهم' : 'إدارة فريق العمل والأدوار والدخول نيابةً عنهم')
+@section('subheading', 'إدارة جميع حسابات المنصة والدخول نيابةً عنهم')
 
 @section('header-actions')
-    <a href="{{ route('admin.users.create', ['type' => $type]) }}" class="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800">
+    <a href="{{ route('admin.users.create', ['type' => $type === 'all' ? 'staff' : $type]) }}" class="inline-flex items-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--color-primary-hover)]">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        {{ $type === 'students' ? 'طالب جديد' : 'عضو جديد' }}
+        مستخدم جديد
     </a>
 @endsection
 
 @section('content')
-    <div class="mb-5 flex gap-2">
+    <div class="mb-5 flex flex-wrap gap-2">
+        <a href="{{ route('admin.users.index', ['type' => 'all']) }}"
+           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'all' ? 'bg-[var(--color-primary)] text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">الكل</a>
         <a href="{{ route('admin.users.index', ['type' => 'students']) }}"
-           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'students' ? 'bg-teal-700 text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">الطلاب</a>
+           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'students' ? 'bg-[var(--color-primary)] text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">الطلاب</a>
         <a href="{{ route('admin.users.index', ['type' => 'staff']) }}"
-           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'staff' ? 'bg-teal-700 text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">فريق العمل</a>
+           class="rounded-xl px-4 py-2 text-sm font-medium {{ $type === 'staff' ? 'bg-[var(--color-primary)] text-white' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50' }}">فريق العمل</a>
     </div>
 
     <form method="GET" action="{{ route('admin.users.index') }}" class="mb-5 grid gap-3 rounded-2xl border border-[var(--color-line)] bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -24,7 +26,7 @@
         <div class="sm:col-span-2">
             <label class="mb-1 block text-xs font-medium text-slate-500" for="q">بحث</label>
             <input id="q" type="search" name="q" value="{{ request('q') }}" placeholder="الاسم، البريد، الهاتف..."
-                   class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                   class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
         </div>
         <div>
             <label class="mb-1 block text-xs font-medium text-slate-500" for="status">الحالة</label>
@@ -75,7 +77,7 @@
                             <td class="px-4 py-3">
                                 <div class="flex flex-wrap gap-1">
                                     @forelse ($user->roles as $role)
-                                        <span class="rounded-full bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-800">{{ $role->name_ar }}</span>
+                                        <span class="rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-xs font-medium text-[var(--color-primary-hover)]">{{ $role->name_ar }}</span>
                                     @empty
                                         <span class="text-xs text-slate-400">بدون دور</span>
                                     @endforelse
@@ -97,7 +99,7 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex flex-wrap items-center gap-2">
-                                    @if ($user->id !== auth()->id() && $user->status === 'active')
+                                    @if ($user->id !== auth()->id() && $user->status === 'active' && ! $user->hasRole('super_admin'))
                                         <form method="POST" action="{{ route('admin.users.impersonate', $user) }}">
                                             @csrf
                                             <button type="submit" class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100">دخول كـ</button>

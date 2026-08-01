@@ -17,9 +17,9 @@ class UserController extends Controller
 {
     public function index(Request $request): View
     {
-        $type = $request->query('type', 'students');
-        if (! in_array($type, ['students', 'staff'], true)) {
-            $type = 'students';
+        $type = $request->query('type', 'all');
+        if (! in_array($type, ['all', 'students', 'staff'], true)) {
+            $type = 'all';
         }
 
         $query = User::query()->with('roles')->latest();
@@ -27,7 +27,7 @@ class UserController extends Controller
         if ($type === 'students') {
             $query->whereHas('roles', fn ($q) => $q->where('slug', 'student'))
                 ->whereDoesntHave('roles', fn ($q) => $q->where('slug', '!=', 'student'));
-        } else {
+        } elseif ($type === 'staff') {
             $query->whereHas('roles', fn ($q) => $q->where('slug', '!=', 'student'));
         }
 
@@ -49,11 +49,17 @@ class UserController extends Controller
 
         $users = $query->paginate(20)->withQueryString();
 
-        $roles = $type === 'students'
-            ? Role::query()->where('slug', 'student')->orderBy('name_ar')->get()
-            : Role::query()->where('slug', '!=', 'student')->orderBy('name_ar')->get();
+        $roles = match ($type) {
+            'students' => Role::query()->where('slug', 'student')->orderBy('name_ar')->get(),
+            'staff' => Role::query()->where('slug', '!=', 'student')->orderBy('name_ar')->get(),
+            default => Role::query()->orderBy('name_ar')->get(),
+        };
 
-        $pageTitle = $type === 'students' ? 'الطلاب' : 'فريق العمل';
+        $pageTitle = match ($type) {
+            'students' => 'الطلاب',
+            'staff' => 'فريق العمل',
+            default => 'كل المستخدمين',
+        };
 
         return view('admin.users.index', compact('users', 'roles', 'type', 'pageTitle'));
     }

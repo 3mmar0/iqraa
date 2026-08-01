@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'من نحن')
 
@@ -14,15 +14,15 @@
     <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="grid gap-6 sm:grid-cols-3">
             <div class="rounded-2xl border border-[var(--color-line)] bg-white px-5 py-6">
-                <p class="text-3xl font-bold text-teal-800">{{ number_format($stats['courses']) }}</p>
+                <p class="text-3xl font-bold text-[var(--color-primary-hover)]">{{ number_format($stats['courses']) }}</p>
                 <p class="mt-1 text-sm text-slate-600">مقرر منشور</p>
             </div>
             <div class="rounded-2xl border border-[var(--color-line)] bg-white px-5 py-6">
-                <p class="text-3xl font-bold text-teal-800">{{ number_format($stats['instructors']) }}</p>
+                <p class="text-3xl font-bold text-[var(--color-primary-hover)]">{{ number_format($stats['instructors']) }}</p>
                 <p class="mt-1 text-sm text-slate-600">محاضر</p>
             </div>
             <div class="rounded-2xl border border-[var(--color-line)] bg-white px-5 py-6">
-                <p class="text-3xl font-bold text-teal-800">{{ number_format($stats['students']) }}</p>
+                <p class="text-3xl font-bold text-[var(--color-primary-hover)]">{{ number_format($stats['students']) }}</p>
                 <p class="mt-1 text-sm text-slate-600">طالب مسجّل</p>
             </div>
         </div>
@@ -42,6 +42,6 @@
     </section>
 
     <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <a href="{{ route('public.contact') }}" class="inline-flex rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-800">تواصل مع الفريق</a>
+        <a href="{{ route('public.contact') }}" class="inline-flex rounded-xl bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">تواصل مع الفريق</a>
     </section>
 @endsection

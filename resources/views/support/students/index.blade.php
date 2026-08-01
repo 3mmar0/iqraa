@@ -1,10 +1,10 @@
-@extends('layouts.support')
+﻿@extends('layouts.support')
 @section('title', 'البحث عن طالب')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">البحث عن طالب</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">البحث عن طالب</h1>
     <form method="GET" class="mb-6 flex max-w-lg gap-2">
         <input type="search" name="q" value="{{ $q }}" placeholder="اسم أو بريد أو هاتف" class="flex-1 rounded border border-slate-300 px-3 py-2">
-        <button type="submit" class="rounded bg-teal-700 px-4 py-2 text-white">بحث</button>
+        <button type="submit" class="rounded bg-[var(--color-primary)] px-4 py-2 text-white">بحث</button>
     </form>
     @if ($students->isEmpty())
         <x-empty-state message="لا نتائج." />

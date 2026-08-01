@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $student->name)
 @section('heading', $student->name)
@@ -49,7 +49,7 @@
 
     <div class="mb-6 rounded-2xl border border-[var(--color-line)] bg-white p-5">
         <div class="flex flex-wrap items-start gap-4">
-            <span class="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-100 text-2xl font-bold text-teal-800">{{ mb_substr($student->name, 0, 1) }}</span>
+            <span class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-primary-light)] text-2xl font-bold text-[var(--color-primary-hover)]">{{ mb_substr($student->name, 0, 1) }}</span>
             <dl class="grid flex-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
                 <div><dt class="text-slate-500">الهاتف</dt><dd class="font-medium">{{ $student->phone ?? '—' }}</dd></div>
                 <div><dt class="text-slate-500">الجامعة</dt><dd class="font-medium">{{ $student->university ?? '—' }}</dd></div>

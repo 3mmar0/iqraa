@@ -1,7 +1,7 @@
-@extends('layouts.marketing')
+﻿@extends('layouts.marketing')
 @section('title', 'السفراء')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">السفراء</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">السفراء</h1>
     @if ($ambassadors->isEmpty())
         <x-empty-state message="لا سفراء." />
     @else

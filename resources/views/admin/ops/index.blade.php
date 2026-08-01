@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'التشغيل والمراقبة')
 @section('heading', 'التشغيل والمراقبة')
@@ -12,7 +12,7 @@
                 <p class="mt-2 text-sm leading-6 text-slate-600">
                     هذه اللوحة جاهزة للربط مع مؤشرات التشغيل الحية (Redis، Supervisor، مساحة القرص). يمكنك مراقبة طابور `yatmaen-queue` من الخادم حالياً.
                 </p>
-                <div class="mt-4 rounded-xl bg-[var(--color-sand)] px-3 py-2 text-xs font-medium text-teal-900">مفتاح: {{ $key }}</div>
+                <div class="mt-4 rounded-xl bg-[var(--color-sand)] px-3 py-2 text-xs font-medium text-[var(--color-ink)]">مفتاح: {{ $key }}</div>
             </article>
         @endforeach
     </div>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'طلبات الالتحاق')
 @section('heading', 'طلبات الالتحاق')
@@ -8,7 +8,7 @@
     <div class="mb-5 flex flex-wrap gap-2">
         @foreach (['pending' => 'معلّقة', 'approved' => 'مقبولة', 'rejected' => 'مرفوضة', 'all' => 'الكل'] as $key => $label)
             <a href="{{ route('admin.enrollment-requests.index', ['status' => $key]) }}"
-               class="rounded-xl px-4 py-2 text-sm font-medium {{ request('status', 'pending') === $key ? 'bg-teal-700 text-white' : 'border border-slate-200 bg-white text-slate-700' }}">
+               class="rounded-xl px-4 py-2 text-sm font-medium {{ request('status', 'pending') === $key ? 'bg-[var(--color-primary)] text-white' : 'border border-slate-200 bg-white text-slate-700' }}">
                 {{ $label }}
             </a>
         @endforeach
@@ -30,7 +30,7 @@
                         <div class="flex gap-2">
                             <form method="POST" action="{{ route('admin.enrollment-requests.approve', $item) }}">
                                 @csrf
-                                <button class="rounded-xl bg-teal-700 px-4 py-2 text-sm font-medium text-white">موافقة</button>
+                                <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white">موافقة</button>
                             </form>
                             <form method="POST" action="{{ route('admin.enrollment-requests.reject', $item) }}">
                                 @csrf

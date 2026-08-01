@@ -1,10 +1,10 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'المجموعات')
 @section('heading', 'المجموعات')
 
 @section('header-actions')
-    <a href="{{ route('admin.groups.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">مجموعة جديدة</a>
+    <a href="{{ route('admin.groups.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">مجموعة جديدة</a>
 @endsection
 
 @section('content')

@@ -1,7 +1,7 @@
-@extends('layouts.finance')
+﻿@extends('layouts.finance')
 @section('title', 'الاشتراكات')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">الاشتراكات</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">الاشتراكات</h1>
     @if ($subscriptions->isEmpty())
         <x-empty-state message="لا اشتراكات." />
     @else

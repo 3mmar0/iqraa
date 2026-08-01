@@ -1,4 +1,4 @@
-<div class="space-y-4">
+﻿<div class="space-y-4">
     @if (Route::has('admin.courses.assign-semester'))
         <form method="POST" action="{{ route('admin.courses.assign-semester', $course) }}" class="rounded-xl border p-4">
             @csrf
@@ -17,7 +17,7 @@
                     @endforeach
                 </select>
             </div>
-            <button class="rounded-lg bg-teal-700 px-3 py-1.5 text-xs text-white">حفظ</button>
+            <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">حفظ</button>
         </form>
     @endif
 

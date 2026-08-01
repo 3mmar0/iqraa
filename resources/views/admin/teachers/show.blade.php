@@ -1,11 +1,19 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $teacher->name)
 @section('heading', $teacher->name)
 @section('subheading', 'ملف المعلم والتحليلات')
 
 @section('header-actions')
-    <a href="{{ route('admin.teachers.edit', $teacher) }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">تعديل</a>
+    <div class="flex flex-wrap gap-2">
+        @if ($teacher->id !== auth()->id() && $teacher->status === 'active' && ! $teacher->hasRole('super_admin'))
+            <form method="POST" action="{{ route('admin.users.impersonate', $teacher) }}">
+                @csrf
+                <button type="submit" class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">دخول كـ</button>
+            </form>
+        @endif
+        <a href="{{ route('admin.teachers.edit', $teacher) }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">تعديل</a>
+    </div>
 @endsection
 
 @section('content')
@@ -34,7 +42,7 @@
                     {{ $course->title }}
                 </label>
             @endforeach
-            <button class="rounded-xl bg-teal-700 px-4 py-2 text-sm text-white">حفظ التعيين</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm text-white">حفظ التعيين</button>
         </form>
     </section>
 

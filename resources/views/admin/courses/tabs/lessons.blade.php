@@ -1,6 +1,6 @@
-<div class="mb-3 flex items-center justify-between">
+﻿<div class="mb-3 flex items-center justify-between">
     <h3 class="font-semibold">الدروس ({{ $course->lessons->count() }})</h3>
-    <a href="{{ route('admin.lessons.index', ['course_id' => $course->id]) }}" class="text-sm text-teal-700 hover:underline">إدارة الدروس</a>
+    <a href="{{ route('admin.lessons.index', ['course_id' => $course->id]) }}" class="text-sm text-[var(--color-primary)] hover:underline">إدارة الدروس</a>
 </div>
 <ul class="divide-y divide-slate-100">
     @forelse ($course->lessons as $lesson)
@@ -10,9 +10,9 @@
             </span>
             <div class="flex gap-2">
                 @if (Route::has('admin.lessons.show'))
-                    <a href="{{ route('admin.lessons.show', $lesson) }}" class="text-teal-700 hover:underline">عرض</a>
+                    <a href="{{ route('admin.lessons.show', $lesson) }}" class="text-[var(--color-primary)] hover:underline">عرض</a>
                 @endif
-                <a href="{{ route('admin.lessons.edit', $lesson) }}" class="text-teal-700 hover:underline">تعديل</a>
+                <a href="{{ route('admin.lessons.edit', $lesson) }}" class="text-[var(--color-primary)] hover:underline">تعديل</a>
             </div>
         </li>
     @empty

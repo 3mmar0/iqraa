@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'سياسة الخصوصية')
 
@@ -14,7 +14,7 @@
             <p>لتشغيل الحسابات، تمكين الوصول للمقررات، تحسين التجربة، والرد على الاستفسارات. لا نبيع بياناتك الشخصية.</p>
             <h2 class="text-xl font-semibold text-slate-900">الحماية والوصول</h2>
             <p>نقيّد الوصول للموظفين المخوّلين وفق الأدوار والصلاحيات. يمكنك طلب تصحيح بياناتك عبر صفحة التواصل أو من داخل حسابك.</p>
-            <p>للاستفسارات المتعلقة بالخصوصية: <a href="{{ route('public.contact') }}" class="text-teal-800 hover:underline">تواصل معنا</a>.</p>
+            <p>للاستفسارات المتعلقة بالخصوصية: <a href="{{ route('public.contact') }}" class="text-[var(--color-primary-hover)] hover:underline">تواصل معنا</a>.</p>
         </div>
     </article>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'سجلات النظام')
 @section('heading', 'سجلات النظام')
@@ -15,7 +15,7 @@
                 <input type="search" name="q" id="q" value="{{ $search }}" placeholder="حدث، رسالة، IP..."
                     class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm">
             </div>
-            <button type="submit" class="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">تطبيق</button>
+            <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">تطبيق</button>
         </x-admin.filter-bar>
     </form>
 

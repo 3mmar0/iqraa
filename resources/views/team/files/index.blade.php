@@ -1,7 +1,7 @@
-@extends('layouts.team')
+﻿@extends('layouts.team')
 @section('title', 'ملفات الفريق')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">ملفات الفريق</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">ملفات الفريق</h1>
     @if ($files->isEmpty())
         <x-empty-state message="لا ملفات." />
     @else

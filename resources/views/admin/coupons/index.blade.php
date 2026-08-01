@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'كوبونات الخصم')
 @section('heading', 'كوبونات الخصم')
 @section('subheading', 'إنشاء وإدارة أكواد الخصم')
 
 @section('header-actions')
-    <a href="{{ route('admin.coupons.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">كوبون جديد</a>
+    <a href="{{ route('admin.coupons.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">كوبون جديد</a>
 @endsection
 
 @section('content')
@@ -43,7 +43,7 @@
                 <option value="fixed">ثابت</option>
             </select>
             <input type="number" step="0.01" name="discount_value" placeholder="القيمة" class="rounded-xl border px-3 py-2 text-sm" required>
-            <button class="rounded-xl bg-teal-700 px-4 py-2 text-sm text-white">توليد</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm text-white">توليد</button>
         </form>
     </details>
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\Web\Admin\GroupController as AdminGroupController;
 use App\Http\Controllers\Web\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Web\Admin\ImpersonationController;
 use App\Http\Controllers\Web\Admin\LessonController as AdminLessonController;
+use App\Http\Controllers\Web\Admin\LessonMediaController as AdminLessonMediaController;
 use App\Http\Controllers\Web\Admin\MarketingOverviewController;
 use App\Http\Controllers\Web\Admin\OpsController;
 use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
@@ -312,6 +313,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/lessons/{lesson}/duplicate', [AdminLessonController::class, 'duplicate'])->name('lessons.duplicate');
         Route::post('/lessons/{lesson}/schedule-publish', [AdminLessonController::class, 'schedulePublish'])->name('lessons.schedule-publish');
         Route::post('/lessons/{lesson}/attach-quiz', [AdminLessonController::class, 'attachQuiz'])->name('lessons.attach-quiz');
+        Route::post('/lessons/{lesson}/media', [AdminLessonMediaController::class, 'store'])->name('lessons.media.store');
+        Route::delete('/lessons/{lesson}/media/{media}', [AdminLessonMediaController::class, 'destroy'])->name('lessons.media.destroy');
 
         Route::get('/quizzes', [AdminQuizController::class, 'index'])->name('quizzes.index');
         Route::get('/quizzes/create', [AdminQuizController::class, 'create'])->name('quizzes.create');
@@ -421,6 +424,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
         Route::post('/reports', [AdminReportController::class, 'store'])->name('reports.store');
+        Route::get('/reports/{reportJob}/download', [AdminReportController::class, 'download'])->name('reports.download');
         Route::get('/marketing', [MarketingOverviewController::class, 'index'])->name('marketing.index');
         Route::get('/support', [SupportOverviewController::class, 'index'])->name('support.index');
         Route::get('/team', [TeamOverviewController::class, 'index'])->name('team.index');

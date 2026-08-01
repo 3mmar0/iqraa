@@ -1,7 +1,7 @@
-@extends('layouts.team')
+﻿@extends('layouts.team')
 @section('title', 'إعلانات الفريق')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">إعلانات الفريق</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">إعلانات الفريق</h1>
     @if ($announcements->isEmpty())
         <x-empty-state message="لا إعلانات فريق." />
     @else

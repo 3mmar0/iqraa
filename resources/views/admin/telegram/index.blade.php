@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'تيليجرام')
 @section('heading', 'مجموعات تيليجرام')
@@ -21,7 +21,7 @@
                     <option value="{{ $course->id }}">{{ $course->title }}</option>
                 @endforeach
             </select>
-            <button class="rounded-xl bg-teal-700 px-4 py-2 text-sm text-white sm:col-span-2">إنشاء</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm text-white sm:col-span-2">إنشاء</button>
         </div>
     </form>
 
@@ -33,7 +33,7 @@
                         <h3 class="font-semibold">{{ $group->title }}</h3>
                         <p class="text-sm text-slate-500">Chat: {{ $group->chat_id ?? '—' }} · {{ $group->course?->title ?? 'بدون مقرر' }}</p>
                         @if ($group->invite_link)
-                            <p class="mt-1 text-xs font-mono text-teal-700">{{ $group->invite_link }}</p>
+                            <p class="mt-1 text-xs font-mono text-[var(--color-primary)]">{{ $group->invite_link }}</p>
                             <p class="text-xs text-slate-500">ينتهي: {{ $group->invite_expires_at?->format('Y-m-d H:i') ?? '—' }}</p>
                         @endif
                     </div>

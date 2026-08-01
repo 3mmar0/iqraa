@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الواجبات')
 @section('heading', 'الواجبات')
 @section('subheading', 'إدارة الواجبات وتسليمات الطلاب')
 
 @section('header-actions')
-    <a href="{{ route('admin.assignments.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">واجب جديد</a>
+    <a href="{{ route('admin.assignments.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">واجب جديد</a>
 @endsection
 
 @section('content')

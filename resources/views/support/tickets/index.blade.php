@@ -1,7 +1,7 @@
-@extends('layouts.support')
+﻿@extends('layouts.support')
 @section('title', 'التذاكر')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">تذاكر الدعم</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">تذاكر الدعم</h1>
     @if ($tickets->isEmpty())
         <x-empty-state message="لا تذاكر." />
     @else
@@ -14,7 +14,7 @@
                             <p class="text-sm text-slate-600">{{ $ticket->student?->name }} · {{ $ticket->status }}</p>
                         </div>
                         @if (\Illuminate\Support\Facades\Route::has('support.tickets.show'))
-                            <a href="{{ route('support.tickets.show', $ticket) }}" class="text-sm text-teal-700 hover:underline">عرض</a>
+                            <a href="{{ route('support.tickets.show', $ticket) }}" class="text-sm text-[var(--color-primary)] hover:underline">عرض</a>
                         @endif
                     </div>
                 </li>

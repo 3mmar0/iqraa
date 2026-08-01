@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الدعم الفني')
 @section('heading', 'نظرة عامة — الدعم')
@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('support.home') }}" class="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">
+        <a href="{{ route('support.home') }}" class="inline-flex rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">
             فتح لوحة الدعم
         </a>
     </div>
@@ -21,7 +21,7 @@
     <section class="mt-8 rounded-2xl border border-[var(--color-line)] bg-white p-5">
         <div class="mb-4 flex items-center justify-between">
             <h2 class="text-base font-semibold text-slate-900">أحدث التذاكر</h2>
-            <a href="{{ route('support.tickets.index') }}" class="text-sm font-medium text-teal-700 hover:underline">عرض الكل</a>
+            <a href="{{ route('support.tickets.index') }}" class="text-sm font-medium text-[var(--color-primary)] hover:underline">عرض الكل</a>
         </div>
         <div class="divide-y divide-slate-100">
             @forelse ($recentTickets as $ticket)

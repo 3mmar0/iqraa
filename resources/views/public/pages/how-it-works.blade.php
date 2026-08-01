@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'كيف تعمل المنصة')
 
@@ -20,7 +20,7 @@
                 ['title' => 'اطلب المساعدة', 'text' => 'إن تعثّرت، راسل الدعم من داخل المنصة أو عبر صفحة التواصل.'],
             ] as $i => $step)
                 <li class="grid gap-3 sm:grid-cols-[4rem_1fr] sm:gap-6">
-                    <span class="site-brand text-3xl font-bold text-teal-700/70">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="site-brand text-3xl font-bold text-[var(--color-primary)]/70">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
                     <div>
                         <h2 class="text-xl font-semibold text-slate-900">{{ $step['title'] }}</h2>
                         <p class="mt-2 text-slate-600 leading-relaxed">{{ $step['text'] }}</p>
@@ -30,7 +30,7 @@
         </ol>
 
         <div class="mt-14 flex flex-wrap gap-3">
-            <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-800">تصفّح المقررات</a>
+            <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">تصفّح المقررات</a>
             <a href="{{ route('register') }}" class="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50">إنشاء حساب</a>
         </div>
     </section>

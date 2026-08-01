@@ -1,4 +1,4 @@
-@php
+﻿@php
     $statusLabels = ['draft' => 'مسودة', 'published' => 'منشور', 'archived' => 'مؤرشف', 'hidden' => 'مخفي'];
 @endphp
 
@@ -33,7 +33,7 @@
                         <option value="{{ $instructor->id }}" @selected($course->instructor_user_id === $instructor->id)>{{ $instructor->name }}</option>
                     @endforeach
                 </select>
-                <button class="rounded-lg bg-teal-700 px-3 py-1.5 text-xs text-white">حفظ</button>
+                <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">حفظ</button>
             </form>
         @endif
     </div>

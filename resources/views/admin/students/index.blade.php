@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الطلاب')
 @section('heading', 'الطلاب')
 @section('subheading', 'إدارة حسابات الطلاب والالتحاق والاشتراكات')
 
 @section('header-actions')
-    <a href="{{ route('admin.students.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800">
+    <a href="{{ route('admin.students.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--color-primary-hover)]">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         طالب جديد
     </a>
@@ -18,7 +18,7 @@
             <div class="sm:col-span-2">
                 <label class="mb-1 block text-xs font-medium text-slate-500" for="q">بحث</label>
                 <input id="q" type="search" name="q" value="{{ request('q') }}" placeholder="الاسم، البريد، الهاتف، المعرّف..."
-                       class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                       class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
             </div>
             <div>
                 <label class="mb-1 block text-xs font-medium text-slate-500" for="status">الحالة</label>
@@ -50,7 +50,7 @@
                 <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800">تطبيق</button>
                 <a href="{{ route('admin.students.index') }}" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">مسح</a>
                 @if (Route::has('admin.students.bulk.export'))
-                    <a href="{{ route('admin.students.bulk.export', request()->query()) }}" class="rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-medium text-teal-800 hover:bg-teal-100">تصدير CSV</a>
+                    <a href="{{ route('admin.students.bulk.export', request()->query()) }}" class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary-light)] px-4 py-2.5 text-sm font-medium text-[var(--color-primary-hover)] hover:bg-[var(--color-primary-light)]">تصدير CSV</a>
                 @endif
             </div>
         </form>
@@ -104,15 +104,15 @@
                     <tr class="hover:bg-slate-50/80">
                         <td class="px-4 py-3">
                             <input type="checkbox" name="ids[]" value="{{ $student->id }}" form="bulk-form"
-                                   class="rounded border-slate-300 text-teal-700" x-model.number="selected">
+                                   class="rounded border-slate-300 text-[var(--color-primary)]" x-model.number="selected">
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
-                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-semibold text-teal-800">
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-sm font-semibold text-[var(--color-primary-hover)]">
                                     {{ mb_substr($student->name, 0, 1) }}
                                 </span>
                                 <div>
-                                    <a href="{{ route('admin.students.show', $student) }}" class="font-medium text-slate-900 hover:text-teal-700">{{ $student->name }}</a>
+                                    <a href="{{ route('admin.students.show', $student) }}" class="font-medium text-slate-900 hover:text-[var(--color-primary)]">{{ $student->name }}</a>
                                     <div class="text-xs text-slate-400">#{{ $student->id }}</div>
                                 </div>
                             </div>

@@ -12,7 +12,15 @@ class EnsureDashboardAccess
     {
         $user = $request->user();
 
-        if (! $user || ! in_array($dashboardKey, $user->dashboardKeys(), true)) {
+        if (! $user) {
+            abort(403, 'غير مصرح لك بالوصول إلى هذه اللوحة.');
+        }
+
+        if ($user->hasRole('super_admin')) {
+            return $next($request);
+        }
+
+        if (! in_array($dashboardKey, $user->dashboardKeys(), true)) {
             abort(403, 'غير مصرح لك بالوصول إلى هذه اللوحة.');
         }
 

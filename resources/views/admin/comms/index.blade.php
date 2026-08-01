@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الإشعارات والبريد')
 @section('heading', 'الإشعارات والبريد')
@@ -18,7 +18,7 @@
         <section class="rounded-2xl border border-[var(--color-line)] bg-white p-6">
             <h2 class="text-base font-semibold text-slate-900">داخل المنصة وتليجرام</h2>
             <p class="mt-2 text-sm leading-6 text-slate-600">الإشعارات داخل التطبيق محفوظة دائماً. قناة تليجرام متاحة كتكامل مرحلي عبر الطابور.</p>
-            <a href="{{ route('admin.ops.index') }}" class="mt-4 inline-flex text-sm font-medium text-teal-700 hover:underline">مراجعة حالة الطابور</a>
+            <a href="{{ route('admin.ops.index') }}" class="mt-4 inline-flex text-sm font-medium text-[var(--color-primary)] hover:underline">مراجعة حالة الطابور</a>
         </section>
     </div>
 @endsection

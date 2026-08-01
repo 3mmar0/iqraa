@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'كوبون جديد')
 @section('heading', 'كوبون جديد')
@@ -9,7 +9,7 @@
         @csrf
         @include('admin.coupons._form')
         <div class="mt-6 flex gap-2">
-            <button class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm text-white">حفظ</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm text-white">حفظ</button>
             <a href="{{ route('admin.coupons.index') }}" class="rounded-xl border px-4 py-2.5 text-sm">إلغاء</a>
         </div>
     </form>

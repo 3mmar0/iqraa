@@ -12,6 +12,7 @@
         [
             'section' => 'المستخدمون',
             'items' => [
+                ['label' => 'كل المستخدمين', 'route' => 'admin.users.index', 'match' => 'admin.users.*', 'icon' => 'users'],
                 ['label' => 'الطلاب', 'route' => 'admin.students.index', 'match' => 'admin.students.*', 'icon' => 'student'],
                 ['label' => 'المعلمون', 'route' => 'admin.teachers.index', 'match' => 'admin.teachers.*', 'icon' => 'staff'],
                 ['label' => 'طلبات الالتحاق', 'route' => 'admin.enrollment-requests.index', 'match' => 'admin.enrollment-requests.*', 'icon' => 'inbox'],

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'الرئيسية')
 
@@ -13,7 +13,7 @@
             <h1 class="anim-rise-delay max-w-2xl text-2xl font-semibold leading-relaxed text-white/95 sm:text-3xl">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</h1>
             <p class="anim-rise-delay-2 mt-4 max-w-xl text-base text-teal-50/80 sm:text-lg">منصة عربية للمقررات والدروس والمتابعة — ابدأ من الكتالوج أو أنشئ حسابك اليوم.</p>
             <div class="anim-rise-delay-2 mt-8 flex flex-wrap gap-3">
-                <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[var(--color-primary)] hover:bg-teal-50">تصفّح المقررات</a>
+                <a href="{{ route('public.courses.index') }}" class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[var(--color-primary)] hover:bg-[var(--color-primary-light)]">تصفّح المقررات</a>
                 @guest
                     <a href="{{ route('register') }}" class="rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-medium text-white hover:bg-white/10">إنشاء حساب</a>
                 @else
@@ -29,7 +29,7 @@
                 <h2 class="text-2xl font-bold text-[var(--color-ink)]">المقررات المتاحة</h2>
                 <p class="mt-1 text-slate-600">{{ $courseCount }} مقرر منشور حالياً على المنصة.</p>
             </div>
-            <a href="{{ route('public.courses.index') }}" class="text-sm font-medium text-teal-800 hover:underline">عرض الكل</a>
+            <a href="{{ route('public.courses.index') }}" class="text-sm font-medium text-[var(--color-primary-hover)] hover:underline">عرض الكل</a>
         </div>
 
         @if ($courses->isEmpty())
@@ -39,13 +39,13 @@
         @else
             <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($courses as $course)
-                    <a href="{{ route('public.courses.show', $course) }}" class="group block overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-[0_16px_40px_-24px_rgba(12,31,28,0.45)]">
-                        <div class="h-32 bg-gradient-to-br from-teal-800 via-teal-700 to-[var(--color-ink)] transition group-hover:brightness-110"></div>
+                    <a href="{{ route('public.courses.show', $course) }}" class="group block overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white transition hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:shadow-[0_16px_40px_-24px_rgba(12,31,28,0.45)]">
+                        <div class="h-32 bg-gradient-to-br from-[var(--color-primary-hover)] via-[var(--color-primary)] to-[var(--color-ink)] transition group-hover:brightness-110"></div>
                         <div class="p-5">
-                            <h3 class="text-lg font-semibold text-slate-900 group-hover:text-teal-900">{{ $course->title }}</h3>
+                            <h3 class="text-lg font-semibold text-slate-900 group-hover:text-[var(--color-ink)]">{{ $course->title }}</h3>
                             <p class="mt-1 text-sm text-slate-500">{{ $course->instructor?->name ?? 'محاضر المنصة' }}</p>
                             <p class="mt-3 line-clamp-2 text-sm text-slate-600">{{ $course->description ?: 'تعرّف على محتوى المقرر وابدأ طلب الالتحاق.' }}</p>
-                            <p class="mt-4 text-xs font-medium text-teal-800">{{ $course->lessons_count }} درس · عرض التفاصيل</p>
+                            <p class="mt-4 text-xs font-medium text-[var(--color-primary-hover)]">{{ $course->lessons_count }} درس · عرض التفاصيل</p>
                         </div>
                     </a>
                 @endforeach
@@ -65,13 +65,13 @@
                     ['title' => 'تعلّم وتقدّم', 'text' => 'دروس، اختبارات، ومتابعة في لوحتك.'],
                 ] as $i => $step)
                     <li>
-                        <p class="site-brand text-3xl font-bold text-teal-700/80">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</p>
+                        <p class="site-brand text-3xl font-bold text-[var(--color-primary)]/80">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</p>
                         <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ $step['title'] }}</h3>
                         <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ $step['text'] }}</p>
                     </li>
                 @endforeach
             </ol>
-            <a href="{{ route('public.how-it-works') }}" class="mt-10 inline-block text-sm font-medium text-teal-800 hover:underline">تفاصيل أكثر عن آلية العمل</a>
+            <a href="{{ route('public.how-it-works') }}" class="mt-10 inline-block text-sm font-medium text-[var(--color-primary-hover)] hover:underline">تفاصيل أكثر عن آلية العمل</a>
         </div>
     </section>
 
@@ -81,9 +81,9 @@
                 <h2 class="text-2xl font-bold text-[var(--color-ink)]">صُممت للطالب العربي</h2>
                 <p class="mt-3 text-slate-600 leading-relaxed">واجهة من اليمين لليسار، محتوى مرتب، وإشعارات تُبقيك على المسار دون تشتيت. المحاضر يتابع، والدعم قريب عند الحاجة.</p>
                 <ul class="mt-6 space-y-3 text-sm text-slate-700">
-                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"></span>دروس مرتبة وتقدّم واضح</li>
-                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"></span>طلبات التحاق بمراجعة بشرية</li>
-                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"></span>تقويم وإشعارات في مكان واحد</li>
+                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-primary)]"></span>دروس مرتبة وتقدّم واضح</li>
+                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-primary)]"></span>طلبات التحاق بمراجعة بشرية</li>
+                    <li class="flex gap-3"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-primary)]"></span>تقويم وإشعارات في مكان واحد</li>
                 </ul>
             </div>
             <div class="relative overflow-hidden rounded-3xl bg-[var(--color-ink)] px-8 py-12 text-white">
@@ -103,14 +103,14 @@
                         <h2 class="text-2xl font-bold text-[var(--color-ink)]">المحاضرون</h2>
                         <p class="mt-1 text-slate-600">تعرّف على من يقدّم المحتوى على المنصة.</p>
                     </div>
-                    <a href="{{ route('public.instructors') }}" class="text-sm font-medium text-teal-800 hover:underline">كل المحاضرين</a>
+                    <a href="{{ route('public.instructors') }}" class="text-sm font-medium text-[var(--color-primary-hover)] hover:underline">كل المحاضرين</a>
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($instructors as $instructor)
                         <div class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-sand)]/60 px-5 py-5">
                             <p class="text-lg font-semibold text-slate-900">{{ $instructor->name }}</p>
                             <p class="mt-1 text-sm text-slate-500">{{ $instructor->university ?: 'محاضر في المنصة' }}</p>
-                            <p class="mt-3 text-xs font-medium text-teal-800">{{ $instructor->published_courses_count }} مقرر منشور</p>
+                            <p class="mt-3 text-xs font-medium text-[var(--color-primary-hover)]">{{ $instructor->published_courses_count }} مقرر منشور</p>
                         </div>
                     @endforeach
                 </div>
@@ -126,7 +126,7 @@
                 <div>
                     <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-right" @click="open = open === {{ $i }} ? -1 : {{ $i }}">
                         <span class="font-medium text-slate-900">{{ $faq->title }}</span>
-                        <span class="text-teal-700" x-text="open === {{ $i }} ? '−' : '+'"></span>
+                        <span class="text-[var(--color-primary)]" x-text="open === {{ $i }} ? '−' : '+'"></span>
                     </button>
                     <div x-show="open === {{ $i }}" class="pb-4 text-sm leading-relaxed text-slate-600" style="display: none;">
                         {{ $faq->body }}
@@ -134,7 +134,7 @@
                 </div>
             @endforeach
         </div>
-        <a href="{{ route('public.faq') }}" class="mt-6 inline-block text-sm font-medium text-teal-800 hover:underline">عرض كل الأسئلة</a>
+        <a href="{{ route('public.faq') }}" class="mt-6 inline-block text-sm font-medium text-[var(--color-primary-hover)] hover:underline">عرض كل الأسئلة</a>
     </section>
 
     <section class="bg-[var(--color-ink)] text-white">
@@ -144,7 +144,7 @@
                 <p class="mt-2 max-w-lg text-teal-100/70">انضم الآن وتصفّح المقررات، أو راسلنا إن كان لديك سؤال قبل التسجيل.</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('register') }}" class="rounded-xl bg-teal-400 px-5 py-3 text-sm font-semibold text-[var(--color-ink)] hover:bg-teal-300">إنشاء حساب</a>
+                <a href="{{ route('register') }}" class="rounded-xl bg-[var(--color-accent)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] hover:brightness-95">إنشاء حساب</a>
                 <a href="{{ route('public.contact') }}" class="rounded-xl border border-white/20 px-5 py-3 text-sm font-medium text-white hover:bg-white/10">تواصل معنا</a>
             </div>
         </div>

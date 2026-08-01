@@ -1,4 +1,4 @@
-@php
+﻿@php
     $field = fn (string $key) => str_replace('.', '_', $key);
 @endphp
 
@@ -19,5 +19,5 @@
             class="w-full max-w-md rounded-xl border border-slate-200 px-3 py-2 text-sm">
     </div>
 
-    <button type="submit" class="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">حفظ</button>
+    <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">حفظ</button>
 </form>

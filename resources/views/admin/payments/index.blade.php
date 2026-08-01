@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'المدفوعات')
 @section('heading', 'المدفوعات والمعاملات')
@@ -77,7 +77,7 @@
             </select>
             <input name="reference" placeholder="مرجع (اختياري)" class="rounded-xl border px-3 py-2 text-sm">
             <textarea name="note" rows="1" placeholder="ملاحظة" class="rounded-xl border px-3 py-2 text-sm sm:col-span-2"></textarea>
-            <button class="rounded-xl bg-teal-700 px-4 py-2 text-sm text-white">تسجيل</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm text-white">تسجيل</button>
         </form>
     </details>
 

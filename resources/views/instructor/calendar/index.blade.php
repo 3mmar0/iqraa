@@ -1,9 +1,9 @@
-@extends('layouts.instructor')
+﻿@extends('layouts.instructor')
 
 @section('title', 'التقويم')
 
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">التقويم</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">التقويم</h1>
     <h2 class="mb-2 font-semibold">الأحداث</h2>
     @if ($events->isEmpty())
         <x-empty-state message="لا أحداث في التقويم." class="mb-6" />

@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'المعلمون')
 @section('heading', 'المعلمون')
 @section('subheading', 'إدارة حسابات المحاضرين')
 
 @section('header-actions')
-    <a href="{{ route('admin.teachers.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">معلم جديد</a>
+    <a href="{{ route('admin.teachers.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">معلم جديد</a>
 @endsection
 
 @section('content')
@@ -49,6 +49,12 @@
                             <div class="flex flex-wrap gap-1">
                                 <a href="{{ route('admin.teachers.show', $teacher) }}" class="rounded-lg border px-2 py-1 text-xs">عرض</a>
                                 <a href="{{ route('admin.teachers.edit', $teacher) }}" class="rounded-lg border px-2 py-1 text-xs">تعديل</a>
+                                @if ($teacher->id !== auth()->id() && $teacher->status === 'active' && ! $teacher->hasRole('super_admin') && Route::has('admin.users.impersonate'))
+                                    <form method="POST" action="{{ route('admin.users.impersonate', $teacher) }}" class="inline">
+                                        @csrf
+                                        <button type="submit" class="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-900">دخول كـ</button>
+                                    </form>
+                                @endif
                                 @if ($teacher->status !== 'disabled')
                                     <form method="POST" action="{{ route('admin.teachers.suspend', $teacher) }}" class="inline">@csrf<button class="rounded-lg border px-2 py-1 text-xs">تعليق</button></form>
                                 @endif

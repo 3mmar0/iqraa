@@ -8,7 +8,7 @@
         @csrf
         @foreach ($dashboards as $key)
             <button type="submit" name="dashboard" value="{{ $key }}"
-                    class="block w-full rounded-lg border border-slate-200 px-4 py-3 text-right hover:border-teal-600 hover:bg-teal-50">
+                    class="block w-full rounded-lg border border-slate-200 px-4 py-3 text-right hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]">
                 {{ $labels[$key] ?? $key }}
             </button>
         @endforeach

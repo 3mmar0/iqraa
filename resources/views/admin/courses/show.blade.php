@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $course->title)
 @section('heading', $course->title)
@@ -6,7 +6,7 @@
 
 @section('header-actions')
     <a href="{{ route('admin.courses.edit', $course) }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">تعديل</a>
-    <a href="{{ route('admin.lessons.create', ['course_id' => $course->id]) }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">درس جديد</a>
+    <a href="{{ route('admin.lessons.create', ['course_id' => $course->id]) }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">درس جديد</a>
 @endsection
 
 @section('content')

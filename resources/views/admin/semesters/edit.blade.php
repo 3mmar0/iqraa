@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'تعديل فصل')
 @section('heading', 'تعديل فصل')
@@ -10,7 +10,7 @@
         @method('PUT')
         @include('admin.semesters._form', ['years' => $years, 'semester' => $semester])
         <div class="mt-6 flex gap-2">
-            <button class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm text-white">تحديث</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm text-white">تحديث</button>
             <a href="{{ route('admin.semesters.index', ['academic_year_id' => $semester->academic_year_id]) }}" class="rounded-xl border px-4 py-2.5 text-sm">رجوع</a>
         </div>
     </form>

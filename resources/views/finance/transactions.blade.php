@@ -1,7 +1,7 @@
-@extends('layouts.finance')
+﻿@extends('layouts.finance')
 @section('title', 'المعاملات')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">المعاملات</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">المعاملات</h1>
     @if ($transactions->isEmpty())
         <x-empty-state message="لا معاملات." />
     @else

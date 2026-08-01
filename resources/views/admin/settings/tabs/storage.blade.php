@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('admin.settings.update') }}" class="space-y-5">
+﻿<form method="POST" action="{{ route('admin.settings.update') }}" class="space-y-5">
     @csrf
     @method('PUT')
     <input type="hidden" name="tab" value="storage">
@@ -12,5 +12,5 @@
         </select>
     </div>
 
-    <button type="submit" class="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">حفظ</button>
+    <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">حفظ</button>
 </form>

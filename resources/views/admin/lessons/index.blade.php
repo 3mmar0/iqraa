@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الدروس')
 @section('heading', 'الدروس')
 @section('subheading', 'عرض وإدارة دروس جميع المقررات')
 
 @section('header-actions')
-    <a href="{{ route('admin.lessons.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">درس جديد</a>
+    <a href="{{ route('admin.lessons.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">درس جديد</a>
 @endsection
 
 @section('content')

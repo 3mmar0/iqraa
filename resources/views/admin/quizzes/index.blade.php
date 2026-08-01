@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الاختبارات')
 @section('heading', 'الاختبارات')
 @section('subheading', 'إدارة الاختبارات والأسئلة')
 
 @section('header-actions')
-    <a href="{{ route('admin.quizzes.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">اختبار جديد</a>
+    <a href="{{ route('admin.quizzes.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">اختبار جديد</a>
 @endsection
 
 @section('content')

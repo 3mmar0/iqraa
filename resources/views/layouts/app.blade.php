@@ -33,16 +33,16 @@
         .hero-wash { animation: soft-pan 18s ease-in-out infinite alternate; }
     </style>
 </head>
-<body class="min-h-screen bg-[var(--color-sand)] text-slate-900 antialiased" x-data="{ navOpen: false }">
+<body class="min-h-screen bg-[var(--color-sand)] text-[var(--color-ink)] antialiased" x-data="{ navOpen: false }">
     <header class="sticky top-0 z-40 border-b border-white/10 bg-[var(--color-ink)]/95 text-white backdrop-blur">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-            <a href="{{ url('/') }}" class="site-brand text-2xl font-bold tracking-wide text-teal-100">{{ config('app.name') }}</a>
+            <a href="{{ url('/') }}" class="site-brand text-2xl font-bold tracking-wide text-[var(--color-primary-light)]">{{ config('app.name') }}</a>
 
             <nav class="hidden items-center gap-1 lg:flex">
                 @foreach ($navLinks as $link)
                     @php $active = request()->routeIs($link['route']); @endphp
                     <a href="{{ route($link['route']) }}"
-                       class="rounded-lg px-2.5 py-1.5 text-sm {{ $active ? 'bg-white/10 text-white' : 'text-teal-100/75 hover:bg-white/5 hover:text-white' }}">
+                       class="rounded-lg px-2.5 py-1.5 text-sm {{ $active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white' }}">
                         {{ $link['label'] }}
                     </a>
                 @endforeach
@@ -50,14 +50,14 @@
 
             <div class="flex items-center gap-2 text-sm">
                 @auth
-                    <a href="{{ route('dashboard.redirect') }}" class="rounded-lg bg-teal-500/20 px-3 py-1.5 text-teal-100 ring-1 ring-teal-400/30 hover:bg-teal-500/30">لوحتي</a>
+                    <a href="{{ route('dashboard.redirect') }}" class="rounded-lg bg-[var(--color-primary)]/25 px-3 py-1.5 text-[var(--color-primary-light)] ring-1 ring-[var(--color-primary)]/40 hover:bg-[var(--color-primary)]/35">لوحتي</a>
                     <form method="POST" action="{{ route('logout') }}" class="hidden sm:block">
                         @csrf
-                        <button type="submit" class="text-teal-100/70 hover:text-white">خروج</button>
+                        <button type="submit" class="text-white/70 hover:text-white">خروج</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="hidden text-teal-100/80 hover:text-white sm:inline">تسجيل الدخول</a>
-                    <a href="{{ route('register') }}" class="rounded-lg bg-teal-500 px-3 py-1.5 font-medium text-[var(--color-ink)] hover:bg-teal-400">إنشاء حساب</a>
+                    <a href="{{ route('login') }}" class="hidden text-white/80 hover:text-white sm:inline">تسجيل الدخول</a>
+                    <a href="{{ route('register') }}" class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 font-medium text-white hover:bg-[var(--color-primary-hover)]">إنشاء حساب</a>
                 @endauth
                 <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 lg:hidden" @click="navOpen = !navOpen" :aria-expanded="navOpen.toString()" aria-label="القائمة">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -68,10 +68,10 @@
         <div x-show="navOpen" x-transition class="border-t border-white/10 lg:hidden" style="display: none;">
             <div class="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 sm:px-6">
                 @foreach ($navLinks as $link)
-                    <a href="{{ route($link['route']) }}" class="rounded-lg px-3 py-2 text-sm text-teal-50 hover:bg-white/10" @click="navOpen = false">{{ $link['label'] }}</a>
+                    <a href="{{ route($link['route']) }}" class="rounded-lg px-3 py-2 text-sm text-white/90 hover:bg-white/10" @click="navOpen = false">{{ $link['label'] }}</a>
                 @endforeach
                 @guest
-                    <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm text-teal-50 hover:bg-white/10">تسجيل الدخول</a>
+                    <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm text-white/90 hover:bg-white/10">تسجيل الدخول</a>
                 @endguest
             </div>
         </div>
@@ -84,11 +84,11 @@
         @yield('content')
     </main>
 
-    <footer class="mt-20 border-t border-[var(--color-line)] bg-[var(--color-ink)] text-teal-100/80">
+    <footer class="mt-20 border-t border-[var(--color-line)] bg-[var(--color-ink)] text-white/80">
         <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3">
             <div>
-                <p class="site-brand text-2xl font-bold text-teal-100">{{ config('app.name') }}</p>
-                <p class="mt-3 max-w-xs text-sm leading-relaxed text-teal-100/60">منصة تعلم عربية تمنحك مساراً واضحاً من الاكتشاف إلى الإتمام — بطمأنينة وخطوات مرتبة.</p>
+                <p class="site-brand text-2xl font-bold text-[var(--color-primary-light)]">{{ config('app.name') }}</p>
+                <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/60">منصة تعلم عربية تمنحك مساراً واضحاً من الاكتشاف إلى الإتمام — بطمأنينة وخطوات مرتبة.</p>
             </div>
             <div>
                 <p class="mb-3 text-sm font-semibold text-white">استكشف</p>

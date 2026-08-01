@@ -1,7 +1,7 @@
-@extends('layouts.team')
+﻿@extends('layouts.team')
 @section('title', 'المهام')
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">مهام الفريق</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">مهام الفريق</h1>
     @if ($tasks->isEmpty())
         <x-empty-state message="لا مهام." />
     @else
@@ -19,7 +19,7 @@
                                     <option value="{{ $status }}" @selected($task->status === $status)>{{ $status }}</option>
                                 @endforeach
                             </select>
-                            <button type="submit" class="rounded bg-teal-700 px-3 py-1 text-sm text-white">تحديث</button>
+                            <button type="submit" class="rounded bg-[var(--color-primary)] px-3 py-1 text-sm text-white">تحديث</button>
                         </form>
                     @endif
                 </li>

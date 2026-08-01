@@ -1,9 +1,9 @@
-@extends('layouts.instructor')
+﻿@extends('layouts.instructor')
 
 @section('title', 'إنشاء مقرر')
 
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">إنشاء مقرر</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">إنشاء مقرر</h1>
 
     <form method="POST" action="{{ route('instructor.courses.store') }}" class="max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-6">
         @csrf
@@ -29,6 +29,6 @@
             <label class="mb-1 block text-sm font-medium">الجدول</label>
             <input type="text" name="schedule_text" value="{{ old('schedule_text') }}" class="w-full rounded border border-slate-300 px-3 py-2">
         </div>
-        <button type="submit" class="rounded bg-teal-700 px-4 py-2 text-white">حفظ</button>
+        <button type="submit" class="rounded bg-[var(--color-primary)] px-4 py-2 text-white">حفظ</button>
     </form>
 @endsection

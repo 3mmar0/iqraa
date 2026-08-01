@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'تعديل التصنيف')
 @section('heading', 'تعديل التصنيف')
@@ -10,7 +10,7 @@
         @method('PUT')
         @include('admin.categories._form', ['category' => $category])
         <div class="flex gap-2">
-            <button class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">حفظ</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">حفظ</button>
             <a href="{{ route('admin.categories.index') }}" class="rounded-xl border px-4 py-2.5 text-sm">رجوع</a>
         </div>
     </form>

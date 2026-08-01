@@ -17,15 +17,15 @@
 
     <form method="POST" action="{{ route('student.lessons.complete', $lesson) }}" class="mb-6">
         @csrf
-        <button class="rounded-lg bg-teal-700 px-4 py-2 text-white">تعليم كمكتمل</button>
+        <button class="rounded-lg bg-[var(--color-primary)] px-4 py-2 text-white">تعليم كمكتمل</button>
     </form>
 
     <div class="flex gap-4 text-sm">
         @if ($previous)
-            <a class="text-teal-700 hover:underline" href="{{ route('student.lessons.show', $previous) }}">الدرس السابق</a>
+            <a class="text-[var(--color-primary)] hover:underline" href="{{ route('student.lessons.show', $previous) }}">الدرس السابق</a>
         @endif
         @if ($next)
-            <a class="text-teal-700 hover:underline" href="{{ route('student.lessons.show', $next) }}">الدرس التالي</a>
+            <a class="text-[var(--color-primary)] hover:underline" href="{{ route('student.lessons.show', $next) }}">الدرس التالي</a>
         @endif
     </div>
 @endsection

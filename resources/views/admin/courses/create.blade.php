@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'مقرر جديد')
 @section('heading', 'إنشاء مقرر')
@@ -9,7 +9,7 @@
         @csrf
         @include('admin.courses._form', ['course' => null])
         <div class="flex gap-2">
-            <button class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">حفظ</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">حفظ</button>
             <a href="{{ route('admin.courses.index') }}" class="rounded-xl border px-4 py-2.5 text-sm">إلغاء</a>
         </div>
     </form>

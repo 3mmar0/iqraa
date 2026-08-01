@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $quiz->title)
 @section('heading', $quiz->title)
@@ -71,7 +71,7 @@
                             <option value="{{ $course->id }}" @selected($quiz->course_id === $course->id)>{{ $course->title }}</option>
                         @endforeach
                     </select>
-                    <button class="rounded-lg bg-teal-700 px-3 py-1.5 text-xs text-white">حفظ</button>
+                    <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">حفظ</button>
                 </form>
             @endif
             @if (Route::has('admin.quizzes.assign-lesson'))
@@ -83,7 +83,7 @@
                             <option value="{{ $lesson->id }}">{{ $lesson->title }} ({{ $lesson->course?->title }})</option>
                         @endforeach
                     </select>
-                    <button class="rounded-lg bg-teal-700 px-3 py-1.5 text-xs text-white">ربط</button>
+                    <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">ربط</button>
                 </form>
             @endif
             <form method="POST" action="{{ route('admin.quizzes.destroy', $quiz) }}" class="mt-4" onsubmit="return confirm('حذف الاختبار؟');">

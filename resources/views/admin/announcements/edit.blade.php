@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'تعديل إعلان')
 @section('heading', 'تعديل إعلان')
@@ -10,7 +10,7 @@
         @method('PUT')
         @include('admin.announcements._form', compact('courses', 'announcement'))
         <div class="mt-6 flex gap-2">
-            <button class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm text-white">تحديث</button>
+            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm text-white">تحديث</button>
             <a href="{{ route('admin.announcements.index') }}" class="rounded-xl border px-4 py-2.5 text-sm">رجوع</a>
         </div>
     </form>

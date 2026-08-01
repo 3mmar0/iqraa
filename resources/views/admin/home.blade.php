@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'لوحة الإدارة')
 @section('heading', 'لوحة التحكم')
@@ -22,7 +22,7 @@
             @csrf
             <input type="hidden" name="from" value="{{ $from ?? '' }}">
             <input type="hidden" name="to" value="{{ $to ?? '' }}">
-            <button type="submit" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">Excel</button>
+            <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">Excel</button>
         </form>
     @endif
 @endsection
@@ -32,12 +32,12 @@
         <div>
             <label class="mb-1 block text-xs font-medium text-slate-500" for="from">من تاريخ</label>
             <input id="from" type="date" name="from" value="{{ $from ?? '' }}"
-                   class="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                   class="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
         </div>
         <div>
             <label class="mb-1 block text-xs font-medium text-slate-500" for="to">إلى تاريخ</label>
             <input id="to" type="date" name="to" value="{{ $to ?? '' }}"
-                   class="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                   class="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
         </div>
         <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800">تطبيق</button>
         <a href="{{ route('admin.home') }}" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">مسح</a>
@@ -99,7 +99,7 @@
                                     <td class="px-2 py-1.5 font-medium">{{ number_format($count) }}</td>
                                     <td class="px-2 py-1.5">
                                         <div class="h-2 rounded-full bg-slate-100">
-                                            <div class="h-2 rounded-full bg-teal-600" style="width: {{ min(100, ($count / $max) * 100) }}%"></div>
+                                            <div class="h-2 rounded-full bg-[var(--color-primary)]" style="width: {{ min(100, ($count / $max) * 100) }}%"></div>
                                         </div>
                                     </td>
                                 </tr>
@@ -116,7 +116,7 @@
             <h2 class="mb-4 text-base font-semibold text-slate-900">اختصارات سريعة</h2>
             <div class="grid gap-2">
                 @foreach ($quickActions as $action)
-                    <a href="{{ $action['href'] }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">{{ $action['label'] }}</a>
+                    <a href="{{ $action['href'] }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">{{ $action['label'] }}</a>
                 @endforeach
             </div>
         </section>
@@ -124,7 +124,7 @@
         <section class="rounded-2xl border border-[var(--color-line)] bg-white p-5 lg:col-span-2">
             <div class="mb-4 flex items-center justify-between">
                 <h2 class="text-base font-semibold text-slate-900">أحدث الطلاب</h2>
-                <a href="{{ $studentHref }}" class="text-sm font-medium text-teal-700 hover:underline">عرض الكل</a>
+                <a href="{{ $studentHref }}" class="text-sm font-medium text-[var(--color-primary)] hover:underline">عرض الكل</a>
             </div>
             <div class="divide-y divide-slate-100">
                 @forelse ($recent['students'] as $student)
@@ -134,7 +134,7 @@
                             <p class="truncate text-xs text-slate-500">{{ $student->email }} · {{ $student->created_at?->diffForHumans() }}</p>
                         </div>
                         @if (Route::has('admin.students.show'))
-                            <a href="{{ route('admin.students.show', $student) }}" class="shrink-0 text-teal-700 hover:underline">عرض</a>
+                            <a href="{{ route('admin.students.show', $student) }}" class="shrink-0 text-[var(--color-primary)] hover:underline">عرض</a>
                         @endif
                     </div>
                 @empty

@@ -1,10 +1,10 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'السنوات الدراسية')
 @section('heading', 'السنوات الدراسية')
 
 @section('header-actions')
-    <a href="{{ route('admin.academic-years.create') }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">سنة جديدة</a>
+    <a href="{{ route('admin.academic-years.create') }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">سنة جديدة</a>
 @endsection
 
 @section('content')

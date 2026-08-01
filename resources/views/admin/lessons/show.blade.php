@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', $lesson->title)
 @section('heading', $lesson->title)
@@ -49,19 +49,50 @@
             </dl>
             <p class="mt-4 text-sm text-slate-600 whitespace-pre-line">{{ $lesson->description ?: 'لا يوجد وصف.' }}</p>
         @elseif ($section === 'video')
+            <form method="POST" action="{{ route('admin.lessons.media.store', $lesson) }}" enctype="multipart/form-data" class="mb-6 rounded-xl border border-[var(--color-line)] bg-[var(--color-sand)] p-4">
+                @csrf
+                <p class="mb-3 text-sm font-medium text-[var(--color-ink)]">رفع فيديو</p>
+                <input type="hidden" name="type" value="video">
+                <input type="file" name="file" accept="video/*" required class="mb-3 block w-full text-sm">
+                <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">رفع</button>
+            </form>
             <ul class="divide-y divide-slate-100 text-sm">
                 @forelse ($videos as $asset)
-                    <li class="py-2">{{ $asset->original_name ?? basename($asset->path) }}</li>
+                    <li class="flex items-center justify-between gap-3 py-2">
+                        <span>{{ $asset->original_name ?? basename($asset->path) }}</span>
+                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="rounded-lg border border-rose-200 px-2 py-1 text-xs text-rose-700">حذف</button>
+                        </form>
+                    </li>
                 @empty
                     <li class="py-6 text-slate-500">لا فيديو مرفق.</li>
                 @endforelse
             </ul>
         @elseif ($section === 'files')
+            <form method="POST" action="{{ route('admin.lessons.media.store', $lesson) }}" enctype="multipart/form-data" class="mb-6 rounded-xl border border-[var(--color-line)] bg-[var(--color-sand)] p-4">
+                @csrf
+                <p class="mb-3 text-sm font-medium text-[var(--color-ink)]">رفع ملف / PDF / صورة</p>
+                <div class="mb-3 grid gap-3 sm:grid-cols-2">
+                    <select name="type" class="rounded-xl border border-slate-200 px-3 py-2 text-sm">
+                        <option value="pdf">PDF</option>
+                        <option value="image">صورة</option>
+                        <option value="attachment">مرفق</option>
+                    </select>
+                    <input type="file" name="file" accept=".pdf,image/*,.doc,.docx,.zip" required class="block w-full text-sm">
+                </div>
+                <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">رفع</button>
+            </form>
             <ul class="divide-y divide-slate-100 text-sm">
                 @forelse ($files as $asset)
-                    <li class="flex justify-between py-2">
-                        <span>{{ $asset->original_name ?? basename($asset->path) }}</span>
-                        <span class="text-xs text-slate-500">{{ $asset->type }}</span>
+                    <li class="flex items-center justify-between gap-3 py-2">
+                        <span>{{ $asset->original_name ?? basename($asset->path) }} <span class="text-xs text-slate-500">({{ $asset->type }})</span></span>
+                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="rounded-lg border border-rose-200 px-2 py-1 text-xs text-rose-700">حذف</button>
+                        </form>
                     </li>
                 @empty
                     <li class="py-6 text-slate-500">لا ملفات.</li>
@@ -83,7 +114,7 @@
                                 <option value="{{ $quiz->id }}">{{ $quiz->title }}</option>
                             @endforeach
                         </select>
-                        <button class="rounded-lg bg-teal-700 px-3 py-1.5 text-xs text-white">ربط اختبار</button>
+                        <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">ربط اختبار</button>
                     </form>
                 @endif
             @endif
@@ -97,7 +128,7 @@
                     @csrf
                     <p class="mb-2 text-sm font-medium">جدولة النشر</p>
                     <input type="datetime-local" name="published_at" value="{{ $lesson->published_at?->format('Y-m-d\TH:i') }}" class="mb-2 rounded-lg border px-3 py-2 text-sm">
-                    <button class="rounded-lg bg-teal-700 px-3 py-1.5 text-xs text-white">حفظ</button>
+                    <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">حفظ</button>
                 </form>
             @endif
             <form method="POST" action="{{ route('admin.lessons.destroy', $lesson) }}" onsubmit="return confirm('حذف الدرس؟');">

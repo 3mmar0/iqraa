@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+﻿@extends('layouts.guest')
 
 @section('title', 'تعيين كلمة مرور جديدة')
 
@@ -19,6 +19,6 @@
             <label class="mb-1 block text-sm" for="password_confirmation">تأكيد كلمة المرور</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required class="w-full rounded-lg border border-slate-300 px-3 py-2">
         </div>
-        <button type="submit" class="w-full rounded-lg bg-teal-700 px-4 py-2 text-white">حفظ</button>
+        <button type="submit" class="w-full rounded-lg bg-[var(--color-primary)] px-4 py-2 text-white">حفظ</button>
     </form>
 @endsection

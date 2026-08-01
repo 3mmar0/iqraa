@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'المالية')
 @section('heading', 'نظرة عامة — المالية')
@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('finance.home') }}" class="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">
+        <a href="{{ route('finance.home') }}" class="inline-flex rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">
             فتح لوحة المالية
         </a>
     </div>
@@ -23,10 +23,10 @@
     <section class="mt-8 rounded-2xl border border-[var(--color-line)] bg-white p-6">
         <h2 class="text-base font-semibold text-slate-900">اختصارات</h2>
         <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <a href="{{ route('finance.revenue.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">الإيرادات</a>
-            <a href="{{ route('finance.expenses.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">المصروفات</a>
-            <a href="{{ route('finance.profit.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">الأرباح</a>
-            <a href="{{ route('finance.forecast.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-teal-50">التوقعات</a>
+            <a href="{{ route('finance.revenue.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">الإيرادات</a>
+            <a href="{{ route('finance.expenses.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">المصروفات</a>
+            <a href="{{ route('finance.profit.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">الأرباح</a>
+            <a href="{{ route('finance.forecast.index') }}" class="rounded-xl bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-[var(--color-line)] hover:bg-[var(--color-primary-light)]">التوقعات</a>
         </div>
     </section>
 @endsection

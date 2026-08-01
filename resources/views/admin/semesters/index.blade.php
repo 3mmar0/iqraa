@@ -1,10 +1,10 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'الفصول الدراسية')
 @section('heading', 'الفصول الدراسية')
 
 @section('header-actions')
-    <a href="{{ route('admin.semesters.create', request()->only('academic_year_id')) }}" class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white">فصل جديد</a>
+    <a href="{{ route('admin.semesters.create', request()->only('academic_year_id')) }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">فصل جديد</a>
 @endsection
 
 @section('content')

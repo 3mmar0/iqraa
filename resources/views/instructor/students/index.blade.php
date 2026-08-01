@@ -1,9 +1,9 @@
-@extends('layouts.instructor')
+﻿@extends('layouts.instructor')
 
 @section('title', 'الطلاب')
 
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-teal-900">قائمة الطلاب</h1>
+    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">قائمة الطلاب</h1>
     @if ($enrollments->isEmpty())
         <x-empty-state message="لا يوجد طلاب مسجّلون في مقرراتك." />
     @else

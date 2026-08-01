@@ -11,7 +11,7 @@
     <ul class="mb-6 space-y-2">
         @foreach ($course->lessons as $lesson)
             <li>
-                <a class="text-teal-700 hover:underline" href="{{ route('student.lessons.show', $lesson) }}">{{ $lesson->title }}</a>
+                <a class="text-[var(--color-primary)] hover:underline" href="{{ route('student.lessons.show', $lesson) }}">{{ $lesson->title }}</a>
             </li>
         @endforeach
     </ul>
@@ -20,7 +20,7 @@
     <ul class="space-y-2">
         @forelse ($course->quizzes as $quiz)
             <li>
-                <a class="text-teal-700 hover:underline" href="{{ route('student.quizzes.show', $quiz) }}">{{ $quiz->title }}</a>
+                <a class="text-[var(--color-primary)] hover:underline" href="{{ route('student.quizzes.show', $quiz) }}">{{ $quiz->title }}</a>
             </li>
         @empty
             <li class="text-sm text-slate-500">لا اختبارات بعد.</li>
