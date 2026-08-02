@@ -25,6 +25,7 @@ export function courseIntroUpload(config) {
         totalChunks: 0,
         chunkSize: 2 * 1024 * 1024,
         resumable: null,
+        dragging: false,
 
         init() {
             this.restoreResumeHint();
@@ -60,7 +61,26 @@ export function courseIntroUpload(config) {
         },
 
         onFilePicked(event) {
-            const file = event.target.files?.[0] || null;
+            this.assignFile(event.target.files?.[0] || null);
+        },
+
+        onDrop(event) {
+            this.dragging = false;
+            if (this.uploading) return;
+            const file = event.dataTransfer?.files?.[0] || null;
+            this.assignFile(file);
+            if (file && this.$refs?.fileInput) {
+                try {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    this.$refs.fileInput.files = dt.files;
+                } catch {
+                    // ignore
+                }
+            }
+        },
+
+        assignFile(file) {
             this.file = file;
             this.error = null;
             this.message = null;
@@ -76,6 +96,14 @@ export function courseIntroUpload(config) {
                 this.error = 'الحد الأقصى لحجم الفيديو 2 جيجابايت.';
                 this.file = null;
             }
+        },
+
+        clearFile() {
+            if (this.uploading) return;
+            this.file = null;
+            this.error = null;
+            this.message = null;
+            if (this.$refs?.fileInput) this.$refs.fileInput.value = '';
         },
 
         async startUpload({ resume = false } = {}) {

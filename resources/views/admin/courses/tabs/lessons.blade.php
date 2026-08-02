@@ -166,11 +166,51 @@
                         })"
                     >
                         <div class="grid gap-3 sm:grid-cols-2">
-                            <div>
-                                <label class="admin-label">الملف</label>
-                                <input type="file" x-ref="fileInput" class="block w-full text-sm" @change="onPick($event)" :disabled="uploading">
+                            <div
+                                class="admin-dropzone sm:col-span-2"
+                                :class="{
+                                    'is-dragging': dragging,
+                                    'is-filled': !! file,
+                                    'is-disabled': uploading,
+                                }"
+                                @dragenter.prevent="if (! uploading) dragging = true"
+                                @dragover.prevent="if (! uploading) dragging = true"
+                                @dragleave.prevent="dragging = false"
+                                @drop.prevent="onDrop($event)"
+                                @click="if (! uploading) $refs.fileInput.click()"
+                                role="button"
+                                tabindex="0"
+                                @keydown.enter.prevent="if (! uploading) $refs.fileInput.click()"
+                                @keydown.space.prevent="if (! uploading) $refs.fileInput.click()"
+                            >
+                                <input type="file" x-ref="fileInput" class="sr-only" @change="onPick($event)" :disabled="uploading" @click.stop>
+
+                                <template x-if="! file">
+                                    <div class="admin-dropzone-empty">
+                                        <span class="admin-dropzone-icon" aria-hidden="true">
+                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                                            </svg>
+                                        </span>
+                                        <p class="admin-dropzone-title">اسحب الملف هنا أو انقر للاختيار</p>
+                                        <p class="admin-dropzone-sub">فيديو، صورة، PDF أو مرفق</p>
+                                    </div>
+                                </template>
+
+                                <template x-if="file">
+                                    <div class="admin-dropzone-file" @click.stop>
+                                        <div class="admin-dropzone-file-icon" aria-hidden="true">
+                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                        </div>
+                                        <div class="min-w-0 flex-1 text-right">
+                                            <p class="truncate text-sm font-semibold text-slate-900" x-text="file.name"></p>
+                                            <p class="mt-0.5 text-xs text-slate-500" x-text="formatBytes(file.size)"></p>
+                                        </div>
+                                        <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm" @click="clearFile()" :disabled="uploading">تغيير</button>
+                                    </div>
+                                </template>
                             </div>
-                            <div>
+                            <div class="sm:col-span-2">
                                 <label class="admin-label">النوع</label>
                                 <select x-model="type" class="admin-input" :disabled="uploading">
                                     <option value="">تلقائي</option>

@@ -22,6 +22,7 @@ export function mediaUploader(config = {}) {
         error: null,
         message: null,
         xhr: null,
+        dragging: false,
 
         resolveUrl() {
             if (typeof this.getUploadUrl === 'function') {
@@ -34,7 +35,26 @@ export function mediaUploader(config = {}) {
         },
 
         onPick(event) {
-            const file = event.target.files?.[0] || null;
+            this.assignFile(event.target.files?.[0] || null);
+        },
+
+        onDrop(event) {
+            this.dragging = false;
+            if (this.uploading) return;
+            const file = event.dataTransfer?.files?.[0] || null;
+            this.assignFile(file);
+            if (file && this.$refs?.fileInput) {
+                try {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    this.$refs.fileInput.files = dt.files;
+                } catch {
+                    // Some browsers block programmatic FileList assignment; file state is enough.
+                }
+            }
+        },
+
+        assignFile(file) {
             this.clearPreview();
             this.file = file;
             this.error = null;
@@ -60,6 +80,13 @@ export function mediaUploader(config = {}) {
                 this.previewKind = 'file';
                 this.previewUrl = null;
             }
+        },
+
+        clearFile() {
+            if (this.uploading) return;
+            this.resetInput();
+            this.error = null;
+            this.message = null;
         },
 
         clearPreview() {

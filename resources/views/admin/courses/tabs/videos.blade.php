@@ -19,6 +19,7 @@
                 :show-type-select="false"
                 accept="video/*,.mp4,.webm,.mov,.mkv,.m4v"
                 button-label="رفع الفيديو"
+                hint="اسحب الفيديو هنا أو انقر للاختيار"
             />
         @endif
     </section>

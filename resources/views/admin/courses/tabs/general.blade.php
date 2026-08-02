@@ -82,14 +82,59 @@
             </template>
 
             <div class="space-y-3">
-                <input
-                    type="file"
-                    accept="video/*,.mp4,.webm,.mov,.mkv,.m4v"
-                    class="block w-full text-sm"
-                    x-ref="fileInput"
-                    @change="onFilePicked($event)"
-                    :disabled="uploading"
+                <div
+                    class="admin-dropzone"
+                    :class="{
+                        'is-dragging': dragging,
+                        'is-filled': !! file,
+                        'is-disabled': uploading,
+                    }"
+                    @dragenter.prevent="if (! uploading) dragging = true"
+                    @dragover.prevent="if (! uploading) dragging = true"
+                    @dragleave.prevent="dragging = false"
+                    @drop.prevent="onDrop($event)"
+                    @click="if (! uploading) $refs.fileInput.click()"
+                    role="button"
+                    tabindex="0"
+                    @keydown.enter.prevent="if (! uploading) $refs.fileInput.click()"
+                    @keydown.space.prevent="if (! uploading) $refs.fileInput.click()"
                 >
+                    <input
+                        type="file"
+                        accept="video/*,.mp4,.webm,.mov,.mkv,.m4v"
+                        class="sr-only"
+                        x-ref="fileInput"
+                        @change="onFilePicked($event)"
+                        :disabled="uploading"
+                        @click.stop
+                    >
+
+                    <template x-if="! file">
+                        <div class="admin-dropzone-empty">
+                            <span class="admin-dropzone-icon" aria-hidden="true">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                                </svg>
+                            </span>
+                            <p class="admin-dropzone-title">اسحب فيديو المقدمة هنا أو انقر للاختيار</p>
+                            <p class="admin-dropzone-sub">MP4 / WEBM / MOV — حتى 2 جيجابايت</p>
+                        </div>
+                    </template>
+
+                    <template x-if="file">
+                        <div class="admin-dropzone-file" @click.stop>
+                            <div class="admin-dropzone-file-icon" aria-hidden="true">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"/></svg>
+                            </div>
+                            <div class="min-w-0 flex-1 text-right">
+                                <p class="truncate text-sm font-semibold text-slate-900" x-text="file.name"></p>
+                                <p class="mt-0.5 text-xs text-slate-500" x-text="formatBytes(file.size)"></p>
+                            </div>
+                            <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm shrink-0" @click="clearFile()" :disabled="uploading">تغيير</button>
+                        </div>
+                    </template>
+                </div>
+
                 <div class="flex flex-wrap gap-2">
                     <button
                         type="button"

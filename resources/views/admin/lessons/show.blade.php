@@ -73,6 +73,7 @@
                     :show-type-select="false"
                     accept="video/*,.mp4,.webm,.mov,.mkv,.m4v"
                     button-label="رفع الفيديو"
+                    hint="اسحب فيديو الدرس هنا أو انقر للاختيار"
                 />
                 <ul class="space-y-4 text-sm">
                     @forelse ($videos as $asset)
@@ -99,6 +100,7 @@
                     :upload-url="route('admin.lessons.media.store', $lesson)"
                     accept=".pdf,image/*,.doc,.docx,.zip,application/pdf"
                     button-label="رفع الملف"
+                    hint="اسحب الملف هنا أو انقر للاختيار"
                 />
                 <ul class="space-y-4 text-sm">
                     @forelse ($files as $asset)

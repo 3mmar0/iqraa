@@ -13,10 +13,31 @@
                 <h3 class="font-medium">{{ $lesson->position }}. {{ $lesson->title }}</h3>
                 <p class="text-sm text-slate-600">{{ $lesson->mediaAssets->count() }} ملفات</p>
                 @if (\Illuminate\Support\Facades\Route::has('instructor.media.store'))
-                    <form method="POST" action="{{ route('instructor.media.store', $lesson) }}" enctype="multipart/form-data" class="mt-3 flex flex-wrap items-end gap-2">
+                    <form method="POST" action="{{ route('instructor.media.store', $lesson) }}" enctype="multipart/form-data" class="admin-uploader mt-3 space-y-3" x-data="{ fileName: '', dragging: false }">
                         @csrf
-                        <input type="file" name="file" required class="text-sm">
-                        <button type="submit" class="rounded bg-slate-800 px-3 py-1.5 text-sm text-white">رفع ملف</button>
+                        <div
+                            class="admin-dropzone"
+                            :class="{ 'is-dragging': dragging, 'is-filled': !! fileName }"
+                            @dragenter.prevent="dragging = true"
+                            @dragover.prevent="dragging = true"
+                            @dragleave.prevent="dragging = false"
+                            @drop.prevent="dragging = false; $refs.file.files = $event.dataTransfer.files; fileName = $event.dataTransfer.files[0]?.name || ''"
+                            @click="$refs.file.click()"
+                        >
+                            <input type="file" name="file" required class="sr-only" x-ref="file" @change="fileName = $event.target.files[0]?.name || ''" @click.stop>
+                            <div class="admin-dropzone-empty" x-show="! fileName">
+                                <span class="admin-dropzone-icon" aria-hidden="true">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                                    </svg>
+                                </span>
+                                <p class="admin-dropzone-title">اسحب الملف هنا أو انقر للاختيار</p>
+                            </div>
+                            <div class="admin-dropzone-file" x-show="fileName" x-cloak @click.stop>
+                                <p class="truncate text-sm font-semibold text-slate-900" x-text="fileName"></p>
+                            </div>
+                        </div>
+                        <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm">رفع ملف</button>
                     </form>
                 @endif
             </div>

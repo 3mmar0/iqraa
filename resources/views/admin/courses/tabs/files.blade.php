@@ -17,6 +17,7 @@
                 :lessons="$course->lessons"
                 accept=".pdf,image/*,.doc,.docx,.zip,application/pdf"
                 button-label="رفع الملف"
+                hint="اسحب الملف هنا أو انقر للاختيار"
             />
         @endif
     </section>
