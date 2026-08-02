@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ImpersonationController extends Controller
 {
-    public function start(Request $request, User $user): RedirectResponse
+    public function start(Request $request): RedirectResponse
     {
         $admin = $request->user();
+        $user = $this->resolveTargetUser($request);
 
         if ($user->id === $admin->id) {
             return back()->with('error', 'لا يمكنك تسجيل الدخول كنفسك.');
@@ -48,6 +49,21 @@ class ImpersonationController extends Controller
 
         return redirect()->route('dashboard.redirect')
             ->with('status', 'تم الدخول كـ '.$user->name);
+    }
+
+    /**
+     * Users route binds {user}; students route binds {student}.
+     * Both map to the same User model.
+     */
+    private function resolveTargetUser(Request $request): User
+    {
+        $target = $request->route('user') ?? $request->route('student');
+
+        if ($target instanceof User) {
+            return $target;
+        }
+
+        return User::query()->findOrFail($target);
     }
 
     public function leave(Request $request): RedirectResponse
