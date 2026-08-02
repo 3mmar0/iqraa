@@ -325,6 +325,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/lessons/{lesson}/schedule-publish', [AdminLessonController::class, 'schedulePublish'])->name('lessons.schedule-publish');
         Route::post('/lessons/{lesson}/attach-quiz', [AdminLessonController::class, 'attachQuiz'])->name('lessons.attach-quiz');
         Route::post('/lessons/{lesson}/media', [AdminLessonMediaController::class, 'store'])->name('lessons.media.store');
+        Route::get('/lessons/{lesson}/media/{media}', [AdminLessonMediaController::class, 'show'])->name('lessons.media.show');
         Route::delete('/lessons/{lesson}/media/{media}', [AdminLessonMediaController::class, 'destroy'])->name('lessons.media.destroy');
 
         Route::get('/quizzes', [AdminQuizController::class, 'index'])->name('quizzes.index');

@@ -18,7 +18,15 @@
             'id' => $a->id,
             'name' => $a->original_name ?? basename($a->path),
             'type' => $a->type,
+            'mime' => $a->mime,
+            'preview_url' => route('admin.lessons.media.show', [$l, $a]),
             'destroy_url' => route('admin.lessons.media.destroy', [$l, $a]),
+            'kind' => match (true) {
+                $a->type === 'video' || str_starts_with((string) $a->mime, 'video/') => 'video',
+                $a->type === 'image' || str_starts_with((string) $a->mime, 'image/') => 'image',
+                $a->type === 'pdf' || $a->mime === 'application/pdf' => 'pdf',
+                default => 'file',
+            },
         ])->values(),
     ]);
 @endphp
@@ -165,7 +173,7 @@
         class="fixed inset-0 z-[80] flex items-end justify-center bg-black/45 p-4 sm:items-center"
         @click.self="close()"
     >
-        <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" @click.stop>
+        <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" @click.stop>
             <div class="mb-4 flex items-center justify-between gap-3">
                 <div>
                     <h3 class="text-base font-semibold text-slate-900">وسائط الدرس</h3>
@@ -199,18 +207,38 @@
                         </div>
                     </form>
 
-                    <ul class="divide-y divide-slate-100 text-sm">
+                    <ul class="space-y-4 text-sm">
                         <template x-for="asset in mediaLesson().media" :key="asset.id">
-                            <li class="flex items-center justify-between gap-3 py-2">
-                                <span class="min-w-0 truncate">
-                                    <span x-text="asset.name"></span>
-                                    <span class="text-xs text-slate-400" x-text="'(' + asset.type + ')'"></span>
-                                </span>
-                                <form method="POST" :action="asset.destroy_url" onsubmit="return confirm('حذف الملف؟');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-xs text-rose-700 hover:underline">حذف</button>
-                                </form>
+                            <li class="rounded-xl border border-slate-200 p-3">
+                                <div class="mb-2 flex items-center justify-between gap-3">
+                                    <div class="min-w-0">
+                                        <p class="truncate font-medium" x-text="asset.name"></p>
+                                        <p class="text-xs text-slate-400" x-text="asset.type"></p>
+                                    </div>
+                                    <form method="POST" :action="asset.destroy_url" onsubmit="return confirm('حذف الملف؟');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-xs text-rose-700 hover:underline">حذف</button>
+                                    </form>
+                                </div>
+
+                                <template x-if="asset.kind === 'video'">
+                                    <video class="max-h-56 w-full rounded-lg bg-black" controls preload="metadata" :src="asset.preview_url"></video>
+                                </template>
+                                <template x-if="asset.kind === 'image'">
+                                    <a :href="asset.preview_url" target="_blank" rel="noopener">
+                                        <img :src="asset.preview_url" :alt="asset.name" class="max-h-56 w-full rounded-lg object-contain bg-white">
+                                    </a>
+                                </template>
+                                <template x-if="asset.kind === 'pdf'">
+                                    <div>
+                                        <iframe :src="asset.preview_url" class="h-56 w-full rounded-lg border-0 bg-white" :title="asset.name"></iframe>
+                                        <a :href="asset.preview_url" target="_blank" rel="noopener" class="mt-2 inline-block text-xs text-[var(--color-primary)] hover:underline">فتح PDF</a>
+                                    </div>
+                                </template>
+                                <template x-if="asset.kind === 'file'">
+                                    <a :href="asset.preview_url" target="_blank" rel="noopener" class="inline-flex rounded-lg border px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">فتح / تنزيل</a>
+                                </template>
                             </li>
                         </template>
                     </ul>

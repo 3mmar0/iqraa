@@ -8,11 +8,75 @@ use App\Models\MediaAsset;
 use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LessonMediaController extends Controller
 {
+    public function show(Request $request, Lesson $lesson, MediaAsset $media): StreamedResponse|Response
+    {
+        if ($media->lesson_id !== $lesson->id) {
+            abort(404);
+        }
+
+        $disk = Storage::disk($media->disk ?: 'local_private');
+        abort_unless($disk->exists($media->path), 404);
+
+        $path = $disk->path($media->path);
+        $mime = $media->mime ?: 'application/octet-stream';
+        $size = filesize($path) ?: (int) ($media->size ?? 0);
+        $start = 0;
+        $end = max(0, $size - 1);
+        $status = 200;
+
+        if ($range = $request->header('Range')) {
+            if (preg_match('/bytes=(\d+)-(\d*)/', $range, $matches)) {
+                $start = (int) $matches[1];
+                if ($matches[2] !== '') {
+                    $end = (int) $matches[2];
+                }
+                $end = min($end, $size - 1);
+                if ($start > $end || $start >= $size) {
+                    return response('Requested Range Not Satisfiable', 416, [
+                        'Content-Range' => "bytes */{$size}",
+                    ]);
+                }
+                $status = 206;
+            }
+        }
+
+        $length = $end - $start + 1;
+        $filename = addslashes($media->original_name ?: basename($media->path));
+        $headers = [
+            'Content-Type' => $mime,
+            'Accept-Ranges' => 'bytes',
+            'Content-Length' => $length,
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            'Cache-Control' => 'private, max-age=3600',
+        ];
+
+        if ($status === 206) {
+            $headers['Content-Range'] = "bytes {$start}-{$end}/{$size}";
+        }
+
+        return response()->stream(function () use ($path, $start, $length) {
+            $stream = fopen($path, 'rb');
+            fseek($stream, $start);
+            $remaining = $length;
+            while ($remaining > 0 && ! feof($stream)) {
+                $read = fread($stream, min(8192, $remaining));
+                if ($read === false) {
+                    break;
+                }
+                echo $read;
+                $remaining -= strlen($read);
+            }
+            fclose($stream);
+        }, $status, $headers);
+    }
+
     public function store(Request $request, Lesson $lesson): RedirectResponse
     {
         $validated = $request->validate([

@@ -36,25 +36,28 @@
 
     <section>
         <h3 class="mb-3 font-semibold">الفيديوهات ({{ $videos->count() }})</h3>
-        <ul class="divide-y divide-slate-100 text-sm">
+        <div class="space-y-4">
             @forelse ($videos as $row)
-                <li class="flex flex-wrap items-center justify-between gap-2 py-3">
-                    <div>
-                        <p class="font-medium">{{ $row['asset']->original_name ?? basename($row['asset']->path) }}</p>
-                        <p class="text-xs text-slate-500">
-                            {{ $row['lesson']->title }}
-                            · {{ number_format(($row['asset']->size ?? 0) / 1048576, 1) }} MB
-                        </p>
+                <article class="rounded-xl border border-slate-200 p-4">
+                    <div class="mb-3 flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                            <p class="font-medium">{{ $row['asset']->original_name ?? basename($row['asset']->path) }}</p>
+                            <p class="text-xs text-slate-500">
+                                {{ $row['lesson']->title }}
+                                · {{ number_format(($row['asset']->size ?? 0) / 1048576, 1) }} MB
+                            </p>
+                        </div>
+                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$row['lesson'], $row['asset']]) }}" onsubmit="return confirm('حذف الفيديو؟');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs text-rose-800">حذف</button>
+                        </form>
                     </div>
-                    <form method="POST" action="{{ route('admin.lessons.media.destroy', [$row['lesson'], $row['asset']]) }}" onsubmit="return confirm('حذف الفيديو؟');">
-                        @csrf
-                        @method('DELETE')
-                        <button class="rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs text-rose-800">حذف</button>
-                    </form>
-                </li>
+                    <x-admin.media-preview :asset="$row['asset']" />
+                </article>
             @empty
-                <li class="py-8 text-center text-slate-500">لا فيديوهات بعد.</li>
+                <p class="py-8 text-center text-sm text-slate-500">لا فيديوهات بعد.</p>
             @endforelse
-        </ul>
+        </div>
     </section>
 </div>

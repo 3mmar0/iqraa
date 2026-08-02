@@ -56,15 +56,18 @@
                 <input type="file" name="file" accept="video/*" required class="mb-3 block w-full text-sm">
                 <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">رفع</button>
             </form>
-            <ul class="divide-y divide-slate-100 text-sm">
+            <ul class="space-y-4 text-sm">
                 @forelse ($videos as $asset)
-                    <li class="flex items-center justify-between gap-3 py-2">
-                        <span>{{ $asset->original_name ?? basename($asset->path) }}</span>
-                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="rounded-lg border border-rose-200 px-2 py-1 text-xs text-rose-700">حذف</button>
-                        </form>
+                    <li class="rounded-xl border border-slate-200 p-3">
+                        <div class="mb-2 flex items-center justify-between gap-3">
+                            <span class="font-medium">{{ $asset->original_name ?? basename($asset->path) }}</span>
+                            <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="rounded-lg border border-rose-200 px-2 py-1 text-xs text-rose-700">حذف</button>
+                            </form>
+                        </div>
+                        <x-admin.media-preview :asset="$asset" />
                     </li>
                 @empty
                     <li class="py-6 text-slate-500">لا فيديو مرفق.</li>
@@ -84,15 +87,18 @@
                 </div>
                 <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">رفع</button>
             </form>
-            <ul class="divide-y divide-slate-100 text-sm">
+            <ul class="space-y-4 text-sm">
                 @forelse ($files as $asset)
-                    <li class="flex items-center justify-between gap-3 py-2">
-                        <span>{{ $asset->original_name ?? basename($asset->path) }} <span class="text-xs text-slate-500">({{ $asset->type }})</span></span>
-                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="rounded-lg border border-rose-200 px-2 py-1 text-xs text-rose-700">حذف</button>
-                        </form>
+                    <li class="rounded-xl border border-slate-200 p-3">
+                        <div class="mb-2 flex items-center justify-between gap-3">
+                            <span class="font-medium">{{ $asset->original_name ?? basename($asset->path) }} <span class="text-xs text-slate-500">({{ $asset->type }})</span></span>
+                            <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="rounded-lg border border-rose-200 px-2 py-1 text-xs text-rose-700">حذف</button>
+                            </form>
+                        </div>
+                        <x-admin.media-preview :asset="$asset" compact />
                     </li>
                 @empty
                     <li class="py-6 text-slate-500">لا ملفات.</li>

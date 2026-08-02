@@ -26,16 +26,18 @@ php artisan route:cache
 php artisan view:cache
 php artisan event:cache || true
 
-echo "==> Queue workers"
-# queue:restart writes a cache key (Redis). If Redis is slow/down it hangs forever;
-# || true never fires. Timeout so deploy continues; supervisorctl still reloads workers.
-timeout 15 php artisan queue:restart || echo "WARN: queue:restart timed out or failed (continuing)"
-sudo timeout 30 supervisorctl restart 'yatmaen-queue:*' || echo "WARN: supervisorctl restart failed (continuing)"
-
 echo "==> Permissions"
 chown -R deploy:www-data "$APP"
 find "$APP/storage" "$APP/bootstrap/cache" -type d -exec chmod 775 {} \;
 find "$APP/storage" "$APP/bootstrap/cache" -type f -exec chmod 664 {} \;
+
+echo "==> Queue workers"
+# queue:restart writes a Redis cache key; timeout so a stuck Redis cannot block deploy.
+timeout 15 php artisan queue:restart || echo "WARN: queue:restart timed out or failed (continuing)"
+# stopwaitsecs on yatmaen-queue is 30s — give supervisorctl room, do not kill it mid-stop
+# (killing restart mid-flight caused "ERROR (abnormal termination)").
+sudo supervisorctl stop 'yatmaen-queue:*' || true
+sudo supervisorctl start 'yatmaen-queue:*' || echo "WARN: supervisorctl start failed (continuing)"
 
 echo "==> Reload PHP-FPM (drop OPcache)"
 sudo systemctl reload php8.4-fpm 2>/dev/null \
