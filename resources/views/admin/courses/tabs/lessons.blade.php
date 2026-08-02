@@ -186,26 +186,68 @@
 
             <template x-if="mediaLesson()">
                 <div>
-                    <form method="POST" :action="mediaLesson().media_store_url" enctype="multipart/form-data" class="mb-4 grid gap-3 rounded-xl bg-slate-50 p-3 sm:grid-cols-2">
-                        @csrf
-                        <div class="sm:col-span-2">
-                            <label class="mb-1 block text-xs text-slate-500">رفع ملف / فيديو</label>
-                            <input type="file" name="file" required class="block w-full text-sm">
+                    <template x-for="lesson in [mediaLesson()]" :key="'upload-'+lesson.id">
+                        <div
+                            class="mb-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4"
+                            x-data="mediaUploader({
+                                csrf: @js(csrf_token()),
+                                uploadUrl: lesson.media_store_url,
+                                reloadOnSuccess: true,
+                                showTypeSelect: true,
+                            })"
+                        >
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                <div>
+                                    <label class="mb-1 block text-xs text-slate-500">الملف</label>
+                                    <input type="file" x-ref="fileInput" class="block w-full text-sm" @change="onPick($event)" :disabled="uploading">
+                                </div>
+                                <div>
+                                    <label class="mb-1 block text-xs text-slate-500">النوع</label>
+                                    <select x-model="type" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" :disabled="uploading">
+                                        <option value="">تلقائي</option>
+                                        <option value="video">فيديو</option>
+                                        <option value="pdf">PDF</option>
+                                        <option value="image">صورة</option>
+                                        <option value="attachment">مرفق</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <template x-if="previewKind === 'video' && previewUrl">
+                                <video class="max-h-56 w-full rounded-xl bg-black" controls preload="metadata" :src="previewUrl"></video>
+                            </template>
+                            <template x-if="previewKind === 'image' && previewUrl">
+                                <img :src="previewUrl" alt="معاينة" class="max-h-56 w-full rounded-xl object-contain bg-white">
+                            </template>
+                            <template x-if="previewKind === 'pdf' && previewUrl">
+                                <iframe :src="previewUrl" class="h-56 w-full rounded-xl border-0 bg-white" title="معاينة PDF"></iframe>
+                            </template>
+                            <template x-if="previewKind === 'file' && file">
+                                <div class="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-3 text-sm text-slate-600">
+                                    <span x-text="file.name"></span> · <span x-text="formatBytes(file.size)"></span>
+                                </div>
+                            </template>
+
+                            <div x-show="uploading || progress > 0" x-cloak>
+                                <div class="mb-1 flex justify-between text-xs text-slate-600">
+                                    <span x-text="message || 'الرفع'"></span>
+                                    <span><span x-text="progress"></span>%</span>
+                                </div>
+                                <div class="h-2.5 overflow-hidden rounded-full bg-slate-200">
+                                    <div class="h-full rounded-full bg-[var(--color-primary)] transition-all duration-200" :style="`width: ${progress}%`"></div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-rose-700" x-show="error" x-text="error" x-cloak></p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" class="rounded-xl bg-slate-900 px-4 py-2 text-sm text-white disabled:opacity-50" @click="startUpload()" :disabled="uploading || ! file">
+                                    <span x-show="! uploading">رفع</span>
+                                    <span x-show="uploading" x-cloak>جارٍ الرفع…</span>
+                                </button>
+                                <button type="button" class="rounded-xl border px-4 py-2 text-sm" @click="cancel()" x-show="uploading" x-cloak>إلغاء</button>
+                            </div>
                         </div>
-                        <div>
-                            <label class="mb-1 block text-xs text-slate-500">النوع</label>
-                            <select name="type" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                                <option value="">تلقائي</option>
-                                <option value="video">فيديو</option>
-                                <option value="pdf">PDF</option>
-                                <option value="attachment">مرفق</option>
-                                <option value="image">صورة</option>
-                            </select>
-                        </div>
-                        <div class="flex items-end">
-                            <button type="submit" class="w-full rounded-xl bg-slate-900 px-4 py-2 text-sm text-white">رفع</button>
-                        </div>
-                    </form>
+                    </template>
 
                     <ul class="space-y-4 text-sm">
                         <template x-for="asset in mediaLesson().media" :key="asset.id">

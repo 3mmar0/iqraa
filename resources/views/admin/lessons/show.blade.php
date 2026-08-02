@@ -49,13 +49,14 @@
             </dl>
             <p class="mt-4 text-sm text-slate-600 whitespace-pre-line">{{ $lesson->description ?: 'لا يوجد وصف.' }}</p>
         @elseif ($section === 'video')
-            <form method="POST" action="{{ route('admin.lessons.media.store', $lesson) }}" enctype="multipart/form-data" class="mb-6 rounded-xl border border-[var(--color-line)] bg-[var(--color-sand)] p-4">
-                @csrf
-                <p class="mb-3 text-sm font-medium text-[var(--color-ink)]">رفع فيديو</p>
-                <input type="hidden" name="type" value="video">
-                <input type="file" name="file" accept="video/*" required class="mb-3 block w-full text-sm">
-                <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">رفع</button>
-            </form>
+            <x-admin.media-uploader
+                class="mb-6"
+                :upload-url="route('admin.lessons.media.store', $lesson)"
+                default-type="video"
+                :show-type-select="false"
+                accept="video/*,.mp4,.webm,.mov,.mkv,.m4v"
+                button-label="رفع الفيديو"
+            />
             <ul class="space-y-4 text-sm">
                 @forelse ($videos as $asset)
                     <li class="rounded-xl border border-slate-200 p-3">
@@ -74,19 +75,12 @@
                 @endforelse
             </ul>
         @elseif ($section === 'files')
-            <form method="POST" action="{{ route('admin.lessons.media.store', $lesson) }}" enctype="multipart/form-data" class="mb-6 rounded-xl border border-[var(--color-line)] bg-[var(--color-sand)] p-4">
-                @csrf
-                <p class="mb-3 text-sm font-medium text-[var(--color-ink)]">رفع ملف / PDF / صورة</p>
-                <div class="mb-3 grid gap-3 sm:grid-cols-2">
-                    <select name="type" class="rounded-xl border border-slate-200 px-3 py-2 text-sm">
-                        <option value="pdf">PDF</option>
-                        <option value="image">صورة</option>
-                        <option value="attachment">مرفق</option>
-                    </select>
-                    <input type="file" name="file" accept=".pdf,image/*,.doc,.docx,.zip" required class="block w-full text-sm">
-                </div>
-                <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]">رفع</button>
-            </form>
+            <x-admin.media-uploader
+                class="mb-6"
+                :upload-url="route('admin.lessons.media.store', $lesson)"
+                accept=".pdf,image/*,.doc,.docx,.zip,application/pdf"
+                button-label="رفع الملف"
+            />
             <ul class="space-y-4 text-sm">
                 @forelse ($files as $asset)
                     <li class="rounded-xl border border-slate-200 p-3">

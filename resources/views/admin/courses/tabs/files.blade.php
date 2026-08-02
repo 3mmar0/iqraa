@@ -5,40 +5,19 @@
 @endphp
 
 <div class="space-y-6">
-    <section class="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+    <section>
         <h3 class="mb-3 text-sm font-semibold text-slate-900">رفع ملف لمقرر</h3>
         @if ($course->lessons->isEmpty())
-            <p class="text-sm text-amber-800">أضف درساً أولاً من تبويب الدروس ثم ارفع الملفات عليه.</p>
+            <p class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">أضف درساً أولاً من تبويب الدروس ثم ارفع الملفات عليه.</p>
         @else
-            <form method="POST" enctype="multipart/form-data" class="grid gap-3 sm:grid-cols-2"
-                  x-data="{ lessonId: @js((string) $course->lessons->first()->id) }"
-                  :action="'{{ url('/admin/lessons') }}/' + lessonId + '/media'">
-                @csrf
-                <div>
-                    <label class="mb-1 block text-xs text-slate-500">الدرس</label>
-                    <select name="lesson_id" x-model="lessonId" required class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                        @foreach ($course->lessons as $lesson)
-                            <option value="{{ $lesson->id }}">{{ $lesson->position }}. {{ $lesson->title }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs text-slate-500">النوع</label>
-                    <select name="type" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                        <option value="pdf">PDF</option>
-                        <option value="attachment">مرفق</option>
-                        <option value="image">صورة</option>
-                        <option value="file">ملف</option>
-                    </select>
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">الملف</label>
-                    <input type="file" name="file" required class="block w-full text-sm">
-                </div>
-                <div class="sm:col-span-2">
-                    <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">رفع الملف</button>
-                </div>
-            </form>
+            <x-admin.media-uploader
+                :lesson-base-url="url('/admin/lessons')"
+                :lesson-id="$course->lessons->first()->id"
+                :show-lesson-select="true"
+                :lessons="$course->lessons"
+                accept=".pdf,image/*,.doc,.docx,.zip,application/pdf"
+                button-label="رفع الملف"
+            />
         @endif
     </section>
 

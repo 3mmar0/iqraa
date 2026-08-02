@@ -80,18 +80,18 @@ class LessonMediaController extends Controller
     public function store(Request $request, Lesson $lesson): RedirectResponse
     {
         $validated = $request->validate([
-            'file' => ['required', 'file', 'max:51200'],
+            'file' => ['required', 'file', 'max:204800'],
             'type' => ['nullable', 'string', Rule::in(['video', 'pdf', 'attachment', 'image', 'file'])],
         ], [
             'file.required' => 'الملف مطلوب.',
-            'file.max' => 'الحد الأقصى لحجم الملف 50 ميجابايت.',
+            'file.max' => 'الحد الأقصى لحجم الملف 200 ميجابايت.',
         ]);
 
         $file = $validated['file'];
         $type = $validated['type'] ?? $this->guessType($file->getClientMimeType());
         $path = $file->store('lessons/'.$lesson->id, 'local_private');
 
-        MediaAsset::query()->create([
+        $asset = MediaAsset::query()->create([
             'lesson_id' => $lesson->id,
             'type' => $type,
             'disk' => 'local_private',
@@ -106,6 +106,29 @@ class LessonMediaController extends Controller
                 'type' => $type,
                 'name' => $file->getClientOriginalName(),
             ]);
+        }
+
+        if ($request->expectsJson() || $request->wantsJson() || $request->ajax()) {
+            $kind = match (true) {
+                $type === 'video' || str_starts_with((string) $asset->mime, 'video/') => 'video',
+                $type === 'image' || str_starts_with((string) $asset->mime, 'image/') => 'image',
+                $type === 'pdf' || $asset->mime === 'application/pdf' => 'pdf',
+                default => 'file',
+            };
+
+            return response()->json([
+                'message' => 'تم رفع الملف.',
+                'data' => [
+                    'id' => $asset->id,
+                    'name' => $asset->original_name,
+                    'type' => $asset->type,
+                    'mime' => $asset->mime,
+                    'size' => $asset->size,
+                    'kind' => $kind,
+                    'preview_url' => route('admin.lessons.media.show', [$lesson, $asset]),
+                    'destroy_url' => route('admin.lessons.media.destroy', [$lesson, $asset]),
+                ],
+            ], 201);
         }
 
         return back()->with('status', 'تم رفع الملف.');
