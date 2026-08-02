@@ -211,12 +211,16 @@ class CourseController extends Controller
             'instructor_user_id' => ['required', 'integer', 'exists:users,id'],
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'academic_year_id' => ['nullable', 'integer', 'exists:academic_years,id'],
-            'semester_id' => ['nullable', 'integer', 'exists:semesters,id'],
+            'semester_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('semesters', 'id')->where(
+                    fn ($query) => $query->where('academic_year_id', request()->input('academic_year_id'))
+                ),
+            ],
             'hours' => ['nullable', 'numeric', 'min:0'],
             'price' => ['nullable', 'numeric', 'min:0'],
             'status' => ['required', 'string', Rule::in(['draft', 'published', 'archived', 'hidden'])],
-            'schedule_text' => ['nullable', 'string', 'max:500'],
-            'term_label' => ['nullable', 'string', 'max:100'],
         ];
     }
 }

@@ -12,11 +12,10 @@
             <div><dt class="text-slate-500">المحاضر</dt><dd class="font-medium">{{ $course->instructor?->name ?? '—' }}</dd></div>
             <div><dt class="text-slate-500">التصنيف</dt><dd class="font-medium">{{ $course->category?->name ?? '—' }}</dd></div>
             <div><dt class="text-slate-500">السنة الدراسية</dt><dd class="font-medium">{{ $course->academicYear?->name ?? '—' }}</dd></div>
-            <div><dt class="text-slate-500">الفصل</dt><dd class="font-medium">{{ $course->semester?->name ?? $course->term_label ?? '—' }}</dd></div>
+            <div><dt class="text-slate-500">الفصل</dt><dd class="font-medium">{{ $course->semester?->name ?? '—' }}</dd></div>
             <div><dt class="text-slate-500">السعر</dt><dd class="font-medium">{{ $course->price !== null ? number_format((float) $course->price, 2).' ر.س' : '—' }}</dd></div>
             <div><dt class="text-slate-500">الحالة</dt><dd class="font-medium">{{ $statusLabels[$course->status] ?? $course->status }}</dd></div>
             <div><dt class="text-slate-500">الساعات</dt><dd class="font-medium">{{ $course->hours ?? '—' }}</dd></div>
-            <div><dt class="text-slate-500">الجدول</dt><dd class="font-medium">{{ $course->schedule_text ?? '—' }}</dd></div>
         </dl>
     </div>
     <div class="space-y-4">

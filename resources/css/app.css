@@ -134,6 +134,10 @@ body {
     --dash-sidebar: #0f172a;
 }
 
+[x-cloak] {
+    display: none !important;
+}
+
 .dashboard-sidebar {
     background: var(--dash-sidebar, var(--color-ink));
 }

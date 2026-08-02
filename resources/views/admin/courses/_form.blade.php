@@ -1,6 +1,14 @@
 @php
     $c = $course;
+    $selectedYear = (string) old('academic_year_id', $c?->academic_year_id ?? '');
+    $selectedSemester = (string) old('semester_id', $c?->semester_id ?? '');
+    $semestersPayload = $semesters->map(fn ($s) => [
+        'id' => (string) $s->id,
+        'name' => $s->name,
+        'academic_year_id' => (string) ($s->academic_year_id ?? ''),
+    ])->values();
 @endphp
+
 <div>
     <label class="mb-1 block text-sm font-medium" for="title">العنوان</label>
     <input id="title" name="title" value="{{ old('title', $c?->title) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
@@ -10,7 +18,22 @@
     <label class="mb-1 block text-sm font-medium" for="description">الوصف</label>
     <textarea id="description" name="description" rows="4" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">{{ old('description', $c?->description) }}</textarea>
 </div>
-<div class="grid gap-4 sm:grid-cols-2">
+<div
+    class="grid gap-4 sm:grid-cols-2"
+    x-data="{
+        yearId: @js($selectedYear),
+        semesterId: @js($selectedSemester),
+        semesters: @js($semestersPayload),
+        get filteredSemesters() {
+            if (! this.yearId) return [];
+            return this.semesters.filter(s => s.academic_year_id === this.yearId);
+        },
+        onYearChange() {
+            const stillValid = this.filteredSemesters.some(s => s.id === this.semesterId);
+            if (! stillValid) this.semesterId = '';
+        }
+    }"
+>
     <div>
         <label class="mb-1 block text-sm font-medium" for="instructor_user_id">المحاضر</label>
         <select id="instructor_user_id" name="instructor_user_id" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
@@ -31,21 +54,37 @@
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium" for="academic_year_id">السنة الدراسية</label>
-        <select id="academic_year_id" name="academic_year_id" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <select
+            id="academic_year_id"
+            name="academic_year_id"
+            class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            x-model="yearId"
+            @change="onYearChange()"
+        >
             <option value="">—</option>
             @foreach ($academicYears as $year)
-                <option value="{{ $year->id }}" @selected((string) old('academic_year_id', $c?->academic_year_id) === (string) $year->id)>{{ $year->name }}</option>
+                <option value="{{ $year->id }}">{{ $year->name }}</option>
             @endforeach
         </select>
+        @error('academic_year_id')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium" for="semester_id">الفصل الدراسي</label>
-        <select id="semester_id" name="semester_id" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <select
+            id="semester_id"
+            name="semester_id"
+            class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            x-model="semesterId"
+            :disabled="! yearId || filteredSemesters.length === 0"
+        >
             <option value="">—</option>
-            @foreach ($semesters as $semester)
-                <option value="{{ $semester->id }}" @selected((string) old('semester_id', $c?->semester_id) === (string) $semester->id)>{{ $semester->name }} @if($semester->academicYear) ({{ $semester->academicYear->name }}) @endif</option>
-            @endforeach
+            <template x-for="semester in filteredSemesters" :key="semester.id">
+                <option :value="semester.id" x-text="semester.name" :selected="semester.id === semesterId"></option>
+            </template>
         </select>
+        <p class="mt-1 text-xs text-slate-500" x-show="! yearId">اختر السنة الدراسية أولاً لعرض الفصول.</p>
+        <p class="mt-1 text-xs text-amber-700" x-show="yearId && filteredSemesters.length === 0" x-cloak>لا توجد فصول مرتبطة بهذه السنة.</p>
+        @error('semester_id')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium" for="price">السعر (ر.س)</label>
@@ -64,12 +103,4 @@
         <label class="mb-1 block text-sm font-medium" for="hours">الساعات</label>
         <input id="hours" type="number" step="0.5" name="hours" value="{{ old('hours', $c?->hours) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
     </div>
-    <div>
-        <label class="mb-1 block text-sm font-medium" for="term_label">الفصل / الترم (نص)</label>
-        <input id="term_label" name="term_label" value="{{ old('term_label', $c?->term_label) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
-    </div>
-</div>
-<div>
-    <label class="mb-1 block text-sm font-medium" for="schedule_text">الجدول</label>
-    <input id="schedule_text" name="schedule_text" value="{{ old('schedule_text', $c?->schedule_text) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
 </div>

@@ -81,7 +81,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-3 text-slate-600">{{ $course->semester?->name ?? $course->term_label ?? '—' }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ $course->semester?->name ?? '—' }}</td>
                     <td class="px-4 py-3 text-slate-600">{{ $course->academicYear?->name ?? '—' }}</td>
                     <td class="px-4 py-3 text-slate-600">{{ $course->instructor?->name ?? '—' }}</td>
                     <td class="px-4 py-3">{{ $course->price !== null ? number_format((float) $course->price, 2).' ر.س' : '—' }}</td>
