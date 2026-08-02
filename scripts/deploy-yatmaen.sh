@@ -27,8 +27,10 @@ php artisan view:cache
 php artisan event:cache || true
 
 echo "==> Queue workers"
-php artisan queue:restart || true
-sudo supervisorctl restart 'yatmaen-queue:*' || true
+# queue:restart writes a cache key (Redis). If Redis is slow/down it hangs forever;
+# || true never fires. Timeout so deploy continues; supervisorctl still reloads workers.
+timeout 15 php artisan queue:restart || echo "WARN: queue:restart timed out or failed (continuing)"
+sudo timeout 30 supervisorctl restart 'yatmaen-queue:*' || echo "WARN: supervisorctl restart failed (continuing)"
 
 echo "==> Permissions"
 chown -R deploy:www-data "$APP"

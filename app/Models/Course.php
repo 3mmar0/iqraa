@@ -14,6 +14,8 @@ class Course extends Model
     protected $fillable = [
         'title', 'description', 'instructor_user_id', 'category_id',
         'academic_year_id', 'semester_id', 'image_path',
+        'intro_video_path', 'intro_video_disk', 'intro_video_original_name',
+        'intro_video_mime', 'intro_video_size',
         'hours', 'price', 'status', 'schedule_text', 'term_label',
     ];
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController
 use App\Http\Controllers\Web\Admin\CommsController;
 use App\Http\Controllers\Web\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Web\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Web\Admin\CourseIntroVideoController;
 use App\Http\Controllers\Web\Admin\DashboardExportController;
 use App\Http\Controllers\Web\Admin\EnrollmentRequestController as AdminEnrollmentRequestController;
 use App\Http\Controllers\Web\Admin\FinanceOverviewController;
@@ -293,6 +294,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/courses/{course}/assign-semester', [AdminCourseController::class, 'assignSemester'])->name('courses.assign-semester');
         Route::post('/courses/{course}/enroll-student', [AdminCourseController::class, 'enrollStudent'])->name('courses.enroll-student');
         Route::post('/courses/{course}/unenroll-student', [AdminCourseController::class, 'unenrollStudent'])->name('courses.unenroll-student');
+        Route::post('/courses/{course}/intro-video/init', [CourseIntroVideoController::class, 'init'])->name('courses.intro-video.init');
+        Route::get('/courses/{course}/intro-video/uploads/{upload}', [CourseIntroVideoController::class, 'status'])->name('courses.intro-video.status');
+        Route::post('/courses/{course}/intro-video/uploads/{upload}/chunk', [CourseIntroVideoController::class, 'chunk'])->name('courses.intro-video.chunk');
+        Route::post('/courses/{course}/intro-video/uploads/{upload}/complete', [CourseIntroVideoController::class, 'complete'])->name('courses.intro-video.complete');
+        Route::get('/courses/{course}/intro-video/stream', [CourseIntroVideoController::class, 'stream'])->name('courses.intro-video.stream');
+        Route::delete('/courses/{course}/intro-video', [CourseIntroVideoController::class, 'destroy'])->name('courses.intro-video.destroy');
 
         Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
         Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
