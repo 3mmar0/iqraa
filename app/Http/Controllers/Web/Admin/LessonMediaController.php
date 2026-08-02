@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lesson;
 use App\Models\MediaAsset;
 use App\Services\AuditLogger;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -77,7 +78,7 @@ class LessonMediaController extends Controller
         }, $status, $headers);
     }
 
-    public function store(Request $request, Lesson $lesson): RedirectResponse
+    public function store(Request $request, Lesson $lesson): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
             'file' => ['required', 'file', 'max:204800'],
@@ -89,7 +90,19 @@ class LessonMediaController extends Controller
 
         $file = $validated['file'];
         $type = $validated['type'] ?? $this->guessType($file->getClientMimeType());
+        if ($type === '' || $type === null) {
+            $type = $this->guessType($file->getClientMimeType());
+        }
+
         $path = $file->store('lessons/'.$lesson->id, 'local_private');
+
+        if (! $path) {
+            if ($request->expectsJson() || $request->wantsJson() || $request->ajax()) {
+                return response()->json(['message' => 'تعذر حفظ الملف على الخادم.'], 500);
+            }
+
+            return back()->with('error', 'تعذر حفظ الملف على الخادم.');
+        }
 
         $asset = MediaAsset::query()->create([
             'lesson_id' => $lesson->id,
