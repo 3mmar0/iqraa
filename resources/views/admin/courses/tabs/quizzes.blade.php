@@ -63,41 +63,40 @@
         <p x-show="items.length === 0" class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center text-sm text-slate-500">لا اختبارات بعد.</p>
     </div>
 
-    <div x-show="open" x-cloak class="fixed inset-0 z-[80] flex items-end justify-center bg-black/45 p-4 sm:items-center" @click.self="close()">
-        <div class="w-full max-w-lg rounded-2xl bg-white p-5 shadow-xl" @click.stop>
-            <div class="mb-4 flex items-center justify-between">
-                <h3 class="font-semibold" x-text="editing ? 'تعديل الاختبار' : 'إضافة اختبار'"></h3>
-                <button type="button" @click="close()" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100" aria-label="إغلاق">✕</button>
+    <x-admin.modal show="open">
+        <x-slot:header>
+            <h3 class="text-base font-semibold text-slate-900" x-text="editing ? 'تعديل الاختبار' : 'إضافة اختبار'"></h3>
+            <p class="mt-0.5 text-xs text-slate-500">العنوان، المدة، وحالة النشر</p>
+        </x-slot:header>
+
+        <form method="POST" :action="editing ? editing.update_url : '{{ route('admin.quizzes.store') }}'" class="grid gap-4 sm:grid-cols-2" :key="editing ? ('q-'+editing.id) : 'q-new'">
+            @csrf
+            <template x-if="editing"><input type="hidden" name="_method" value="PUT"></template>
+            @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'quizzes'])
+            <input type="hidden" name="course_id" value="{{ $course->id }}">
+            <div class="sm:col-span-2">
+                <label class="admin-label">العنوان</label>
+                <input name="title" required class="admin-input" placeholder="عنوان الاختبار" :value="editing?.title || ''">
             </div>
-            <form method="POST" :action="editing ? editing.update_url : '{{ route('admin.quizzes.store') }}'" class="grid gap-3 sm:grid-cols-2" :key="editing ? ('q-'+editing.id) : 'q-new'">
-                @csrf
-                <template x-if="editing"><input type="hidden" name="_method" value="PUT"></template>
-                @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'quizzes'])
-                <input type="hidden" name="course_id" value="{{ $course->id }}">
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">العنوان</label>
-                    <input name="title" required class="w-full rounded-xl border px-3 py-2.5 text-sm" :value="editing?.title || ''">
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs text-slate-500">المدة (دقائق)</label>
-                    <input type="number" min="1" name="duration_minutes" class="w-full rounded-xl border px-3 py-2.5 text-sm" :value="editing?.duration_minutes || ''">
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs text-slate-500">الحالة</label>
-                    <select name="status" class="w-full rounded-xl border px-3 py-2.5 text-sm" x-effect="$el.value = editing?.status || 'draft'">
-                        <option value="draft">مسودة</option>
-                        <option value="published">منشور</option>
-                    </select>
-                </div>
-                <div class="flex items-center gap-2 sm:col-span-2">
-                    <input id="quiz_show_answers" type="checkbox" name="show_correct_answers" value="1" class="rounded border-slate-300" :checked="!!editing?.show_correct_answers">
-                    <label for="quiz_show_answers" class="text-sm">إظهار الإجابات الصحيحة بعد التسليم</label>
-                </div>
-                <div class="sm:col-span-2 flex gap-2 pt-1">
-                    <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white" x-text="editing ? 'حفظ' : 'إضافة'"></button>
-                    <button type="button" @click="close()" class="rounded-xl border px-4 py-2.5 text-sm">إلغاء</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div>
+                <label class="admin-label">المدة (دقائق)</label>
+                <input type="number" min="1" name="duration_minutes" class="admin-input" :value="editing?.duration_minutes || ''">
+            </div>
+            <div>
+                <label class="admin-label">الحالة</label>
+                <select name="status" class="admin-input" x-effect="$el.value = editing?.status || 'draft'">
+                    <option value="draft">مسودة</option>
+                    <option value="published">منشور</option>
+                </select>
+            </div>
+            <label class="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-700 sm:col-span-2">
+                <input id="quiz_show_answers" type="checkbox" name="show_correct_answers" value="1" class="rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]" :checked="!!editing?.show_correct_answers">
+                إظهار الإجابات الصحيحة بعد التسليم
+            </label>
+            <div class="sm:col-span-2 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+                <button class="admin-btn admin-btn-primary" x-text="editing ? 'حفظ' : 'إضافة'"></button>
+                <button type="button" @click="close()" class="admin-btn admin-btn-ghost">إلغاء</button>
+            </div>
+        </form>
+    </x-admin.modal>
 </div>

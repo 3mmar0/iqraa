@@ -66,51 +66,50 @@
         <p x-show="items.length === 0" class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center text-sm text-slate-500">لا واجبات بعد.</p>
     </div>
 
-    <div x-show="open" x-cloak class="fixed inset-0 z-[80] flex items-end justify-center bg-black/45 p-4 sm:items-center" @click.self="close()">
-        <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" @click.stop>
-            <div class="mb-4 flex items-center justify-between">
-                <h3 class="font-semibold" x-text="editing ? 'تعديل الواجب' : 'إضافة واجب'"></h3>
-                <button type="button" @click="close()" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100" aria-label="إغلاق">✕</button>
+    <x-admin.modal show="open">
+        <x-slot:header>
+            <h3 class="text-base font-semibold text-slate-900" x-text="editing ? 'تعديل الواجب' : 'إضافة واجب'"></h3>
+            <p class="mt-0.5 text-xs text-slate-500">أدخل بيانات الواجب ثم احفظ</p>
+        </x-slot:header>
+
+        <form method="POST" :action="editing ? editing.update_url : '{{ route('admin.assignments.store') }}'" class="grid gap-4 sm:grid-cols-2" :key="editing ? ('a-'+editing.id) : 'a-new'">
+            @csrf
+            <template x-if="editing"><input type="hidden" name="_method" value="PUT"></template>
+            @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'assignments'])
+            <input type="hidden" name="course_id" value="{{ $course->id }}">
+            <div class="sm:col-span-2">
+                <label class="admin-label">العنوان</label>
+                <input name="title" required class="admin-input" placeholder="عنوان الواجب" :value="editing?.title || ''">
             </div>
-            <form method="POST" :action="editing ? editing.update_url : '{{ route('admin.assignments.store') }}'" class="grid gap-3 sm:grid-cols-2" :key="editing ? ('a-'+editing.id) : 'a-new'">
-                @csrf
-                <template x-if="editing"><input type="hidden" name="_method" value="PUT"></template>
-                @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'assignments'])
-                <input type="hidden" name="course_id" value="{{ $course->id }}">
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">العنوان</label>
-                    <input name="title" required class="w-full rounded-xl border px-3 py-2.5 text-sm" :value="editing?.title || ''">
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">الوصف</label>
-                    <textarea name="description" rows="3" class="w-full rounded-xl border px-3 py-2.5 text-sm" x-effect="$el.value = editing?.description || ''"></textarea>
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs text-slate-500">الدرس (اختياري)</label>
-                    <select name="lesson_id" class="w-full rounded-xl border px-3 py-2.5 text-sm" x-effect="$el.value = editing?.lesson_id || ''">
-                        <option value="">—</option>
-                        <template x-for="lesson in lessons" :key="lesson.id">
-                            <option :value="lesson.id" x-text="lesson.title"></option>
-                        </template>
-                    </select>
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs text-slate-500">موعد التسليم</label>
-                    <input type="datetime-local" name="due_at" required class="w-full rounded-xl border px-3 py-2.5 text-sm" :value="editing?.due_at || ''">
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">الحالة</label>
-                    <select name="status" class="w-full rounded-xl border px-3 py-2.5 text-sm" x-effect="$el.value = editing?.status || 'draft'">
-                        @foreach ($statusLabels as $value => $label)
-                            <option value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="sm:col-span-2 flex gap-2 pt-1">
-                    <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white" x-text="editing ? 'حفظ' : 'إضافة'"></button>
-                    <button type="button" @click="close()" class="rounded-xl border px-4 py-2.5 text-sm">إلغاء</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div class="sm:col-span-2">
+                <label class="admin-label">الوصف</label>
+                <textarea name="description" rows="3" class="admin-input" placeholder="وصف مختصر..." x-effect="$el.value = editing?.description || ''"></textarea>
+            </div>
+            <div>
+                <label class="admin-label">الدرس (اختياري)</label>
+                <select name="lesson_id" class="admin-input" x-effect="$el.value = editing?.lesson_id || ''">
+                    <option value="">—</option>
+                    <template x-for="lesson in lessons" :key="lesson.id">
+                        <option :value="lesson.id" x-text="lesson.title"></option>
+                    </template>
+                </select>
+            </div>
+            <div>
+                <label class="admin-label">موعد التسليم</label>
+                <input type="datetime-local" name="due_at" required class="admin-input" :value="editing?.due_at || ''">
+            </div>
+            <div class="sm:col-span-2">
+                <label class="admin-label">الحالة</label>
+                <select name="status" class="admin-input" x-effect="$el.value = editing?.status || 'draft'">
+                    @foreach ($statusLabels as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="sm:col-span-2 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+                <button class="admin-btn admin-btn-primary" x-text="editing ? 'حفظ' : 'إضافة'"></button>
+                <button type="button" @click="close()" class="admin-btn admin-btn-ghost">إلغاء</button>
+            </div>
+        </form>
+    </x-admin.modal>
 </div>

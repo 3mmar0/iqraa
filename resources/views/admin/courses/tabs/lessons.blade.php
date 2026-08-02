@@ -96,197 +96,165 @@
     </div>
 
     {{-- Create / Edit modal --}}
-    <div
-        x-show="modal === 'form'"
-        x-cloak
-        class="fixed inset-0 z-[80] flex items-end justify-center bg-black/45 p-4 sm:items-center"
-        @click.self="close()"
-    >
-        <div
-            class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl"
-            @click.stop
-            x-transition
+    <x-admin.modal show="modal === 'form'">
+        <x-slot:header>
+            <h3 class="text-base font-semibold text-slate-900" x-text="editing ? 'تعديل الدرس' : 'إضافة درس'"></h3>
+            <p class="mt-0.5 text-xs text-slate-500">العنوان، الوصف، وحالة النشر</p>
+        </x-slot:header>
+
+        <form
+            method="POST"
+            :action="editing ? editing.update_url : '{{ route('admin.lessons.store') }}'"
+            class="grid gap-4 sm:grid-cols-2"
+            :key="editing ? ('edit-' + editing.id) : 'create'"
         >
-            <div class="mb-4 flex items-center justify-between gap-3">
-                <h3 class="text-base font-semibold text-slate-900" x-text="editing ? 'تعديل الدرس' : 'إضافة درس'"></h3>
-                <button type="button" @click="close()" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100" aria-label="إغلاق">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+            @csrf
+            <template x-if="editing">
+                <input type="hidden" name="_method" value="PUT">
+            </template>
+            @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'lessons'])
+            <input type="hidden" name="course_id" value="{{ $course->id }}">
+
+            <div class="sm:col-span-2">
+                <label class="admin-label">العنوان</label>
+                <input name="title" required class="admin-input" placeholder="عنوان الدرس" :value="editing?.title || ''">
             </div>
-
-            <form
-                method="POST"
-                :action="editing ? editing.update_url : '{{ route('admin.lessons.store') }}'"
-                class="grid gap-3 sm:grid-cols-2"
-                :key="editing ? ('edit-' + editing.id) : 'create'"
-            >
-                @csrf
-                <template x-if="editing">
-                    <input type="hidden" name="_method" value="PUT">
-                </template>
-                @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'lessons'])
-                <input type="hidden" name="course_id" value="{{ $course->id }}">
-
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">العنوان</label>
-                    <input name="title" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm" placeholder="عنوان الدرس"
-                           :value="editing?.title || ''">
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="mb-1 block text-xs text-slate-500">الوصف</label>
-                    <textarea name="description" rows="3" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                              x-effect="$el.value = editing?.description || ''"></textarea>
-                </div>
-                <div x-show="!!editing" x-cloak>
-                    <label class="mb-1 block text-xs text-slate-500">الترتيب</label>
-                    <input type="number" min="1" name="position" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                           :value="editing?.position || ''"
-                           :disabled="!editing">
-                </div>
-                <div :class="editing ? '' : 'sm:col-span-2'">
-                    <label class="mb-1 block text-xs text-slate-500">الحالة</label>
-                    <select name="status" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                            x-effect="$el.value = editing?.status || 'draft'">
-                        @foreach ($statusLabels as $value => $label)
-                            <option value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="flex items-center gap-2 sm:col-span-2">
-                    <input id="lesson_modal_locked" type="checkbox" name="is_locked" value="1" class="rounded border-slate-300"
-                           :checked="!!editing?.is_locked">
-                    <label for="lesson_modal_locked" class="text-sm">قفل الدرس</label>
-                </div>
-                <div class="sm:col-span-2 flex flex-wrap gap-2 pt-2">
-                    <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white"
-                            x-text="editing ? 'حفظ التعديلات' : 'إضافة الدرس'"></button>
-                    <button type="button" @click="close()" class="rounded-xl border px-4 py-2.5 text-sm">إلغاء</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div class="sm:col-span-2">
+                <label class="admin-label">الوصف</label>
+                <textarea name="description" rows="3" class="admin-input" x-effect="$el.value = editing?.description || ''"></textarea>
+            </div>
+            <div x-show="!!editing" x-cloak>
+                <label class="admin-label">الترتيب</label>
+                <input type="number" min="1" name="position" class="admin-input" :value="editing?.position || ''" :disabled="!editing">
+            </div>
+            <div :class="editing ? '' : 'sm:col-span-2'">
+                <label class="admin-label">الحالة</label>
+                <select name="status" class="admin-input" x-effect="$el.value = editing?.status || 'draft'">
+                    @foreach ($statusLabels as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <label class="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-700 sm:col-span-2">
+                <input id="lesson_modal_locked" type="checkbox" name="is_locked" value="1" class="rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]" :checked="!!editing?.is_locked">
+                قفل الدرس
+            </label>
+            <div class="sm:col-span-2 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+                <button type="submit" class="admin-btn admin-btn-primary" x-text="editing ? 'حفظ التعديلات' : 'إضافة الدرس'"></button>
+                <button type="button" @click="close()" class="admin-btn admin-btn-ghost">إلغاء</button>
+            </div>
+        </form>
+    </x-admin.modal>
 
     {{-- Media modal --}}
-    <div
-        x-show="modal === 'media' && mediaLesson()"
-        x-cloak
-        class="fixed inset-0 z-[80] flex items-end justify-center bg-black/45 p-4 sm:items-center"
-        @click.self="close()"
-    >
-        <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" @click.stop>
-            <div class="mb-4 flex items-center justify-between gap-3">
-                <div>
-                    <h3 class="text-base font-semibold text-slate-900">وسائط الدرس</h3>
-                    <p class="text-xs text-slate-500" x-text="mediaLesson()?.title"></p>
-                </div>
-                <button type="button" @click="close()" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100" aria-label="إغلاق">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
+    <x-admin.modal show="modal === 'media' && mediaLesson()" max-width="max-w-2xl">
+        <x-slot:header>
+            <h3 class="text-base font-semibold text-slate-900">وسائط الدرس</h3>
+            <p class="mt-0.5 text-xs text-slate-500" x-text="mediaLesson()?.title"></p>
+        </x-slot:header>
 
-            <template x-if="mediaLesson()">
-                <div>
-                    <template x-for="lesson in [mediaLesson()]" :key="'upload-'+lesson.id">
-                        <div
-                            class="mb-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4"
-                            x-data="mediaUploader({
-                                csrf: @js(csrf_token()),
-                                uploadUrl: lesson.media_store_url,
-                                reloadOnSuccess: true,
-                                showTypeSelect: true,
-                            })"
-                        >
-                            <div class="grid gap-3 sm:grid-cols-2">
-                                <div>
-                                    <label class="mb-1 block text-xs text-slate-500">الملف</label>
-                                    <input type="file" x-ref="fileInput" class="block w-full text-sm" @change="onPick($event)" :disabled="uploading">
-                                </div>
-                                <div>
-                                    <label class="mb-1 block text-xs text-slate-500">النوع</label>
-                                    <select x-model="type" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" :disabled="uploading">
-                                        <option value="">تلقائي</option>
-                                        <option value="video">فيديو</option>
-                                        <option value="pdf">PDF</option>
-                                        <option value="image">صورة</option>
-                                        <option value="attachment">مرفق</option>
-                                    </select>
-                                </div>
+        <template x-if="mediaLesson()">
+            <div>
+                <template x-for="lesson in [mediaLesson()]" :key="'upload-'+lesson.id">
+                    <div
+                        class="mb-4 space-y-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4"
+                        x-data="mediaUploader({
+                            csrf: @js(csrf_token()),
+                            uploadUrl: lesson.media_store_url,
+                            reloadOnSuccess: true,
+                            showTypeSelect: true,
+                        })"
+                    >
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <div>
+                                <label class="admin-label">الملف</label>
+                                <input type="file" x-ref="fileInput" class="block w-full text-sm" @change="onPick($event)" :disabled="uploading">
                             </div>
-
-                            <template x-if="previewKind === 'video' && previewUrl">
-                                <video class="max-h-56 w-full rounded-xl bg-black" controls preload="metadata" :src="previewUrl"></video>
-                            </template>
-                            <template x-if="previewKind === 'image' && previewUrl">
-                                <img :src="previewUrl" alt="معاينة" class="max-h-56 w-full rounded-xl object-contain bg-white">
-                            </template>
-                            <template x-if="previewKind === 'pdf' && previewUrl">
-                                <iframe :src="previewUrl" class="h-56 w-full rounded-xl border-0 bg-white" title="معاينة PDF"></iframe>
-                            </template>
-                            <template x-if="previewKind === 'file' && file">
-                                <div class="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-3 text-sm text-slate-600">
-                                    <span x-text="file.name"></span> · <span x-text="formatBytes(file.size)"></span>
-                                </div>
-                            </template>
-
-                            <div x-show="uploading || progress > 0" x-cloak>
-                                <div class="mb-1 flex justify-between text-xs text-slate-600">
-                                    <span x-text="message || 'الرفع'"></span>
-                                    <span><span x-text="progress"></span>%</span>
-                                </div>
-                                <div class="h-2.5 overflow-hidden rounded-full bg-slate-200">
-                                    <div class="h-full rounded-full bg-[var(--color-primary)] transition-all duration-200" :style="`width: ${progress}%`"></div>
-                                </div>
-                            </div>
-                            <p class="text-sm text-rose-700" x-show="error" x-text="error" x-cloak></p>
-
-                            <div class="flex flex-wrap gap-2">
-                                <button type="button" class="rounded-xl bg-slate-900 px-4 py-2 text-sm text-white disabled:opacity-50" @click="startUpload()" :disabled="uploading || ! file">
-                                    <span x-show="! uploading">رفع</span>
-                                    <span x-show="uploading" x-cloak>جارٍ الرفع…</span>
-                                </button>
-                                <button type="button" class="rounded-xl border px-4 py-2 text-sm" @click="cancel()" x-show="uploading" x-cloak>إلغاء</button>
+                            <div>
+                                <label class="admin-label">النوع</label>
+                                <select x-model="type" class="admin-input" :disabled="uploading">
+                                    <option value="">تلقائي</option>
+                                    <option value="video">فيديو</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="image">صورة</option>
+                                    <option value="attachment">مرفق</option>
+                                </select>
                             </div>
                         </div>
-                    </template>
 
-                    <ul class="space-y-4 text-sm">
-                        <template x-for="asset in mediaLesson().media" :key="asset.id">
-                            <li class="rounded-xl border border-slate-200 p-3">
-                                <div class="mb-2 flex items-center justify-between gap-3">
-                                    <div class="min-w-0">
-                                        <p class="truncate font-medium" x-text="asset.name"></p>
-                                        <p class="text-xs text-slate-400" x-text="asset.type"></p>
-                                    </div>
-                                    <form method="POST" :action="asset.destroy_url" onsubmit="return confirm('حذف الملف؟');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-xs text-rose-700 hover:underline">حذف</button>
-                                    </form>
-                                </div>
-
-                                <template x-if="asset.kind === 'video'">
-                                    <video class="max-h-56 w-full rounded-lg bg-black" controls preload="metadata" :src="asset.preview_url"></video>
-                                </template>
-                                <template x-if="asset.kind === 'image'">
-                                    <a :href="asset.preview_url" target="_blank" rel="noopener">
-                                        <img :src="asset.preview_url" :alt="asset.name" class="max-h-56 w-full rounded-lg object-contain bg-white">
-                                    </a>
-                                </template>
-                                <template x-if="asset.kind === 'pdf'">
-                                    <div>
-                                        <iframe :src="asset.preview_url" class="h-56 w-full rounded-lg border-0 bg-white" :title="asset.name"></iframe>
-                                        <a :href="asset.preview_url" target="_blank" rel="noopener" class="mt-2 inline-block text-xs text-[var(--color-primary)] hover:underline">فتح PDF</a>
-                                    </div>
-                                </template>
-                                <template x-if="asset.kind === 'file'">
-                                    <a :href="asset.preview_url" target="_blank" rel="noopener" class="inline-flex rounded-lg border px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">فتح / تنزيل</a>
-                                </template>
-                            </li>
+                        <template x-if="previewKind === 'video' && previewUrl">
+                            <video class="max-h-56 w-full rounded-xl bg-black" controls preload="metadata" :src="previewUrl"></video>
                         </template>
-                    </ul>
-                    <p x-show="! mediaLesson().media.length" class="py-4 text-center text-sm text-slate-500">لا وسائط لهذا الدرس.</p>
-                </div>
-            </template>
-        </div>
-    </div>
+                        <template x-if="previewKind === 'image' && previewUrl">
+                            <img :src="previewUrl" alt="معاينة" class="max-h-56 w-full rounded-xl object-contain bg-white">
+                        </template>
+                        <template x-if="previewKind === 'pdf' && previewUrl">
+                            <iframe :src="previewUrl" class="h-56 w-full rounded-xl border-0 bg-white" title="معاينة PDF"></iframe>
+                        </template>
+                        <template x-if="previewKind === 'file' && file">
+                            <div class="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-3 text-sm text-slate-600">
+                                <span x-text="file.name"></span> · <span x-text="formatBytes(file.size)"></span>
+                            </div>
+                        </template>
+
+                        <div x-show="uploading || progress > 0" x-cloak>
+                            <div class="mb-1 flex justify-between text-xs text-slate-600">
+                                <span x-text="message || 'الرفع'"></span>
+                                <span><span x-text="progress"></span>%</span>
+                            </div>
+                            <div class="h-2.5 overflow-hidden rounded-full bg-slate-200">
+                                <div class="h-full rounded-full bg-[var(--color-primary)] transition-all duration-200" :style="`width: ${progress}%`"></div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-rose-700" x-show="error" x-text="error" x-cloak></p>
+
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" class="admin-btn admin-btn-dark disabled:opacity-50" @click="startUpload()" :disabled="uploading || ! file">
+                                <span x-show="! uploading">رفع</span>
+                                <span x-show="uploading" x-cloak>جارٍ الرفع…</span>
+                            </button>
+                            <button type="button" class="admin-btn admin-btn-ghost" @click="cancel()" x-show="uploading" x-cloak>إلغاء</button>
+                        </div>
+                    </div>
+                </template>
+
+                <ul class="space-y-4 text-sm">
+                    <template x-for="asset in mediaLesson().media" :key="asset.id">
+                        <li class="rounded-2xl border border-slate-200 p-3">
+                            <div class="mb-2 flex items-center justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="truncate font-semibold" x-text="asset.name"></p>
+                                    <p class="text-xs text-slate-400" x-text="asset.type"></p>
+                                </div>
+                                <form method="POST" :action="asset.destroy_url" onsubmit="return confirm('حذف الملف؟');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>
+                                </form>
+                            </div>
+
+                            <template x-if="asset.kind === 'video'">
+                                <video class="max-h-56 w-full rounded-lg bg-black" controls preload="metadata" :src="asset.preview_url"></video>
+                            </template>
+                            <template x-if="asset.kind === 'image'">
+                                <a :href="asset.preview_url" target="_blank" rel="noopener">
+                                    <img :src="asset.preview_url" :alt="asset.name" class="max-h-56 w-full rounded-lg object-contain bg-white">
+                                </a>
+                            </template>
+                            <template x-if="asset.kind === 'pdf'">
+                                <div>
+                                    <iframe :src="asset.preview_url" class="h-56 w-full rounded-lg border-0 bg-white" :title="asset.name"></iframe>
+                                    <a :href="asset.preview_url" target="_blank" rel="noopener" class="mt-2 inline-block text-xs text-[var(--color-primary)] hover:underline">فتح PDF</a>
+                                </div>
+                            </template>
+                            <template x-if="asset.kind === 'file'">
+                                <a :href="asset.preview_url" target="_blank" rel="noopener" class="admin-btn admin-btn-ghost admin-btn-sm">فتح / تنزيل</a>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+                <p x-show="! mediaLesson().media.length" class="rounded-2xl border border-dashed border-slate-200 py-8 text-center text-sm text-slate-500">لا وسائط لهذا الدرس.</p>
+            </div>
+        </template>
+    </x-admin.modal>
 </div>
