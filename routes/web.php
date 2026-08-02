@@ -291,6 +291,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/courses/{course}/hide', [AdminCourseController::class, 'hide'])->name('courses.hide');
         Route::post('/courses/{course}/assign-teacher', [AdminCourseController::class, 'assignTeacher'])->name('courses.assign-teacher');
         Route::post('/courses/{course}/assign-semester', [AdminCourseController::class, 'assignSemester'])->name('courses.assign-semester');
+        Route::post('/courses/{course}/enroll-student', [AdminCourseController::class, 'enrollStudent'])->name('courses.enroll-student');
+        Route::post('/courses/{course}/unenroll-student', [AdminCourseController::class, 'unenrollStudent'])->name('courses.unenroll-student');
 
         Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
         Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');

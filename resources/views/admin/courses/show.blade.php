@@ -5,11 +5,13 @@
 @section('subheading', 'تفاصيل المقرر وإدارته')
 
 @section('header-actions')
-    <a href="{{ route('admin.courses.edit', $course) }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">تعديل</a>
-    <a href="{{ route('admin.lessons.create', ['course_id' => $course->id]) }}" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">درس جديد</a>
+    <a href="{{ route('admin.courses.index') }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">رجوع</a>
+    <a href="{{ route('admin.courses.edit', $course) }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">تعديل المقرر</a>
 @endsection
 
 @section('content')
+    @include('components.alert')
+
     @php
         $tabs = [
             ['label' => 'عام', 'href' => route('admin.courses.show', [$course, 'tab' => 'general']), 'active' => $tab === 'general'],

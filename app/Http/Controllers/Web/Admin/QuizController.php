@@ -15,6 +15,8 @@ use Modules\Quizzes\Services\QuizAdminService;
 
 class QuizController extends Controller
 {
+    use Concerns\ReturnsToCourse;
+
     public function __construct(private readonly QuizAdminService $quizzes)
     {
     }
@@ -62,7 +64,10 @@ class QuizController extends Controller
             app(AuditLogger::class)->log($request->user(), 'quiz.created', 'quiz', $quiz->id);
         }
 
-        return redirect()->route('admin.quizzes.show', $quiz)->with('status', 'تم إنشاء الاختبار.');
+        $status = 'تم إنشاء الاختبار.';
+
+        return $this->redirectToCourseContext($request, $status, 'quizzes')
+            ?? redirect()->route('admin.quizzes.show', $quiz)->with('status', $status);
     }
 
     public function show(Request $request, Quiz $quiz): View
@@ -100,7 +105,10 @@ class QuizController extends Controller
             app(AuditLogger::class)->log($request->user(), 'quiz.updated', 'quiz', $quiz->id);
         }
 
-        return redirect()->route('admin.quizzes.show', $quiz)->with('status', 'تم تحديث الاختبار.');
+        $status = 'تم تحديث الاختبار.';
+
+        return $this->redirectToCourseContext($request, $status, 'quizzes')
+            ?? redirect()->route('admin.quizzes.show', $quiz)->with('status', $status);
     }
 
     public function destroy(Request $request, Quiz $quiz): RedirectResponse
@@ -112,7 +120,10 @@ class QuizController extends Controller
             app(AuditLogger::class)->log($request->user(), 'quiz.deleted', 'quiz', $id);
         }
 
-        return redirect()->route('admin.quizzes.index')->with('status', 'تم حذف الاختبار.');
+        $status = 'تم حذف الاختبار.';
+
+        return $this->redirectToCourseContext($request, $status, 'quizzes')
+            ?? redirect()->route('admin.quizzes.index')->with('status', $status);
     }
 
     public function duplicate(Request $request, Quiz $quiz): RedirectResponse

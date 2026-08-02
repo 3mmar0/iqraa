@@ -16,6 +16,8 @@ use Modules\Catalog\Services\LessonAdminService;
 
 class LessonController extends Controller
 {
+    use Concerns\ReturnsToCourse;
+
     public function __construct(private readonly LessonAdminService $lessons)
     {
     }
@@ -72,7 +74,10 @@ class LessonController extends Controller
             app(AuditLogger::class)->log($request->user(), 'lesson.created', 'lesson', $lesson->id);
         }
 
-        return redirect()->route('admin.lessons.show', $lesson)->with('status', 'تم إنشاء الدرس.');
+        $status = 'تم إنشاء الدرس.';
+
+        return $this->redirectToCourseContext($request, $status, 'lessons')
+            ?? redirect()->route('admin.lessons.show', $lesson)->with('status', $status);
     }
 
     public function show(Request $request, Lesson $lesson): View
@@ -112,7 +117,10 @@ class LessonController extends Controller
             app(AuditLogger::class)->log($request->user(), 'lesson.updated', 'lesson', $lesson->id);
         }
 
-        return redirect()->route('admin.lessons.show', $lesson)->with('status', 'تم تحديث الدرس.');
+        $status = 'تم تحديث الدرس.';
+
+        return $this->redirectToCourseContext($request, $status, 'lessons')
+            ?? redirect()->route('admin.lessons.show', $lesson)->with('status', $status);
     }
 
     public function destroy(Request $request, Lesson $lesson): RedirectResponse
@@ -125,8 +133,10 @@ class LessonController extends Controller
             app(AuditLogger::class)->log($request->user(), 'lesson.deleted', 'lesson', $id);
         }
 
-        return redirect()->route('admin.lessons.index', ['course_id' => $courseId])
-            ->with('status', 'تم حذف الدرس.');
+        $status = 'تم حذف الدرس.';
+
+        return $this->redirectToCourseContext($request, $status, 'lessons')
+            ?? redirect()->route('admin.lessons.index', ['course_id' => $courseId])->with('status', $status);
     }
 
     public function lock(Request $request, Lesson $lesson): RedirectResponse

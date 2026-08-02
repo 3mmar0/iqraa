@@ -14,11 +14,14 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Modules\Catalog\Services\CourseAdminService;
+use Modules\Students\Services\StudentAdminService;
 
 class CourseController extends Controller
 {
-    public function __construct(private readonly CourseAdminService $courses)
-    {
+    public function __construct(
+        private readonly CourseAdminService $courses,
+        private readonly StudentAdminService $students,
+    ) {
     }
 
     public function index(Request $request): View
@@ -89,13 +92,25 @@ class CourseController extends Controller
             'semester',
             'lessons' => fn ($q) => $q->orderBy('position')->with('mediaAssets'),
             'quizzes',
-            'assignments',
+            'assignments.lesson',
             'enrollments.user',
         ]);
 
         $course->loadCount(['lessons', 'enrollments']);
 
-        return view('admin.courses.show', compact('course', 'tab'));
+        $availableStudents = collect();
+        if ($tab === 'students') {
+            $enrolledIds = $course->enrollments->where('status', 'active')->pluck('user_id');
+            $availableStudents = User::query()
+                ->whereHas('roles', fn ($q) => $q->where('slug', 'student'))
+                ->whereNotIn('id', $enrolledIds)
+                ->where('status', 'active')
+                ->orderBy('name')
+                ->limit(300)
+                ->get(['id', 'name', 'email']);
+        }
+
+        return view('admin.courses.show', compact('course', 'tab', 'availableStudents'));
     }
 
     public function edit(Course $course): View
@@ -186,6 +201,38 @@ class CourseController extends Controller
         );
 
         return back()->with('status', 'تم تعيين السنة والفصل الدراسي.');
+    }
+
+    public function enrollStudent(Request $request, Course $course): RedirectResponse
+    {
+        $validated = $request->validate([
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+        ], [
+            'user_id.required' => 'اختر طالباً.',
+        ]);
+
+        $student = User::query()->findOrFail($validated['user_id']);
+        abort_unless($student->hasRole('student'), 422);
+
+        $this->students->assignCourse($student, $course->id, $request->user());
+
+        return redirect()
+            ->route('admin.courses.show', ['course' => $course, 'tab' => 'students'])
+            ->with('status', 'تم إلحاق الطالب بالمقرر.');
+    }
+
+    public function unenrollStudent(Request $request, Course $course): RedirectResponse
+    {
+        $validated = $request->validate([
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+        ]);
+
+        $student = User::query()->findOrFail($validated['user_id']);
+        $this->students->removeCourse($student, $course->id, $request->user());
+
+        return redirect()
+            ->route('admin.courses.show', ['course' => $course, 'tab' => 'students'])
+            ->with('status', 'تم إزالة الطالب من المقرر.');
     }
 
     /** @return array<string, mixed> */

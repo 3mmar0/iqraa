@@ -14,6 +14,8 @@ use Illuminate\View\View;
 
 class AssignmentController extends Controller
 {
+    use Concerns\ReturnsToCourse;
+
     public function index(Request $request): View
     {
         $query = Assignment::query()->with(['course', 'lesson'])->withCount('submissions')->latest();
@@ -56,7 +58,10 @@ class AssignmentController extends Controller
             app(AuditLogger::class)->log($request->user(), 'assignment.created', 'assignment', $assignment->id);
         }
 
-        return redirect()->route('admin.assignments.show', $assignment)->with('status', 'تم إنشاء الواجب.');
+        $status = 'تم إنشاء الواجب.';
+
+        return $this->redirectToCourseContext($request, $status, 'assignments')
+            ?? redirect()->route('admin.assignments.show', $assignment)->with('status', $status);
     }
 
     public function show(Assignment $assignment): View
@@ -86,7 +91,10 @@ class AssignmentController extends Controller
             app(AuditLogger::class)->log($request->user(), 'assignment.updated', 'assignment', $assignment->id);
         }
 
-        return redirect()->route('admin.assignments.show', $assignment)->with('status', 'تم تحديث الواجب.');
+        $status = 'تم تحديث الواجب.';
+
+        return $this->redirectToCourseContext($request, $status, 'assignments')
+            ?? redirect()->route('admin.assignments.show', $assignment)->with('status', $status);
     }
 
     public function destroy(Request $request, Assignment $assignment): RedirectResponse
@@ -98,7 +106,10 @@ class AssignmentController extends Controller
             app(AuditLogger::class)->log($request->user(), 'assignment.deleted', 'assignment', $id);
         }
 
-        return redirect()->route('admin.assignments.index')->with('status', 'تم حذف الواجب.');
+        $status = 'تم حذف الواجب.';
+
+        return $this->redirectToCourseContext($request, $status, 'assignments')
+            ?? redirect()->route('admin.assignments.index')->with('status', $status);
     }
 
     /** @return array<string, list<mixed>> */
