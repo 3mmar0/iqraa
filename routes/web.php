@@ -274,6 +274,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/students/{student}/reset-password', [AdminStudentController::class, 'resetPassword'])->name('students.reset-password');
         Route::post('/students/{student}/assign-course', [AdminStudentController::class, 'assignCourse'])->name('students.assign-course');
         Route::post('/students/{student}/remove-course', [AdminStudentController::class, 'removeCourse'])->name('students.remove-course');
+        Route::post('/students/{student}/placement', [AdminStudentController::class, 'updatePlacement'])->name('students.placement');
+        Route::post('/students/{student}/notes', [AdminStudentController::class, 'updateNotes'])->name('students.notes');
         Route::post('/students/{student}/impersonate', [ImpersonationController::class, 'start'])->name('students.impersonate');
 
         Route::get('/courses', [AdminCourseController::class, 'index'])->name('courses.index');

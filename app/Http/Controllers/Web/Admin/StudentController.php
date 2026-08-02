@@ -73,8 +73,9 @@ class StudentController extends Controller
         $student->load(['roles', 'subscriptions', 'group', 'academicYear', 'semester']);
 
         $tabData = $this->tabData($student, $tab);
+        $controls = $this->controlOptions($student);
 
-        return view('admin.students.show', compact('student', 'tab', 'tabData'));
+        return view('admin.students.show', compact('student', 'tab', 'tabData', 'controls'));
     }
 
     public function edit(User $student): View
@@ -180,6 +181,38 @@ class StudentController extends Controller
         return back()->with('status', 'تم إزالة المقرر من الطالب.');
     }
 
+    public function updatePlacement(Request $request, User $student): RedirectResponse
+    {
+        $this->ensureStudent($student);
+
+        $validated = $request->validate([
+            'academic_year_id' => ['nullable', 'integer', 'exists:academic_years,id'],
+            'semester_id' => ['nullable', 'integer', 'exists:semesters,id'],
+            'group_id' => ['nullable', 'integer', 'exists:groups,id'],
+            'university' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', 'string', 'in:active,invited,disabled'],
+        ], [
+            'status.required' => 'الحالة مطلوبة.',
+        ]);
+
+        $this->students->updatePlacement($student, $validated, $request->user());
+
+        return back()->with('status', 'تم تحديث تصنيف الطالب.');
+    }
+
+    public function updateNotes(Request $request, User $student): RedirectResponse
+    {
+        $this->ensureStudent($student);
+
+        $validated = $request->validate([
+            'admin_notes' => ['nullable', 'string', 'max:10000'],
+        ]);
+
+        $this->students->updateNotes($student, $validated['admin_notes'] ?? null, $request->user());
+
+        return back()->with('status', 'تم حفظ الملاحظات.');
+    }
+
     /** @return array<string, mixed> */
     private function formOptions(): array
     {
@@ -188,6 +221,32 @@ class StudentController extends Controller
             'semesters' => Semester::query()->orderByDesc('starts_on')->get(),
             'groups' => Group::query()->orderBy('name')->get(),
             'courses' => Course::query()->where('status', 'published')->orderBy('title')->get(['id', 'title']),
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    private function controlOptions(User $student): array
+    {
+        $enrolledIds = Enrollment::query()
+            ->where('user_id', $student->id)
+            ->where('status', 'active')
+            ->pluck('course_id');
+
+        return [
+            'academicYears' => AcademicYear::query()->orderByDesc('starts_on')->get(['id', 'name']),
+            'semesters' => Semester::query()->orderByDesc('starts_on')->get(['id', 'name']),
+            'groups' => Group::query()->orderBy('name')->get(['id', 'name']),
+            'courses' => Course::query()
+                ->where('status', 'published')
+                ->whereNotIn('id', $enrolledIds)
+                ->orderBy('title')
+                ->get(['id', 'title']),
+            'enrollments_count' => $enrolledIds->count(),
+            'orders_count' => Order::query()->where('user_id', $student->id)->count(),
+            'active_subscription' => Subscription::query()
+                ->where('user_id', $student->id)
+                ->where('status', 'active')
+                ->first(),
         ];
     }
 
@@ -201,7 +260,14 @@ class StudentController extends Controller
                     ->where('user_id', $student->id)
                     ->latest()
                     ->get(),
-                'courses' => Course::query()->where('status', 'published')->orderBy('title')->get(['id', 'title']),
+                'courses' => Course::query()
+                    ->where('status', 'published')
+                    ->whereNotIn('id', Enrollment::query()
+                        ->where('user_id', $student->id)
+                        ->where('status', 'active')
+                        ->select('course_id'))
+                    ->orderBy('title')
+                    ->get(['id', 'title']),
             ],
             'payments' => [
                 'transactions' => FinanceTransaction::query()
@@ -256,7 +322,7 @@ class StudentController extends Controller
                     : collect(),
             ],
             'notes' => [
-                'placeholder' => true,
+                'admin_notes' => $student->admin_notes,
             ],
             default => [
                 'enrollments_count' => Enrollment::query()->where('user_id', $student->id)->where('status', 'active')->count(),

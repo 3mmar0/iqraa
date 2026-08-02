@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[var(--color-sand)] text-[var(--color-text)] antialiased" data-dashboard="{{ $dashboardTheme ?? 'student' }}" x-data="{ sidebarOpen: false }">
+<body class="min-h-screen bg-[var(--color-sand)] text-[var(--color-text)] antialiased" data-dashboard="{{ $dashboardTheme ?? 'student' }}" x-data="{ sidebarOpen: false }" :class="{ 'max-lg:overflow-hidden': sidebarOpen }">
     @if (session()->has('impersonator_id'))
         <div class="relative z-[60] bg-[var(--color-accent)] px-4 py-2 text-center text-sm font-medium text-amber-950">
             أنت تتصفح الآن كـ <strong>{{ auth()->user()->name }}</strong>
@@ -19,18 +19,21 @@
         </div>
     @endif
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen" @keydown.escape.window="sidebarOpen = false">
         <div
             x-show="sidebarOpen"
             x-transition.opacity
             class="fixed inset-0 z-40 bg-black/45 lg:hidden"
             @click="sidebarOpen = false"
             style="display: none;"
+            aria-hidden="true"
         ></div>
 
         <aside
-            class="dashboard-sidebar fixed inset-y-0 right-0 z-50 flex w-72 translate-x-full flex-col text-white transition-transform duration-300 ease-out lg:static lg:translate-x-0"
-            :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
+            id="dashboard-sidebar"
+            class="dashboard-sidebar fixed inset-y-0 right-0 z-50 flex w-72 flex-col text-white transition-transform duration-300 ease-out max-lg:translate-x-full lg:static lg:translate-x-0"
+            :class="{ 'max-lg:!translate-x-0 max-lg:shadow-2xl': sidebarOpen }"
+            :aria-hidden="(!sidebarOpen).toString()"
             @if(session()->has('impersonator_id')) style="top: 2.5rem;" @endif
         >
             <div class="flex items-center justify-between border-b border-white/10 px-5 py-5">
@@ -104,7 +107,14 @@
             <header class="sticky top-0 z-30 border-b border-[var(--color-line)] bg-white/90 backdrop-blur">
                 <div class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
                     <div class="flex items-center gap-3">
-                        <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-line)] bg-white text-slate-700 shadow-sm lg:hidden" @click="sidebarOpen = true" aria-label="فتح القائمة">
+                        <button
+                            type="button"
+                            class="relative z-50 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-line)] bg-white text-slate-700 shadow-sm lg:hidden"
+                            @click="sidebarOpen = !sidebarOpen"
+                            :aria-expanded="sidebarOpen.toString()"
+                            aria-controls="dashboard-sidebar"
+                            aria-label="فتح القائمة"
+                        >
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </button>
                         <div>
@@ -114,7 +124,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">@yield('header-actions')</div>
+                    <div class="flex max-w-[58%] flex-wrap items-center justify-end gap-2 sm:max-w-none">@yield('header-actions')</div>
                 </div>
             </header>
 

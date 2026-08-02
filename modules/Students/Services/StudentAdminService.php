@@ -165,6 +165,26 @@ class StudentAdminService
         ]);
     }
 
+    public function updatePlacement(User $user, array $data, ?User $actor = null): User
+    {
+        $user->fill(collect($data)->only([
+            'academic_year_id', 'semester_id', 'group_id', 'university', 'status',
+        ])->all());
+        $user->save();
+
+        $this->audit->log($actor, 'student.placement_updated', User::class, $user->id, $data);
+
+        return $user->fresh();
+    }
+
+    public function updateNotes(User $user, ?string $notes, ?User $actor = null): User
+    {
+        $user->update(['admin_notes' => $notes]);
+        $this->audit->log($actor, 'student.notes_updated', User::class, $user->id);
+
+        return $user;
+    }
+
     /** @param  list<int>  $ids */
     public function bulkStatus(array $ids, string $status, ?User $actor = null): int
     {

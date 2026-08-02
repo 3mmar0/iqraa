@@ -26,7 +26,12 @@
             @forelse ($tabData['enrollments'] ?? [] as $enrollment)
                 <tr>
                     <td class="px-3 py-2 font-medium">{{ $enrollment->course?->title ?? '—' }}</td>
-                    <td class="px-3 py-2">{{ $enrollment->status }}</td>
+                    <td class="px-3 py-2">
+                        @php
+                            $enrollLabel = ['active' => 'نشط', 'revoked' => 'ملغى', 'completed' => 'مكتمل'][$enrollment->status] ?? $enrollment->status;
+                        @endphp
+                        {{ $enrollLabel }}
+                    </td>
                     <td class="px-3 py-2 text-slate-500">{{ $enrollment->enrolled_at?->format('Y-m-d') ?? '—' }}</td>
                     <td class="px-3 py-2">
                         @if ($enrollment->status === 'active')
