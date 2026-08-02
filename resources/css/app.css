@@ -236,3 +236,216 @@ body {
     flex-shrink: 0;
     opacity: 0.9;
 }
+
+/* Educational content admin surfaces */
+.admin-panel {
+    border-radius: 1.15rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    box-shadow: 0 10px 28px -18px rgba(15, 23, 42, 0.45);
+}
+
+.admin-panel-soft {
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-line) 85%, transparent);
+    background: linear-gradient(180deg, #fff 0%, color-mix(in srgb, var(--color-sand) 55%, #fff) 100%);
+}
+
+.admin-input {
+    width: 100%;
+    border-radius: 0.85rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.admin-input:hover {
+    border-color: #cbd5e1;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+
+.admin-input:disabled {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.admin-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.admin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 0.85rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.admin-btn:active {
+    transform: translateY(1px);
+}
+
+.admin-btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 8px 18px -12px color-mix(in srgb, var(--color-primary) 80%, transparent);
+}
+
+.admin-btn-primary:hover {
+    background: var(--color-primary-hover);
+}
+
+.admin-btn-dark {
+    background: #0f172a;
+    color: #fff;
+}
+
+.admin-btn-dark:hover {
+    background: #1e293b;
+}
+
+.admin-btn-ghost {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #334155;
+}
+
+.admin-btn-ghost:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.admin-btn-danger {
+    border: 1px solid #fecdd3;
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.admin-btn-danger:hover {
+    background: #ffe4e6;
+}
+
+.admin-btn-sm {
+    border-radius: 0.7rem;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.admin-table tbody tr {
+    transition: background-color 0.12s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: color-mix(in srgb, var(--color-teal-50) 70%, #fff);
+}
+
+.admin-table th {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.admin-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.admin-chip-published,
+.admin-chip-active {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.admin-chip-draft,
+.admin-chip-invited {
+    background: #f8fafc;
+    color: #475569;
+}
+
+.admin-chip-archived,
+.admin-chip-hidden,
+.admin-chip-disabled {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.admin-chip-scheduled,
+.admin-chip-warning {
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.admin-entity-thumb {
+    display: flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0.85rem;
+    background: linear-gradient(145deg, var(--color-teal-100), var(--color-indigo-100));
+    color: var(--color-primary-hover);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.admin-entity-thumb img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.admin-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    border: 1px solid var(--color-line);
+    background: linear-gradient(180deg, #fff, #f8fafc);
+}
+
+@keyframes admin-panel-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.admin-content-enter {
+    animation: admin-panel-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

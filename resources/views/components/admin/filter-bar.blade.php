@@ -1,3 +1,3 @@
-<div {{ $attributes->merge(['class' => 'flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--color-line)] bg-white p-4 shadow-sm']) }}>
+<div {{ $attributes->merge(['class' => 'admin-panel-soft flex flex-wrap items-end gap-3 p-4 sm:p-5']) }}>
     {{ $slot }}
 </div>

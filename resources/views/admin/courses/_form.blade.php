@@ -10,13 +10,13 @@
 @endphp
 
 <div>
-    <label class="mb-1 block text-sm font-medium" for="title">العنوان</label>
-    <input id="title" name="title" value="{{ old('title', $c?->title) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+    <label class="admin-label" for="title">العنوان</label>
+    <input id="title" name="title" value="{{ old('title', $c?->title) }}" required class="admin-input">
     @error('title')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
 </div>
 <div>
-    <label class="mb-1 block text-sm font-medium" for="description">الوصف</label>
-    <textarea id="description" name="description" rows="4" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">{{ old('description', $c?->description) }}</textarea>
+    <label class="admin-label" for="description">الوصف</label>
+    <textarea id="description" name="description" rows="4" class="admin-input">{{ old('description', $c?->description) }}</textarea>
 </div>
 <div
     class="grid gap-4 sm:grid-cols-2"
@@ -35,8 +35,8 @@
     }"
 >
     <div>
-        <label class="mb-1 block text-sm font-medium" for="instructor_user_id">المحاضر</label>
-        <select id="instructor_user_id" name="instructor_user_id" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <label class="admin-label" for="instructor_user_id">المحاضر</label>
+        <select id="instructor_user_id" name="instructor_user_id" required class="admin-input">
             <option value="">اختر محاضراً</option>
             @foreach ($instructors as $instructor)
                 <option value="{{ $instructor->id }}" @selected((string) old('instructor_user_id', $c?->instructor_user_id) === (string) $instructor->id)>{{ $instructor->name }}</option>
@@ -44,8 +44,8 @@
         </select>
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium" for="category_id">التصنيف</label>
-        <select id="category_id" name="category_id" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <label class="admin-label" for="category_id">التصنيف</label>
+        <select id="category_id" name="category_id" class="admin-input">
             <option value="">بدون تصنيف</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}" @selected((string) old('category_id', $c?->category_id) === (string) $category->id)>{{ $category->name }}</option>
@@ -53,11 +53,11 @@
         </select>
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium" for="academic_year_id">السنة الدراسية</label>
+        <label class="admin-label" for="academic_year_id">السنة الدراسية</label>
         <select
             id="academic_year_id"
             name="academic_year_id"
-            class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            class="admin-input"
             x-model="yearId"
             @change="onYearChange()"
         >
@@ -69,11 +69,11 @@
         @error('academic_year_id')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium" for="semester_id">الفصل الدراسي</label>
+        <label class="admin-label" for="semester_id">الفصل الدراسي</label>
         <select
             id="semester_id"
             name="semester_id"
-            class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            class="admin-input"
             x-model="semesterId"
             :disabled="! yearId || filteredSemesters.length === 0"
         >
@@ -87,12 +87,12 @@
         @error('semester_id')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium" for="price">السعر (ر.س)</label>
-        <input id="price" type="number" step="0.01" min="0" name="price" value="{{ old('price', $c?->price) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <label class="admin-label" for="price">السعر (ر.س)</label>
+        <input id="price" type="number" step="0.01" min="0" name="price" value="{{ old('price', $c?->price) }}" class="admin-input">
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium" for="status">الحالة</label>
-        <select id="status" name="status" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <label class="admin-label" for="status">الحالة</label>
+        <select id="status" name="status" class="admin-input">
             <option value="draft" @selected(old('status', $c?->status ?? 'draft') === 'draft')>مسودة</option>
             <option value="published" @selected(old('status', $c?->status) === 'published')>منشور</option>
             <option value="hidden" @selected(old('status', $c?->status) === 'hidden')>مخفي</option>
@@ -100,7 +100,7 @@
         </select>
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium" for="hours">الساعات</label>
-        <input id="hours" type="number" step="0.5" name="hours" value="{{ old('hours', $c?->hours) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+        <label class="admin-label" for="hours">الساعات</label>
+        <input id="hours" type="number" step="0.5" name="hours" value="{{ old('hours', $c?->hours) }}" class="admin-input">
     </div>
 </div>

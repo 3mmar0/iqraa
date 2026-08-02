@@ -5,13 +5,19 @@
 @section('subheading', $course->title)
 
 @section('content')
-    <form method="POST" action="{{ route('admin.courses.update', $course) }}" class="mx-auto max-w-3xl space-y-5 rounded-2xl border border-[var(--color-line)] bg-white p-6">
-        @csrf
-        @method('PUT')
-        @include('admin.courses._form', ['course' => $course])
-        <div class="flex gap-2">
-            <button class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">حفظ التعديلات</button>
-            <a href="{{ route('admin.courses.show', $course) }}" class="rounded-xl border px-4 py-2.5 text-sm">رجوع</a>
-        </div>
-    </form>
+    <x-admin.form-shell>
+        <x-slot:header>
+            <p class="text-sm font-semibold text-slate-800">تعديل بيانات المقرر</p>
+            <p class="mt-0.5 text-xs text-slate-500">{{ $course->title }}</p>
+        </x-slot:header>
+        <form method="POST" action="{{ route('admin.courses.update', $course) }}" class="space-y-5">
+            @csrf
+            @method('PUT')
+            @include('admin.courses._form', ['course' => $course])
+            <div class="flex flex-wrap gap-2 border-t border-slate-100 pt-5">
+                <button class="admin-btn admin-btn-primary">حفظ التعديلات</button>
+                <a href="{{ route('admin.courses.show', $course) }}" class="admin-btn admin-btn-ghost">رجوع</a>
+            </div>
+        </form>
+    </x-admin.form-shell>
 @endsection

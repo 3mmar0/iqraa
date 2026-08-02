@@ -5,52 +5,78 @@
 @section('subheading', $assignment->course?->title)
 
 @section('header-actions')
-    <a href="{{ route('admin.assignments.edit', $assignment) }}" class="rounded-xl border bg-white px-4 py-2.5 text-sm">تعديل</a>
+    <a href="{{ route('admin.assignments.index') }}" class="admin-btn admin-btn-ghost">رجوع</a>
+    <a href="{{ route('admin.assignments.edit', $assignment) }}" class="admin-btn admin-btn-primary">تعديل</a>
 @endsection
 
 @section('content')
-    <div class="mb-6 grid gap-4 lg:grid-cols-3">
-        <div class="rounded-2xl border border-[var(--color-line)] bg-white p-5 lg:col-span-2">
-            <p class="text-sm text-slate-600 whitespace-pre-line">{{ $assignment->description ?: 'لا يوجد وصف.' }}</p>
-            <dl class="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
-                <div><dt class="text-slate-500">المقرر</dt><dd class="font-medium">{{ $assignment->course?->title }}</dd></div>
-                <div><dt class="text-slate-500">الدرس</dt><dd class="font-medium">{{ $assignment->lesson?->title ?? '—' }}</dd></div>
-                <div><dt class="text-slate-500">موعد التسليم</dt><dd class="font-medium">{{ $assignment->due_at?->format('Y-m-d H:i') }}</dd></div>
-                <div><dt class="text-slate-500">الحالة</dt><dd class="font-medium">{{ $assignment->status }}</dd></div>
-            </dl>
+    @php
+        $statusLabels = ['draft' => 'مسودة', 'published' => 'منشور', 'archived' => 'مؤرشف'];
+    @endphp
+
+    <div class="admin-content-enter space-y-5">
+        <div class="grid gap-5 lg:grid-cols-3">
+            <div class="admin-panel p-5 sm:p-6 lg:col-span-2">
+                <div class="mb-4 flex flex-wrap items-center gap-2">
+                    <x-admin.status-badge :status="$assignment->status" :label="$statusLabels[$assignment->status] ?? $assignment->status" />
+                    @if ($assignment->due_at)
+                        <span class="admin-chip admin-chip-warning">التسليم: {{ $assignment->due_at->format('Y-m-d H:i') }}</span>
+                    @endif
+                </div>
+                <p class="text-sm leading-7 text-slate-600 whitespace-pre-line">{{ $assignment->description ?: 'لا يوجد وصف.' }}</p>
+                <dl class="mt-5 grid gap-3 sm:grid-cols-2">
+                    @foreach ([
+                        ['المقرر', $assignment->course?->title],
+                        ['الدرس', $assignment->lesson?->title ?? '—'],
+                        ['موعد التسليم', $assignment->due_at?->format('Y-m-d H:i') ?? '—'],
+                        ['الحالة', $statusLabels[$assignment->status] ?? $assignment->status],
+                    ] as [$label, $value])
+                        <div class="rounded-xl border border-slate-100 bg-slate-50/70 px-4 py-3">
+                            <dt class="text-xs font-medium text-slate-500">{{ $label }}</dt>
+                            <dd class="mt-1 text-sm font-semibold text-slate-900">{{ $value }}</dd>
+                        </div>
+                    @endforeach
+                </dl>
+            </div>
+            <x-admin.kpi-card label="التسليمات" :value="$assignment->submissions->count()" />
         </div>
-        <x-admin.kpi-card label="التسليمات" :value="$assignment->submissions->count()" />
+
+        <section class="admin-panel overflow-hidden">
+            <div class="border-b border-slate-100 px-5 py-4">
+                <h2 class="font-semibold text-slate-900">تسليمات الطلاب</h2>
+            </div>
+            @if ($assignment->submissions->isEmpty())
+                <div class="p-5">
+                    <x-admin.empty-state title="لا تسليمات بعد" description="عندما يسلّم الطلاب الواجب ستظهر هنا." />
+                </div>
+            @else
+                <x-admin.data-table class="!rounded-none !border-0 !shadow-none">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-4 py-3.5 text-right">الطالب</th>
+                            <th class="px-4 py-3.5 text-right">الحالة</th>
+                            <th class="px-4 py-3.5 text-right">الدرجة</th>
+                            <th class="px-4 py-3.5 text-right">تاريخ التسليم</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach ($assignment->submissions as $submission)
+                            <tr>
+                                <td class="px-4 py-3.5 font-medium">{{ $submission->user?->name ?? '—' }}</td>
+                                <td class="px-4 py-3.5">{{ $submission->status }}</td>
+                                <td class="px-4 py-3.5">{{ $submission->score ?? '—' }}</td>
+                                <td class="px-4 py-3.5 text-slate-600">{{ $submission->submitted_at?->format('Y-m-d H:i') ?? '—' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </x-admin.data-table>
+            @endif
+        </section>
+
+        <form method="POST" action="{{ route('admin.assignments.destroy', $assignment) }}" onsubmit="return confirm('حذف الواجب؟');">
+            @csrf
+            @method('DELETE')
+            <button class="admin-btn admin-btn-danger">حذف الواجب</button>
+        </form>
     </div>
-
-    <section class="rounded-2xl border border-[var(--color-line)] bg-white p-5">
-        <h2 class="mb-3 font-semibold">تسليمات الطلاب</h2>
-        <x-admin.data-table>
-            <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
-                <tr>
-                    <th class="px-4 py-3 text-right">الطالب</th>
-                    <th class="px-4 py-3 text-right">الحالة</th>
-                    <th class="px-4 py-3 text-right">الدرجة</th>
-                    <th class="px-4 py-3 text-right">تاريخ التسليم</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-                @forelse ($assignment->submissions as $submission)
-                    <tr>
-                        <td class="px-4 py-3">{{ $submission->user?->name ?? '—' }}</td>
-                        <td class="px-4 py-3">{{ $submission->status }}</td>
-                        <td class="px-4 py-3">{{ $submission->score ?? '—' }}</td>
-                        <td class="px-4 py-3">{{ $submission->submitted_at?->format('Y-m-d H:i') ?? '—' }}</td>
-                    </tr>
-                @empty
-                    <tr><td colspan="4" class="px-4 py-10 text-center text-slate-500">لا تسليمات بعد.</td></tr>
-                @endforelse
-            </tbody>
-        </x-admin.data-table>
-    </section>
-
-    <form method="POST" action="{{ route('admin.assignments.destroy', $assignment) }}" class="mt-6" onsubmit="return confirm('حذف الواجب؟');">
-        @csrf
-        @method('DELETE')
-        <button class="rounded-xl bg-rose-700 px-4 py-2 text-sm text-white">حذف الواجب</button>
-    </form>
 @endsection

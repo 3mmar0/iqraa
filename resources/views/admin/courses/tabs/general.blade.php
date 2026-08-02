@@ -11,21 +11,31 @@
 <div class="grid gap-6 lg:grid-cols-3">
     <div class="lg:col-span-2 space-y-6">
         @if ($course->image_path)
-            <img src="{{ asset('storage/'.$course->image_path) }}" alt="" class="h-40 w-full rounded-xl object-cover">
+            <img src="{{ asset('storage/'.$course->image_path) }}" alt="" class="h-48 w-full rounded-2xl object-cover shadow-sm">
         @endif
-        <p class="text-sm text-slate-600 whitespace-pre-line">{{ $course->description ?: 'لا يوجد وصف.' }}</p>
-        <dl class="grid gap-3 sm:grid-cols-2 text-sm">
-            <div><dt class="text-slate-500">المحاضر</dt><dd class="font-medium">{{ $course->instructor?->name ?? '—' }}</dd></div>
-            <div><dt class="text-slate-500">التصنيف</dt><dd class="font-medium">{{ $course->category?->name ?? '—' }}</dd></div>
-            <div><dt class="text-slate-500">السنة الدراسية</dt><dd class="font-medium">{{ $course->academicYear?->name ?? '—' }}</dd></div>
-            <div><dt class="text-slate-500">الفصل</dt><dd class="font-medium">{{ $course->semester?->name ?? '—' }}</dd></div>
-            <div><dt class="text-slate-500">السعر</dt><dd class="font-medium">{{ $course->price !== null ? number_format((float) $course->price, 2).' ر.س' : '—' }}</dd></div>
-            <div><dt class="text-slate-500">الحالة</dt><dd class="font-medium">{{ $statusLabels[$course->status] ?? $course->status }}</dd></div>
-            <div><dt class="text-slate-500">الساعات</dt><dd class="font-medium">{{ $course->hours ?? '—' }}</dd></div>
+        <div>
+            <h3 class="mb-2 text-sm font-semibold text-slate-900">نبذة عن المقرر</h3>
+            <p class="text-sm leading-7 text-slate-600 whitespace-pre-line">{{ $course->description ?: 'لا يوجد وصف.' }}</p>
+        </div>
+        <dl class="grid gap-3 sm:grid-cols-2">
+            @foreach ([
+                ['المحاضر', $course->instructor?->name ?? '—'],
+                ['التصنيف', $course->category?->name ?? '—'],
+                ['السنة الدراسية', $course->academicYear?->name ?? '—'],
+                ['الفصل', $course->semester?->name ?? '—'],
+                ['السعر', $course->price !== null ? number_format((float) $course->price, 2).' ر.س' : '—'],
+                ['الحالة', $statusLabels[$course->status] ?? $course->status],
+                ['الساعات', $course->hours ?? '—'],
+            ] as [$label, $value])
+                <div class="rounded-xl border border-slate-100 bg-slate-50/70 px-4 py-3">
+                    <dt class="text-xs font-medium text-slate-500">{{ $label }}</dt>
+                    <dd class="mt-1 text-sm font-semibold text-slate-900">{{ $value }}</dd>
+                </div>
+            @endforeach
         </dl>
 
         <section
-            class="rounded-2xl border border-[var(--color-line)] p-5"
+            class="rounded-2xl border border-[var(--color-line)] bg-gradient-to-b from-white to-slate-50/80 p-5"
             x-data="courseIntroUpload({
                 courseId: {{ $course->id }},
                 csrf: @js(csrf_token()),
@@ -56,7 +66,7 @@
                         preload="metadata"
                         :src="existing.stream_url"
                     ></video>
-                    <button type="button" @click="deleteVideo()" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs text-rose-800">حذف الفيديو</button>
+                    <button type="button" @click="deleteVideo()" class="admin-btn admin-btn-danger admin-btn-sm">حذف الفيديو</button>
                 </div>
             </template>
 
@@ -83,7 +93,7 @@
                 <div class="flex flex-wrap gap-2">
                     <button
                         type="button"
-                        class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)] disabled:opacity-50"
+                        class="admin-btn admin-btn-primary disabled:opacity-50"
                         @click="startUpload()"
                         :disabled="uploading || ! file"
                     >
@@ -93,7 +103,7 @@
                     </button>
                     <button
                         type="button"
-                        class="rounded-xl border px-4 py-2.5 text-sm disabled:opacity-50"
+                        class="admin-btn admin-btn-ghost disabled:opacity-50"
                         @click="pause()"
                         x-show="uploading && ! assembling"
                         x-cloak
@@ -129,15 +139,15 @@
             <x-admin.kpi-card label="الطلاب" :value="$course->enrollments_count" />
         </div>
         @if (Route::has('admin.courses.assign-teacher'))
-            <form method="POST" action="{{ route('admin.courses.assign-teacher', $course) }}" class="rounded-xl border p-4">
+            <form method="POST" action="{{ route('admin.courses.assign-teacher', $course) }}" class="rounded-2xl border border-slate-200 bg-white p-4">
                 @csrf
-                <p class="mb-2 text-sm font-medium">تعيين محاضر</p>
-                <select name="instructor_user_id" class="mb-2 w-full rounded-lg border px-3 py-2 text-sm">
+                <p class="mb-2 text-sm font-semibold text-slate-900">تعيين محاضر</p>
+                <select name="instructor_user_id" class="admin-input mb-3">
                     @foreach (\App\Models\User::whereHas('roles', fn ($q) => $q->whereIn('slug', ['instructor', 'super_admin']))->orderBy('name')->get() as $instructor)
                         <option value="{{ $instructor->id }}" @selected($course->instructor_user_id === $instructor->id)>{{ $instructor->name }}</option>
                     @endforeach
                 </select>
-                <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">حفظ</button>
+                <button class="admin-btn admin-btn-primary admin-btn-sm">حفظ</button>
             </form>
         @endif
     </div>

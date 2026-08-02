@@ -1,13 +1,13 @@
 @props(['tabs' => []])
 
-<nav {{ $attributes->merge(['class' => 'flex flex-wrap gap-1 border-b border-[var(--color-line)]']) }} aria-label="تبويبات الصفحة">
+<nav {{ $attributes->merge(['class' => 'admin-panel flex flex-wrap gap-1 p-1.5']) }} aria-label="تبويبات الصفحة">
     @foreach ($tabs as $tab)
         <a
             href="{{ $tab['href'] }}"
             @class([
-                'rounded-t-lg px-4 py-2.5 text-sm font-medium transition',
-                'border-b-2 border-[var(--color-primary)] bg-[var(--color-primary-light)]/60 text-[var(--color-primary-hover)]' => $tab['active'] ?? false,
-                'text-slate-600 hover:bg-[var(--color-sand)] hover:text-slate-900' => ! ($tab['active'] ?? false),
+                'rounded-xl px-3.5 py-2 text-sm font-semibold transition',
+                'bg-[var(--color-primary)] text-white shadow-sm' => $tab['active'] ?? false,
+                'text-slate-600 hover:bg-slate-100 hover:text-slate-900' => ! ($tab['active'] ?? false),
             ])
         >
             {{ $tab['label'] }}

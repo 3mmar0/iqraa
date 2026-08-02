@@ -1,6 +1,6 @@
-﻿<div class="space-y-4">
-        @if (Route::has('admin.courses.assign-semester'))
-        <form method="POST" action="{{ route('admin.courses.assign-semester', $course) }}" class="rounded-xl border p-4"
+﻿<div class="space-y-5">
+    @if (Route::has('admin.courses.assign-semester'))
+        <form method="POST" action="{{ route('admin.courses.assign-semester', $course) }}" class="rounded-2xl border border-slate-200 bg-gradient-to-l from-slate-50/80 to-white p-5"
               x-data="{
                   yearId: '{{ $course->academic_year_id }}',
                   semesterId: '{{ $course->semester_id }}',
@@ -14,29 +14,30 @@
                   }
               }">
             @csrf
-            <p class="mb-3 text-sm font-medium">تعيين السنة والفصل الدراسي</p>
-            <div class="mb-3 grid gap-3 sm:grid-cols-2">
-                <select name="academic_year_id" class="rounded-lg border px-3 py-2 text-sm" x-model="yearId" @change="onYearChange()">
+            <p class="mb-3 text-sm font-semibold text-slate-900">تعيين السنة والفصل الدراسي</p>
+            <div class="mb-4 grid gap-3 sm:grid-cols-2">
+                <select name="academic_year_id" class="admin-input" x-model="yearId" @change="onYearChange()">
                     <option value="">— سنة —</option>
                     @foreach (\App\Models\AcademicYear::orderByDesc('starts_on')->get() as $year)
                         <option value="{{ $year->id }}">{{ $year->name }}</option>
                     @endforeach
                 </select>
-                <select name="semester_id" class="rounded-lg border px-3 py-2 text-sm" x-model="semesterId" :disabled="!yearId">
+                <select name="semester_id" class="admin-input" x-model="semesterId" :disabled="!yearId">
                     <option value="">— فصل —</option>
                     <template x-for="s in filtered" :key="s.id">
                         <option :value="s.id" x-text="s.name"></option>
                     </template>
                 </select>
             </div>
-            <button class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs text-white">حفظ</button>
+            <button class="admin-btn admin-btn-primary">حفظ</button>
         </form>
     @endif
 
-    <form method="POST" action="{{ route('admin.courses.destroy', $course) }}" class="rounded-xl border border-rose-200 bg-rose-50 p-4" onsubmit="return confirm('حذف المقرر؟');">
+    <form method="POST" action="{{ route('admin.courses.destroy', $course) }}" class="rounded-2xl border border-rose-200 bg-gradient-to-l from-rose-50 to-white p-5" onsubmit="return confirm('حذف المقرر؟');">
         @csrf
         @method('DELETE')
-        <p class="mb-3 text-sm text-rose-800">حذف المقرر نهائياً (حذف ناعم).</p>
-        <button class="rounded-xl bg-rose-700 px-4 py-2 text-sm text-white">حذف المقرر</button>
+        <p class="mb-1 text-sm font-semibold text-rose-900">منطقة الخطر</p>
+        <p class="mb-4 text-sm text-rose-800/80">حذف المقرر نهائياً (حذف ناعم).</p>
+        <button class="admin-btn admin-btn-danger">حذف المقرر</button>
     </form>
 </div>

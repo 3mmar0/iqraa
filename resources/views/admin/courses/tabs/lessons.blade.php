@@ -48,49 +48,49 @@
     @keydown.escape.window="close()"
 >
     <div class="flex flex-wrap items-center justify-between gap-3">
-        <h3 class="font-semibold text-slate-900">الدروس (<span x-text="lessons.length">{{ $course->lessons->count() }}</span>)</h3>
-        <button type="button" @click="openCreate()" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">
+        <h3 class="text-base font-semibold text-slate-900">الدروس (<span x-text="lessons.length">{{ $course->lessons->count() }}</span>)</h3>
+        <button type="button" @click="openCreate()" class="admin-btn admin-btn-primary">
             إضافة درس
         </button>
     </div>
 
     <div class="space-y-3">
         <template x-for="lesson in lessons" :key="lesson.id">
-            <div class="rounded-xl border border-slate-200 p-4">
+            <div class="rounded-2xl border border-slate-200 bg-gradient-to-l from-slate-50/80 to-white p-4 transition hover:border-[var(--color-primary)]/30 hover:shadow-sm">
                 <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                        <p class="font-medium text-slate-900">
-                            <span class="text-slate-400" x-text="lesson.position + '.'"></span>
-                            <span x-text="lesson.title"></span>
-                        </p>
-                        <p class="mt-1 text-xs text-slate-500">
-                            <span x-text="statusLabels[lesson.status] || lesson.status"></span>
-                            · <span x-text="lesson.media_count"></span> ملفات
-                            <span x-show="lesson.is_locked" class="text-amber-700"> · مقفل</span>
-                        </p>
+                    <div class="flex items-start gap-3">
+                        <div class="admin-entity-thumb !h-10 !w-10 text-[0.7rem]" x-text="lesson.position"></div>
+                        <div>
+                            <p class="font-semibold text-slate-900" x-text="lesson.title"></p>
+                            <p class="mt-1 text-xs text-slate-500">
+                                <span x-text="statusLabels[lesson.status] || lesson.status"></span>
+                                · <span x-text="lesson.media_count"></span> ملفات
+                                <span x-show="lesson.is_locked" class="text-amber-700"> · مقفل</span>
+                            </p>
+                        </div>
                     </div>
                     <div class="flex flex-wrap gap-1.5">
-                        <button type="button" @click="openEdit(lesson)" class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 hover:bg-slate-50">تعديل</button>
-                        <button type="button" @click="openMedia(lesson)" class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 hover:bg-slate-50">وسائط</button>
-                        <a :href="lesson.show_url" class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 hover:bg-slate-50">تفاصيل</a>
+                        <button type="button" @click="openEdit(lesson)" class="admin-btn admin-btn-ghost admin-btn-sm">تعديل</button>
+                        <button type="button" @click="openMedia(lesson)" class="admin-btn admin-btn-ghost admin-btn-sm">وسائط</button>
+                        <a :href="lesson.show_url" class="admin-btn admin-btn-ghost admin-btn-sm">تفاصيل</a>
                         <form method="POST" :action="lesson.is_locked ? lesson.unlock_url : lesson.lock_url">
                             @csrf
-                            <button type="submit" class="rounded-lg border px-2.5 py-1.5 text-xs"
-                                    :class="lesson.is_locked ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-amber-200 bg-amber-50 text-amber-900'"
+                            <button type="submit" class="admin-btn admin-btn-sm"
+                                    :class="lesson.is_locked ? 'border border-emerald-200 bg-emerald-50 text-emerald-800' : 'border border-amber-200 bg-amber-50 text-amber-900'"
                                     x-text="lesson.is_locked ? 'فتح' : 'قفل'"></button>
                         </form>
                         <form method="POST" :action="lesson.destroy_url" onsubmit="return confirm('حذف الدرس؟');">
                             @csrf
                             @method('DELETE')
                             @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'lessons'])
-                            <button type="submit" class="rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs text-rose-800">حذف</button>
+                            <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>
                         </form>
                     </div>
                 </div>
             </div>
         </template>
 
-        <p x-show="lessons.length === 0" class="rounded-xl border border-dashed border-slate-200 py-10 text-center text-sm text-slate-500">
+        <p x-show="lessons.length === 0" class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center text-sm text-slate-500">
             لا دروس بعد — اضغط «إضافة درس» للبدء.
         </p>
     </div>

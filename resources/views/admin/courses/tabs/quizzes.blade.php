@@ -28,39 +28,39 @@
     @keydown.escape.window="close()"
 >
     <div class="flex flex-wrap items-center justify-between gap-3">
-        <h3 class="font-semibold">الاختبارات (<span x-text="items.length">{{ $course->quizzes->count() }}</span>)</h3>
-        <button type="button" @click="openCreate()" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white">إضافة اختبار</button>
+        <h3 class="font-semibold text-slate-900">الاختبارات (<span x-text="items.length">{{ $course->quizzes->count() }}</span>)</h3>
+        <button type="button" @click="openCreate()" class="admin-btn admin-btn-primary">إضافة اختبار</button>
     </div>
 
     <div class="space-y-3">
         <template x-for="item in items" :key="item.id">
-            <div class="rounded-xl border border-slate-200 p-4">
+            <div class="rounded-2xl border border-slate-200 bg-gradient-to-l from-slate-50/80 to-white p-4 transition hover:border-[var(--color-primary)]/30 hover:shadow-sm">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p class="font-medium" x-text="item.title"></p>
+                        <p class="font-semibold text-slate-900" x-text="item.title"></p>
                         <p class="mt-1 text-xs text-slate-500">
                             <span x-text="statusLabels[item.status] || item.status"></span>
                             <span x-show="item.duration_minutes"> · <span x-text="item.duration_minutes"></span> دقيقة</span>
                         </p>
                     </div>
                     <div class="flex flex-wrap gap-1.5">
-                        <button type="button" @click="openEdit(item)" class="rounded-lg border px-2.5 py-1.5 text-xs">تعديل</button>
-                        <a :href="item.show_url" class="rounded-lg border px-2.5 py-1.5 text-xs">أسئلة</a>
+                        <button type="button" @click="openEdit(item)" class="admin-btn admin-btn-ghost admin-btn-sm">تعديل</button>
+                        <a :href="item.show_url" class="admin-btn admin-btn-ghost admin-btn-sm">أسئلة</a>
                         <form method="POST" :action="item.status === 'published' ? item.unpublish_url : item.publish_url">
                             @csrf
-                            <button class="rounded-lg border px-2.5 py-1.5 text-xs" x-text="item.status === 'published' ? 'إلغاء النشر' : 'نشر'"></button>
+                            <button class="admin-btn admin-btn-ghost admin-btn-sm" x-text="item.status === 'published' ? 'إلغاء النشر' : 'نشر'"></button>
                         </form>
                         <form method="POST" :action="item.destroy_url" onsubmit="return confirm('حذف الاختبار؟');">
                             @csrf
                             @method('DELETE')
                             @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'quizzes'])
-                            <button class="rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs text-rose-800">حذف</button>
+                            <button class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>
                         </form>
                     </div>
                 </div>
             </div>
         </template>
-        <p x-show="items.length === 0" class="rounded-xl border border-dashed border-slate-200 py-10 text-center text-sm text-slate-500">لا اختبارات بعد.</p>
+        <p x-show="items.length === 0" class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center text-sm text-slate-500">لا اختبارات بعد.</p>
     </div>
 
     <div x-show="open" x-cloak class="fixed inset-0 z-[80] flex items-end justify-center bg-black/45 p-4 sm:items-center" @click.self="close()">
