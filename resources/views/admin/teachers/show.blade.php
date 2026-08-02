@@ -34,7 +34,7 @@
 
     <section class="mb-6 rounded-2xl border bg-white p-5">
         <h2 class="mb-3 font-semibold">تعيين مقررات</h2>
-        <form method="POST" action="{{ route('admin.teachers.assignCourses', $teacher) }}" class="flex flex-wrap gap-2">
+        <form method="POST" action="{{ route('admin.teachers.assign-courses', $teacher) }}" class="flex flex-wrap gap-2">
             @csrf
             @foreach ($courses as $course)
                 <label class="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm">
