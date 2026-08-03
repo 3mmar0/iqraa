@@ -5,10 +5,22 @@
     <title>@yield('title', $dashboardLabel ?? 'لوحة التحكم') — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .site-brand { font-family: 'Tajawal', ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
+        @keyframes student-home-rise {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .student-home-rise { animation: student-home-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .student-home-rise-delay { animation: student-home-rise 0.55s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        @media (prefers-reduced-motion: reduce) {
+            .student-home-rise, .student-home-rise-delay { animation: none; }
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-[var(--color-sand)] text-[var(--color-text)] antialiased" data-dashboard="{{ $dashboardTheme ?? 'student' }}" x-data="{ sidebarOpen: false }" :class="{ 'max-lg:overflow-hidden': sidebarOpen }">
+<body class="min-h-screen bg-[var(--color-sand)] font-sans text-[var(--color-text)] antialiased" data-dashboard="{{ $dashboardTheme ?? 'student' }}" x-data="{ sidebarOpen: false }" :class="{ 'max-lg:overflow-hidden': sidebarOpen }">
     @if (session()->has('impersonator_id'))
         <div class="relative z-[60] bg-[var(--color-accent)] px-4 py-2 text-center text-sm font-medium text-amber-950">
             أنت تتصفح الآن كـ <strong>{{ auth()->user()->name }}</strong>
@@ -118,9 +130,9 @@
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </button>
                         <div>
-                            <h1 class="text-lg font-semibold text-slate-900 sm:text-xl">@yield('heading', $dashboardLabel)</h1>
+                            <h1 class="text-lg font-semibold text-[var(--color-ink)] sm:text-xl">@yield('heading', $dashboardLabel)</h1>
                             @hasSection('subheading')
-                                <p class="text-sm text-slate-500">@yield('subheading')</p>
+                                <p class="text-sm text-[var(--color-text-secondary)]">@yield('subheading')</p>
                             @endif
                         </div>
                     </div>
