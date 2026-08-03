@@ -1,0 +1,48 @@
+{
+  "title": "Choose the home composition",
+  "question": "Category standard is locked. Which composition should we build?",
+  "options": [
+    {
+      "id": "comp-a",
+      "label": "Full-bleed study hero",
+      "kicker": "COMPOSITION A",
+      "lineage": "Coursera / إدراك craft — atmosphere first",
+      "thesis": "Edge-to-edge study photo carries the first viewport; brand, one line, and CTAs sit in the calm lower band.",
+      "palette": ["#0B1F33", "#FFFFFF", "#0F766E", "#E8EEF4"],
+      "materials": ["photographic daylight", "navy header", "clean sans UI"],
+      "viewport": "Sticky nav; full-bleed hero photo; brand + headline + CTAs; courses begin below the fold.",
+      "risk": "Needs a strong hero image asset or it falls back to empty gradient.",
+      "hero": ".impeccable/mocks/comp-a-bleed-hero.webp",
+      "sketch": ".impeccable/mocks/comp-a-bleed-hero.webp"
+    },
+    {
+      "id": "comp-b",
+      "label": "Split brand + photo",
+      "kicker": "COMPOSITION B",
+      "lineage": "Institutional edtech split landing",
+      "thesis": "Typography owns one half; a tall study photo owns the other — clearest offer and action.",
+      "palette": ["#0B1F33", "#FFFFFF", "#0F766E", "#F4F7FA"],
+      "materials": ["split panel", "photographic side", "type-led side"],
+      "viewport": "Light header; RTL split hero; course rail under.",
+      "risk": "Can feel like two pages if the split is uneven on mobile.",
+      "hero": ".impeccable/mocks/comp-b-split-hero.webp",
+      "sketch": ".impeccable/mocks/comp-b-split-hero.webp"
+    },
+    {
+      "id": "comp-c",
+      "label": "Catalog-forward",
+      "kicker": "COMPOSITION C",
+      "lineage": "Catalog-as-proof edtech home",
+      "thesis": "Short brand band, then the course grid is the proof in the first viewport.",
+      "palette": ["#0B1F33", "#FFFFFF", "#0F766E", "#F8FAFC"],
+      "materials": ["compact hero band", "course tiles", "white ground"],
+      "viewport": "Compact CTA band; course grid dominates; path and FAQ below.",
+      "risk": "Brand signal is weaker if the catalog is empty or sparse.",
+      "hero": ".impeccable/mocks/comp-c-catalog-first.webp",
+      "sketch": ".impeccable/mocks/comp-c-catalog-first.webp"
+    }
+  ],
+  "reroll": false,
+  "steer": true,
+  "canon": false
+}

@@ -32,8 +32,15 @@ Public marketing site (home, catalog, instructors, how-it-works, about, FAQ, con
 ## Brand Commitments
 
 - Product name: يَطْمَئِن (and Latin slug/domain forms such as yatmaen).
-- Full visual replacement of the public home (and its visual world) is approved: new palette, type, and composition allowed. Product truth and Arabic RTL remain fixed.
-- Prior teal/indigo/amber SaaS look is not binding.
+- Official palette (binding):
+  - Primary Teal `#2A9D8F` — main brand and primary actions
+  - Secondary Blue `#4F8FBF` — secondary buttons and links
+  - Sage Green `#A8C3A0` — supportive highlights
+  - Light Background `#F4F6F8` — page sections and cards ground
+  - Dark Text `#2F3A45` — text (not pure black)
+  - Soft Teal / Hover `#DDEEEB` — soft fills and hover grounds
+- Design style: calm, comfortable, educational, professional, minimal, friendly; soft rounded UI; avoid excessive gradients and overly bright colors.
+- Public home visual direction: category standard / catalog-forward (Composition C). Craft bar peers (assumed): Coursera, إدراك, نون أكاديمي — clarity and finish, not their brands.
 
 ## Evidence on Hand
 

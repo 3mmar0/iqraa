@@ -6,78 +6,80 @@
 @source '../**/*.js';
 
 /*
- * هوية يَطْمَئِن
- * Teal = طمأنينة | Indigo = علم وثقة | Amber = أمل وإنجاز
+ * هوية يَطْمَئِن — official palette
+ * Primary Teal #2A9D8F | Secondary Blue #4F8FBF | Sage #A8C3A0
+ * Light #F4F6F8 | Dark Text #2F3A45 | Soft Teal #DDEEEB
+ * Calm, educational, minimal — soft radii, no loud gradients
  */
 @theme {
-    --font-sans: 'IBM Plex Sans Arabic', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 
     /* Brand */
-    --color-primary: #0f766e;
-    --color-primary-hover: #115e59;
-    --color-primary-light: #ccfbf1;
-    --color-secondary: #4f46e5;
-    --color-secondary-hover: #4338ca;
-    --color-secondary-light: #eef2ff;
-    --color-accent: #f59e0b;
-    --color-accent-light: #fef3c7;
+    --color-primary: #2A9D8F;
+    --color-primary-hover: #238B7F;
+    --color-primary-light: #DDEEEB;
+    --color-secondary: #4F8FBF;
+    --color-secondary-hover: #3D7AAB;
+    --color-secondary-light: #E8F1F8;
+    --color-accent: #A8C3A0;
+    --color-accent-light: #E8F0E6;
 
     /* Compat aliases used across Blade */
-    --color-ink: #0f172a;
-    --color-ink-soft: #1e293b;
-    --color-sea: #0f766e;
-    --color-sea-bright: #4f46e5;
-    --color-sand: #f8fafc;
-    --color-line: #e2e8f0;
+    --color-ink: #2F3A45;
+    --color-ink-soft: #3D4A56;
+    --color-sea: #2A9D8F;
+    --color-sea-bright: #4F8FBF;
+    --color-sand: #F4F6F8;
+    --color-line: #E2E8ED;
     --color-surface: #ffffff;
-    --color-divider: #cbd5e1;
-    --color-text: #0f172a;
-    --color-text-secondary: #475569;
-    --color-muted: #94a3b8;
+    --color-divider: #D5DCE3;
+    --color-text: #2F3A45;
+    --color-text-secondary: #5A6772;
+    --color-muted: #8B97A3;
 
     /* Status */
-    --color-success: #16a34a;
-    --color-warning: #f59e0b;
-    --color-danger: #dc2626;
-    --color-info: #2563eb;
+    --color-success: #2A9D8F;
+    --color-warning: #D4A017;
+    --color-danger: #C45C5C;
+    --color-info: #4F8FBF;
 
     /* Charts */
-    --color-chart-revenue: #0f766e;
-    --color-chart-students: #4f46e5;
-    --color-chart-courses: #06b6d4;
-    --color-chart-quizzes: #f59e0b;
-    --color-chart-payments: #22c55e;
+    --color-chart-revenue: #2A9D8F;
+    --color-chart-students: #4F8FBF;
+    --color-chart-courses: #A8C3A0;
+    --color-chart-quizzes: #D4A017;
+    --color-chart-payments: #3D7AAB;
 
-    /* Teal scale aligned to primary */
-    --color-teal-50: #f0fdfa;
-    --color-teal-100: #ccfbf1;
-    --color-teal-200: #99f6e4;
-    --color-teal-300: #5eead4;
-    --color-teal-400: #2dd4bf;
-    --color-teal-500: #14b8a6;
-    --color-teal-600: #0f766e;
-    --color-teal-700: #115e59;
-    --color-teal-800: #134e4a;
-    --color-teal-900: #042f2e;
-    --color-teal-950: #022c22;
+    /* Teal scale aligned to primary #2A9D8F */
+    --color-teal-50: #DDEEEB;
+    --color-teal-100: #DDEEEB;
+    --color-teal-200: #B8DCD5;
+    --color-teal-300: #8EC9BE;
+    --color-teal-400: #5BB5A7;
+    --color-teal-500: #2A9D8F;
+    --color-teal-600: #2A9D8F;
+    --color-teal-700: #238B7F;
+    --color-teal-800: #1C6F66;
+    --color-teal-900: #2F3A45;
+    --color-teal-950: #2F3A45;
 
-    /* Indigo scale aligned to secondary */
-    --color-indigo-50: #eef2ff;
-    --color-indigo-100: #e0e7ff;
-    --color-indigo-200: #c7d2fe;
-    --color-indigo-300: #a5b4fc;
-    --color-indigo-400: #818cf8;
-    --color-indigo-500: #6366f1;
-    --color-indigo-600: #4f46e5;
-    --color-indigo-700: #4338ca;
-    --color-indigo-800: #3730a3;
-    --color-indigo-900: #312e81;
+    /* Blue scale aligned to secondary #4F8FBF (legacy indigo-* keys) */
+    --color-indigo-50: #E8F1F8;
+    --color-indigo-100: #E8F1F8;
+    --color-indigo-200: #C5DBEC;
+    --color-indigo-300: #9FC3DD;
+    --color-indigo-400: #74A9CE;
+    --color-indigo-500: #4F8FBF;
+    --color-indigo-600: #4F8FBF;
+    --color-indigo-700: #3D7AAB;
+    --color-indigo-800: #316288;
+    --color-indigo-900: #2F3A45;
 
-    /* Amber accent */
-    --color-amber-100: #fef3c7;
-    --color-amber-400: #fbbf24;
-    --color-amber-500: #f59e0b;
-    --color-amber-600: #d97706;
+    /* Sage / warm utility (legacy amber keys for soft highlights) */
+    --color-amber-100: #E8F0E6;
+    --color-amber-400: #A8C3A0;
+    --color-amber-500: #A8C3A0;
+    --color-amber-600: #8FAF86;
 }
 
 html {
@@ -92,46 +94,46 @@ body {
 
 /* Dashboard accent tokens (sidebar / icons) */
 [data-dashboard='student'] {
-    --dash-accent: #0f766e;
-    --dash-accent-soft: #14b8a6;
-    --dash-accent-ring: rgb(20 184 166 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #2A9D8F;
+    --dash-accent-soft: #5BB5A7;
+    --dash-accent-ring: rgb(42 157 143 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 [data-dashboard='instructor'] {
-    --dash-accent: #4f46e5;
-    --dash-accent-soft: #6366f1;
-    --dash-accent-ring: rgb(99 102 241 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #4F8FBF;
+    --dash-accent-soft: #74A9CE;
+    --dash-accent-ring: rgb(79 143 191 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 [data-dashboard='finance'] {
-    --dash-accent: #059669;
-    --dash-accent-soft: #10b981;
-    --dash-accent-ring: rgb(16 185 129 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #A8C3A0;
+    --dash-accent-soft: #8FAF86;
+    --dash-accent-ring: rgb(168 195 160 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 [data-dashboard='marketing'] {
-    --dash-accent: #ea580c;
-    --dash-accent-soft: #f97316;
-    --dash-accent-ring: rgb(249 115 22 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #4F8FBF;
+    --dash-accent-soft: #74A9CE;
+    --dash-accent-ring: rgb(79 143 191 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 [data-dashboard='support'] {
-    --dash-accent: #2563eb;
-    --dash-accent-soft: #3b82f6;
-    --dash-accent-ring: rgb(59 130 246 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #4F8FBF;
+    --dash-accent-soft: #74A9CE;
+    --dash-accent-ring: rgb(79 143 191 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 [data-dashboard='team'] {
-    --dash-accent: #0f766e;
-    --dash-accent-soft: #14b8a6;
-    --dash-accent-ring: rgb(20 184 166 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #2A9D8F;
+    --dash-accent-soft: #5BB5A7;
+    --dash-accent-ring: rgb(42 157 143 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 [data-dashboard='admin'] {
-    --dash-accent: #64748b;
-    --dash-accent-soft: #94a3b8;
-    --dash-accent-ring: rgb(148 163 184 / 0.35);
-    --dash-sidebar: #0f172a;
+    --dash-accent: #2A9D8F;
+    --dash-accent-soft: #5BB5A7;
+    --dash-accent-ring: rgb(42 157 143 / 0.35);
+    --dash-sidebar: #2F3A45;
 }
 
 [x-cloak] {
@@ -153,11 +155,13 @@ body {
 }
 
 .hero-gradient {
-    background-image: linear-gradient(135deg, #0f766e 0%, #4f46e5 100%);
+    background-color: var(--color-ink);
+    background-image: none;
 }
 
 .hero-gradient-soft {
-    background-image: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
+    background-color: var(--color-primary);
+    background-image: none;
 }
 
 .btn-primary {
@@ -409,7 +413,7 @@ body {
     justify-content: center;
     overflow: hidden;
     border-radius: 0.85rem;
-    background: linear-gradient(145deg, var(--color-teal-100), var(--color-indigo-100));
+    background: linear-gradient(145deg, var(--color-primary-light), var(--color-secondary-light));
     color: var(--color-primary-hover);
     font-size: 0.75rem;
     font-weight: 700;
@@ -588,7 +592,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 0.85rem;
-    background: linear-gradient(145deg, var(--color-teal-100), var(--color-indigo-100));
+    background: linear-gradient(145deg, var(--color-primary-light), var(--color-secondary-light));
     color: var(--color-primary-hover);
 }
 

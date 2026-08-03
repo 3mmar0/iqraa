@@ -7,6 +7,7 @@
         ['label' => 'الأسئلة', 'route' => 'public.faq'],
         ['label' => 'تواصل', 'route' => 'public.contact'],
     ];
+    $isHome = request()->routeIs('home');
 @endphp
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -15,34 +16,42 @@
     <title>@yield('title', config('app.name')) — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        .site-brand { font-family: 'Amiri', 'IBM Plex Sans Arabic', serif; }
-        @keyframes rise {
-            from { opacity: 0; transform: translateY(18px); }
+        .site-brand { font-family: 'Tajawal', ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
+        @keyframes home-rise {
+            from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .anim-rise { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        .anim-rise-delay { animation: rise 0.7s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        .anim-rise-delay-2 { animation: rise 0.7s 0.24s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        @keyframes soft-pan {
-            from { transform: scale(1.05) translate3d(0, 0, 0); }
-            to { transform: scale(1.12) translate3d(-2%, 1%, 0); }
+        .home-rise { animation: home-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .home-rise-delay { animation: home-rise 0.65s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .home-rise-delay-2 { animation: home-rise 0.65s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        @media (prefers-reduced-motion: reduce) {
+            .home-rise, .home-rise-delay, .home-rise-delay-2 { animation: none; }
         }
-        .hero-wash { animation: soft-pan 18s ease-in-out infinite alternate; }
     </style>
 </head>
-<body class="min-h-screen bg-[var(--color-sand)] text-[var(--color-ink)] antialiased" x-data="{ navOpen: false }">
-    <header class="sticky top-0 z-40 border-b border-white/10 bg-[var(--color-ink)]/95 text-white backdrop-blur">
+<body class="min-h-screen bg-[var(--color-sand)] font-sans text-[var(--color-ink)] antialiased" x-data="{ navOpen: false }">
+@if ($isHome)
+<!--
+THESIS: The catalog is the proof — a short brand band then courses in the first viewport; refuses the empty full-bleed gradient hero.
+OWN-WORLD: Light #F4F6F8 ground, Dark Text #2F3A45 type, Primary Teal #2A9D8F actions, Secondary Blue #4F8FBF links, Sage #A8C3A0 highlights; soft rounded tiles; no loud gradients.
+STORY: Visitor sees real courses immediately, trusts the Arabic path, browses or registers.
+FIRST VIEWPORT: Light sticky nav; compact brand + headline + dual CTAs; course grid owns the rest of the first screen.
+FORM: Category standard / Composition C catalog-forward; seed 3a712c27; canon chosen.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+@endif
+    <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-white/95 text-[var(--color-ink)] backdrop-blur">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-            <a href="{{ url('/') }}" class="site-brand text-2xl font-bold tracking-wide text-[var(--color-primary-light)]">{{ config('app.name') }}</a>
+            <a href="{{ url('/') }}" class="site-brand shrink-0 text-2xl tracking-tight text-[var(--color-ink)]">{{ config('app.name') }}</a>
 
             <nav class="hidden items-center gap-1 lg:flex">
                 @foreach ($navLinks as $link)
                     @php $active = request()->routeIs($link['route']); @endphp
                     <a href="{{ route($link['route']) }}"
-                       class="rounded-lg px-2.5 py-1.5 text-sm {{ $active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white' }}">
+                       class="rounded-lg px-2.5 py-1.5 text-sm {{ $active ? 'bg-[var(--color-sand)] font-medium text-[var(--color-ink)]' : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-sand)] hover:text-[var(--color-ink)]' }}">
                         {{ $link['label'] }}
                     </a>
                 @endforeach
@@ -50,28 +59,28 @@
 
             <div class="flex items-center gap-2 text-sm">
                 @auth
-                    <a href="{{ route('dashboard.redirect') }}" class="rounded-lg bg-[var(--color-primary)]/25 px-3 py-1.5 text-[var(--color-primary-light)] ring-1 ring-[var(--color-primary)]/40 hover:bg-[var(--color-primary)]/35">لوحتي</a>
+                    <a href="{{ route('dashboard.redirect') }}" class="rounded-xl bg-[var(--color-primary-light)] px-3 py-1.5 font-medium text-[var(--color-primary-hover)] ring-1 ring-[var(--color-primary)]/20 hover:bg-[var(--color-primary)]/15">لوحتي</a>
                     <form method="POST" action="{{ route('logout') }}" class="hidden sm:block">
                         @csrf
-                        <button type="submit" class="text-white/70 hover:text-white">خروج</button>
+                        <button type="submit" class="text-[var(--color-text-secondary)] hover:text-[var(--color-ink)]">خروج</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="hidden text-white/80 hover:text-white sm:inline">تسجيل الدخول</a>
-                    <a href="{{ route('register') }}" class="rounded-lg bg-[var(--color-primary)] px-3 py-1.5 font-medium text-white hover:bg-[var(--color-primary-hover)]">إنشاء حساب</a>
+                    <a href="{{ route('login') }}" class="hidden text-[var(--color-secondary)] hover:text-[var(--color-secondary-hover)] sm:inline">تسجيل الدخول</a>
+                    <a href="{{ route('register') }}" class="rounded-xl bg-[var(--color-primary)] px-3 py-1.5 font-medium text-white hover:bg-[var(--color-primary-hover)]">إنشاء حساب</a>
                 @endauth
-                <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 lg:hidden" @click="navOpen = !navOpen" :aria-expanded="navOpen.toString()" aria-label="القائمة">
+                <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-line)] lg:hidden" @click="navOpen = !navOpen" :aria-expanded="navOpen.toString()" aria-label="القائمة">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
             </div>
         </div>
 
-        <div x-show="navOpen" x-transition class="border-t border-white/10 lg:hidden" style="display: none;">
+        <div x-show="navOpen" x-transition class="border-t border-[var(--color-line)] lg:hidden" style="display: none;">
             <div class="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 sm:px-6">
                 @foreach ($navLinks as $link)
-                    <a href="{{ route($link['route']) }}" class="rounded-lg px-3 py-2 text-sm text-white/90 hover:bg-white/10" @click="navOpen = false">{{ $link['label'] }}</a>
+                    <a href="{{ route($link['route']) }}" class="rounded-lg px-3 py-2 text-sm text-[var(--color-ink)] hover:bg-[var(--color-sand)]" @click="navOpen = false">{{ $link['label'] }}</a>
                 @endforeach
                 @guest
-                    <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm text-white/90 hover:bg-white/10">تسجيل الدخول</a>
+                    <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm text-[var(--color-ink)] hover:bg-[var(--color-sand)]">تسجيل الدخول</a>
                 @endguest
             </div>
         </div>
@@ -84,10 +93,10 @@
         @yield('content')
     </main>
 
-    <footer class="mt-20 border-t border-[var(--color-line)] bg-[var(--color-ink)] text-white/80">
+    <footer class="mt-0 border-t border-[var(--color-line)] bg-[var(--color-ink)] text-white/80">
         <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3">
             <div>
-                <p class="site-brand text-2xl font-bold text-[var(--color-primary-light)]">{{ config('app.name') }}</p>
+                <p class="site-brand text-2xl text-white">{{ config('app.name') }}</p>
                 <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/60">منصة تعلم عربية تمنحك مساراً واضحاً من الاكتشاف إلى الإتمام — بطمأنينة وخطوات مرتبة.</p>
             </div>
             <div>
@@ -110,9 +119,9 @@
             </div>
         </div>
         <div class="border-t border-white/10">
-            <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-teal-100/50 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                 <p>© {{ date('Y') }} {{ config('app.name') }}</p>
-                <a href="{{ route('register') }}" class="hover:text-teal-100">ابدأ حسابك مجاناً</a>
+                <a href="{{ route('register') }}" class="hover:text-white">ابدأ حسابك مجاناً</a>
             </div>
         </div>
     </footer>
