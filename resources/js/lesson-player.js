@@ -142,7 +142,9 @@ export function lessonPlayer(config = {}) {
                 .then((r) => r.json())
                 .then((data) => {
                     if (data.video_completed) this.videoComplete = true;
-                    if (data.exam_unlocked) window.location.reload();
+                    if (data.lesson_completed || data.exam_unlocked) {
+                        window.location.reload();
+                    }
                 })
                 .catch(() => {});
         },

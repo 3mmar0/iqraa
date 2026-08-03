@@ -44,8 +44,15 @@ class LessonProgressService
 
         $progress->last_position_seconds = max(0, $positionSeconds);
 
-        if ($markVideoComplete && $progress->video_completed_at === null) {
-            $progress->video_completed_at = now();
+        if ($markVideoComplete) {
+            if ($progress->video_completed_at === null) {
+                $progress->video_completed_at = now();
+            }
+            // Finishing the main lesson video completes the lesson.
+            if ($progress->status !== 'completed') {
+                $progress->status = 'completed';
+                $progress->completed_at = $progress->completed_at ?? now();
+            }
         }
 
         $progress->save();

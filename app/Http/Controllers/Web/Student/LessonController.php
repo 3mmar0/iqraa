@@ -118,6 +118,7 @@ class LessonController extends Controller
         $payload = [
             'last_position_seconds' => (int) $row->last_position_seconds,
             'video_completed' => $row->watchCompleted(),
+            'lesson_completed' => $row->status === 'completed',
             'exam_unlocked' => $this->progress->examIsUnlocked($request->user(), $lesson->fresh(['quiz', 'mainMediaAsset'])),
         ];
 
@@ -125,7 +126,11 @@ class LessonController extends Controller
             return response()->json($payload);
         }
 
-        return back()->with('status', $payload['video_completed'] ? 'تم تسجيل إكمال مشاهدة الفيديو.' : 'تم حفظ موضع المشاهدة.');
+        $message = $payload['lesson_completed']
+            ? 'تم إكمال الدرس بعد مشاهدة الفيديو.'
+            : ($payload['video_completed'] ? 'تم تسجيل إكمال مشاهدة الفيديو.' : 'تم حفظ موضع المشاهدة.');
+
+        return back()->with('status', $message);
     }
 
     public function complete(Request $request, Lesson $lesson): RedirectResponse

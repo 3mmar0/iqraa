@@ -93,6 +93,23 @@ class LessonExamGateTest extends TestCase
         $response->assertRedirect();
     }
 
+    public function test_finishing_video_marks_lesson_completed(): void
+    {
+        $this->actingAs($this->student)->postJson(route('student.lessons.progress', $this->lesson), [
+            'position_seconds' => 200,
+            'completed' => true,
+        ])->assertOk()->assertJson([
+            'video_completed' => true,
+            'lesson_completed' => true,
+        ]);
+
+        $this->assertDatabaseHas('lesson_progress', [
+            'user_id' => $this->student->id,
+            'lesson_id' => $this->lesson->id,
+            'status' => 'completed',
+        ]);
+    }
+
     public function test_no_video_lesson_unlocks_exam_after_complete(): void
     {
         $this->lesson->forceFill(['main_media_asset_id' => null])->save();

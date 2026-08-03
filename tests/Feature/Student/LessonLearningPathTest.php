@@ -86,8 +86,10 @@ class LessonLearningPathTest extends TestCase
         $response->assertOk();
         $response->assertSee('درس التعلم', false);
         $response->assertSee('شرح الدرس', false);
+        $response->assertSee('مواد إضافية', false);
         $response->assertSee('notes.pdf', false);
         $response->assertSee('المشاهدة داخل المنصة فقط', false);
         $response->assertDontSee('تنزيل / فتح', false);
+        $response->assertSee(route('student.media.show', MediaAsset::query()->where('type', 'pdf')->first()), false);
     }
 }

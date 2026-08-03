@@ -238,38 +238,73 @@
                     </section>
                 @endif
 
-                {{-- 3. Secondary materials (non-video) --}}
+                {{-- 3. Secondary materials (non-video) — viewable on the page --}}
                 <section>
                     <div class="mb-4">
                         <h2 class="text-xl font-bold tracking-tight text-[var(--color-ink)]">مواد إضافية</h2>
-                        <p class="mt-1 text-sm text-[var(--color-text-secondary)]">ملفات PDF ومرفقات يمكنك فتحها مع الدرس.</p>
+                        <p class="mt-1 text-sm text-[var(--color-text-secondary)]">اعرض الملفات هنا داخل الدرس.</p>
                     </div>
                     @if ($files->isEmpty())
                         <div class="rounded-2xl border border-dashed border-[var(--color-line)] bg-white px-5 py-8 text-center">
                             <p class="text-sm text-[var(--color-text-secondary)]">لا مرفقات إضافية.</p>
                         </div>
                     @else
-                        <ul class="divide-y divide-[var(--color-line)] overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white shadow-[0_14px_36px_-26px_rgba(47,58,69,0.35)]">
+                        <div class="space-y-4">
                             @foreach ($files as $asset)
                                 @php
-                                    $typeLabel = match ($asset->type) {
-                                        'pdf' => 'PDF',
-                                        'attachment' => 'مرفق',
-                                        default => $asset->type,
+                                    $name = $asset->original_name ?? basename($asset->path);
+                                    $mime = (string) ($asset->mime ?? '');
+                                    $isPdf = $asset->type === 'pdf' || $mime === 'application/pdf' || str_ends_with(strtolower($name), '.pdf');
+                                    $isImage = $asset->type === 'image' || str_starts_with($mime, 'image/');
+                                    $typeLabel = match (true) {
+                                        $isPdf => 'PDF',
+                                        $isImage => 'صورة',
+                                        $asset->type === 'attachment' => 'مرفق',
+                                        default => $asset->type ?: 'ملف',
                                     };
+                                    $streamUrl = route('student.media.show', $asset);
+                                    $downloadUrl = route('student.media.show', ['asset' => $asset, 'download' => 1]);
                                 @endphp
-                                <li>
-                                    <a href="{{ route('student.media.show', ['asset' => $asset, 'download' => 1]) }}"
-                                       class="group flex items-center justify-between gap-3 px-5 py-4 transition hover:bg-[var(--color-sand)] sm:px-6">
-                                        <span class="min-w-0">
-                                            <span class="block truncate font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-primary-hover)]">{{ $asset->original_name ?? basename($asset->path) }}</span>
-                                            <span class="mt-0.5 block text-xs text-[var(--color-text-secondary)]">{{ $typeLabel }}</span>
-                                        </span>
-                                        <span class="shrink-0 text-sm font-medium text-[var(--color-primary)]">فتح</span>
-                                    </a>
-                                </li>
+                                <article class="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white shadow-[0_14px_36px_-26px_rgba(47,58,69,0.35)]">
+                                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-line)] px-5 py-3.5 sm:px-6">
+                                        <div class="min-w-0">
+                                            <h3 class="truncate font-semibold text-[var(--color-ink)]">{{ $name }}</h3>
+                                            <p class="mt-0.5 text-xs text-[var(--color-text-secondary)]">{{ $typeLabel }}</p>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="{{ $streamUrl }}" target="_blank" rel="noopener"
+                                               class="rounded-xl border border-[var(--color-line)] bg-[var(--color-sand)] px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] hover:border-[var(--color-primary)]/40">
+                                                تبويب جديد
+                                            </a>
+                                            <a href="{{ $downloadUrl }}"
+                                               class="rounded-xl bg-[var(--color-primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-primary-hover)]">
+                                                تنزيل
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @if ($isPdf)
+                                        <iframe
+                                            title="{{ $name }}"
+                                            src="{{ $streamUrl }}"
+                                            class="h-[70vh] w-full border-0 bg-white"
+                                        ></iframe>
+                                    @elseif ($isImage)
+                                        <div class="flex justify-center bg-[var(--color-sand)]/50 p-4">
+                                            <img
+                                                src="{{ $streamUrl }}"
+                                                alt="{{ $name }}"
+                                                class="max-h-[70vh] w-auto max-w-full rounded-xl object-contain"
+                                                loading="lazy"
+                                            >
+                                        </div>
+                                    @else
+                                        <div class="px-5 py-8 text-center sm:px-6">
+                                            <p class="text-sm text-[var(--color-text-secondary)]">معاينة مباشرة غير متاحة لهذا النوع — افتحه في تبويب جديد أو نزّله.</p>
+                                        </div>
+                                    @endif
+                                </article>
                             @endforeach
-                        </ul>
+                        </div>
                     @endif
                 </section>
 
