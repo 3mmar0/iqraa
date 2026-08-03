@@ -87,6 +87,7 @@ class LessonLearningPathTest extends TestCase
         $response->assertSee('درس التعلم', false);
         $response->assertSee('شرح الدرس', false);
         $response->assertSee('notes.pdf', false);
-        $response->assertSee('main.mp4', false);
+        $response->assertSee('المشاهدة داخل المنصة فقط', false);
+        $response->assertDontSee('تنزيل / فتح', false);
     }
 }

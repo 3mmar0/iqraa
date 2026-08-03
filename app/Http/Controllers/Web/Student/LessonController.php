@@ -49,6 +49,14 @@ class LessonController extends Controller
             ->filter(fn ($asset) => ! $mainVideo || (int) $asset->id !== (int) $mainVideo->id)
             ->values();
 
+        $secondaryVideos = $files->filter(
+            fn ($asset) => $asset->type === 'video' || str_starts_with((string) $asset->mime, 'video/')
+        )->values();
+
+        $downloadableFiles = $files->reject(
+            fn ($asset) => $asset->type === 'video' || str_starts_with((string) $asset->mime, 'video/')
+        )->values();
+
         $quiz = $lesson->quiz && $lesson->quiz->status === 'published' ? $lesson->quiz : null;
         $examUnlocked = $quiz ? $this->progress->examIsUnlocked($request->user(), $lesson) : false;
 
@@ -73,7 +81,8 @@ class LessonController extends Controller
             'lesson' => $lesson,
             'mainVideo' => $mainVideo,
             'contentHtml' => $lesson->content_html,
-            'files' => $files,
+            'files' => $downloadableFiles,
+            'secondaryVideos' => $secondaryVideos,
             'isCompleted' => $isCompleted,
             'progressRow' => $progressRow,
             'previous' => $index !== false && $index > 0 ? $siblings[$index - 1] : null,

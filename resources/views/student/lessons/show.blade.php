@@ -59,34 +59,101 @@
 
                     @if ($mainVideo)
                         <div
-                            class="border-t border-[var(--color-line)] bg-[var(--color-ink)] px-4 py-4 sm:px-6"
+                            class="border-t border-[var(--color-line)] bg-[var(--color-ink)]"
                             x-data="lessonPlayer({
                                 progressUrl: @js(route('student.lessons.progress', $lesson)),
                                 csrf: @js(csrf_token()),
                                 startAt: {{ $resumeAt }},
                                 alreadyComplete: @js((bool) $progressRow?->watchCompleted()),
+                                src: @js(route('student.media.show', $mainVideo)),
+                                title: @js($mainVideo->original_name ?? 'فيديو الدرس'),
                             })"
                         >
-                            <video
-                                x-ref="player"
-                                class="aspect-video w-full rounded-xl bg-black"
-                                controls
-                                playsinline
-                                preload="metadata"
-                                src="{{ route('student.media.show', $mainVideo) }}"
-                                @timeupdate="onTimeUpdate()"
-                                @ended="onEnded()"
-                                @loadedmetadata="onLoaded()"
-                            ></video>
-                            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-                                <p class="text-xs text-white/65">{{ $mainVideo->original_name ?? 'فيديو الدرس' }}</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <button type="button" @click="markComplete()"
-                                            class="rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/15"
-                                            x-text="videoComplete ? 'تم تسجيل إكمال المشاهدة' : 'تعليم الفيديو كمُشاهد'"></button>
-                                    <a href="{{ route('student.media.show', $mainVideo) }}"
-                                       class="rounded-xl bg-[var(--color-primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-primary-hover)]">تنزيل / فتح</a>
+                            <div
+                                x-ref="shell"
+                                class="group relative aspect-video w-full overflow-hidden bg-black select-none"
+                                @mousemove="bumpControls()"
+                                @touchstart.passive="bumpControls()"
+                                @contextmenu.prevent
+                            >
+                                <video
+                                    x-ref="player"
+                                    class="h-full w-full object-contain"
+                                    playsinline
+                                    preload="metadata"
+                                    controlslist="nodownload noremoteplayback"
+                                    disablepictureinpicture
+                                    :src="src"
+                                    @loadedmetadata="onLoaded()"
+                                    @timeupdate="onTimeUpdate()"
+                                    @ended="onEnded()"
+                                    x-on:error="onError()"
+                                    @click="togglePlay()"
+                                ></video>
+
+                                {{-- Big play affordance when paused --}}
+                                <button
+                                    type="button"
+                                    class="absolute inset-0 flex items-center justify-center transition"
+                                    x-show="!playing && !error"
+                                    x-cloak
+                                    @click="togglePlay()"
+                                    aria-label="تشغيل"
+                                >
+                                    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-lg ring-4 ring-white/20">
+                                        <svg class="h-7 w-7 ms-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+                                    </span>
+                                </button>
+
+                                <div
+                                    x-show="error"
+                                    x-cloak
+                                    class="absolute inset-0 flex items-center justify-center bg-black/80 px-6 text-center text-sm text-white"
+                                    x-text="error"
+                                ></div>
+
+                                {{-- Custom controls --}}
+                                <div
+                                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-3 pb-3 pt-10 transition-opacity"
+                                    :class="showControls || !playing ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+                                >
+                                    <div
+                                        class="mb-2 h-1.5 cursor-pointer overflow-hidden rounded-full bg-white/25"
+                                        @mousedown="startSeek()"
+                                        @mouseup="endSeek($event)"
+                                        @click="seekTo($event)"
+                                        role="slider"
+                                        :aria-valuenow="Math.floor(current)"
+                                        :aria-valuemax="Math.floor(duration)"
+                                        aria-label="تقدم الفيديو"
+                                    >
+                                        <div class="relative h-full w-full">
+                                            <div class="absolute inset-y-0 right-0 rounded-full bg-white/30" :style="`width: ${bufferedPct}%`"></div>
+                                            <div class="absolute inset-y-0 right-0 rounded-full bg-[var(--color-primary)]" :style="`width: ${progressPct}%`"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-white">
+                                        <button type="button" class="rounded-lg p-2 hover:bg-white/10" @click="togglePlay()" :aria-label="playing ? 'إيقاف' : 'تشغيل'">
+                                            <svg x-show="!playing" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+                                            <svg x-show="playing" x-cloak class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6V5zm8 0h4v14h-4V5z"/></svg>
+                                        </button>
+                                        <button type="button" class="rounded-lg p-2 hover:bg-white/10" @click="toggleMute()" :aria-label="muted ? 'إلغاء كتم الصوت' : 'كتم الصوت'">
+                                            <svg x-show="!muted" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5 6 9H3v6h3l5 4V5zm7.07 2.93a6 6 0 0 1 0 8.14M17 9.17a3.5 3.5 0 0 1 0 5.66"/></svg>
+                                            <svg x-show="muted" x-cloak class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5 6 9H3v6h3l5 4V5zM22 9l-6 6m0-6 6 6"/></svg>
+                                        </button>
+                                        <span class="ms-1 text-xs tabular-nums text-white/80" x-text="`${formatTime(current)} / ${formatTime(duration)}`"></span>
+                                        <span class="mx-2 truncate text-xs text-white/55" x-text="title"></span>
+                                        <button type="button" class="ms-auto rounded-lg p-2 hover:bg-white/10" @click="toggleFullscreen()" aria-label="ملء الشاشة">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                                        </button>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+                                <p class="text-xs text-white/65">المشاهدة داخل المنصة فقط — التنزيل غير متاح</p>
+                                <button type="button" @click="markComplete()"
+                                        class="rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/15"
+                                        x-text="videoComplete ? 'تم تسجيل إكمال المشاهدة' : 'تعليم الفيديو كمُشاهد'"></button>
                             </div>
                         </div>
                     @else
@@ -113,7 +180,65 @@
                     @endif
                 </section>
 
-                {{-- 3. Secondary materials --}}
+                {{-- Extra videos (stream only) --}}
+                @if ($secondaryVideos->isNotEmpty())
+                    <section>
+                        <div class="mb-4">
+                            <h2 class="text-xl font-bold tracking-tight text-[var(--color-ink)]">فيديوهات إضافية</h2>
+                            <p class="mt-1 text-sm text-[var(--color-text-secondary)]">تُشغَّل داخل الصفحة ولا يمكن تنزيلها.</p>
+                        </div>
+                        <div class="space-y-4">
+                            @foreach ($secondaryVideos as $extraVideo)
+                                <div class="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-ink)] shadow-[0_14px_36px_-26px_rgba(47,58,69,0.35)]"
+                                     x-data="lessonPlayer({
+                                        src: @js(route('student.media.show', $extraVideo)),
+                                        title: @js($extraVideo->original_name ?? 'فيديو'),
+                                        csrf: @js(csrf_token()),
+                                     })">
+                                    <div x-ref="shell" class="relative aspect-video w-full bg-black select-none" @mousemove="bumpControls()" @contextmenu.prevent>
+                                        <video
+                                            x-ref="player"
+                                            class="h-full w-full object-contain"
+                                            playsinline
+                                            preload="metadata"
+                                            controlslist="nodownload noremoteplayback"
+                                            disablepictureinpicture
+                                            :src="src"
+                                            @loadedmetadata="onLoaded()"
+                                            @timeupdate="onTimeUpdate()"
+                                            @ended="onEnded()"
+                                            x-on:error="onError()"
+                                            @click="togglePlay()"
+                                        ></video>
+                                        <button type="button" class="absolute inset-0 flex items-center justify-center" x-show="!playing && !error" x-cloak @click="togglePlay()" aria-label="تشغيل">
+                                            <span class="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-lg">
+                                                <svg class="h-6 w-6 ms-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+                                            </span>
+                                        </button>
+                                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-3 pt-8" :class="showControls || !playing ? 'opacity-100' : 'opacity-0'">
+                                            <div class="mb-2 h-1.5 cursor-pointer overflow-hidden rounded-full bg-white/25" @click="seekTo($event)">
+                                                <div class="h-full rounded-full bg-[var(--color-primary)]" :style="`width: ${progressPct}%`"></div>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-white">
+                                                <button type="button" class="rounded-lg p-1.5 hover:bg-white/10" @click="togglePlay()">
+                                                    <svg x-show="!playing" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+                                                    <svg x-show="playing" x-cloak class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6V5zm8 0h4v14h-4V5z"/></svg>
+                                                </button>
+                                                <span class="text-xs tabular-nums text-white/80" x-text="`${formatTime(current)} / ${formatTime(duration)}`"></span>
+                                                <span class="truncate text-xs text-white/55" x-text="title"></span>
+                                                <button type="button" class="ms-auto rounded-lg p-1.5 hover:bg-white/10" @click="toggleFullscreen()" aria-label="ملء الشاشة">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </section>
+                @endif
+
+                {{-- 3. Secondary materials (non-video) --}}
                 <section>
                     <div class="mb-4">
                         <h2 class="text-xl font-bold tracking-tight text-[var(--color-ink)]">مواد إضافية</h2>
@@ -128,14 +253,13 @@
                             @foreach ($files as $asset)
                                 @php
                                     $typeLabel = match ($asset->type) {
-                                        'video' => 'فيديو',
                                         'pdf' => 'PDF',
                                         'attachment' => 'مرفق',
                                         default => $asset->type,
                                     };
                                 @endphp
                                 <li>
-                                    <a href="{{ route('student.media.show', $asset) }}"
+                                    <a href="{{ route('student.media.show', ['asset' => $asset, 'download' => 1]) }}"
                                        class="group flex items-center justify-between gap-3 px-5 py-4 transition hover:bg-[var(--color-sand)] sm:px-6">
                                         <span class="min-w-0">
                                             <span class="block truncate font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-primary-hover)]">{{ $asset->original_name ?? basename($asset->path) }}</span>
@@ -271,60 +395,14 @@
     </div>
 
     @push('scripts')
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('lessonPlayer', (cfg) => ({
-                progressUrl: cfg.progressUrl,
-                csrf: cfg.csrf,
-                startAt: cfg.startAt || 0,
-                videoComplete: !!cfg.alreadyComplete,
-                lastSent: 0,
-                onLoaded() {
-                    const p = this.$refs.player;
-                    if (p && this.startAt > 0 && this.startAt < (p.duration || Infinity)) {
-                        p.currentTime = this.startAt;
-                    }
-                },
-                onTimeUpdate() {
-                    const p = this.$refs.player;
-                    if (!p || !p.duration) return;
-                    const t = Math.floor(p.currentTime);
-                    if (t - this.lastSent < 5) return;
-                    this.lastSent = t;
-                    const ratio = p.currentTime / p.duration;
-                    this.sendProgress(t, ratio >= 0.9);
-                },
-                onEnded() {
-                    this.sendProgress(Math.floor(this.$refs.player?.currentTime || 0), true);
-                },
-                markComplete() {
-                    this.sendProgress(Math.floor(this.$refs.player?.currentTime || 0), true);
-                },
-                sendProgress(position, completed) {
-                    if (completed) this.videoComplete = true;
-                    fetch(this.progressUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': this.csrf,
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: JSON.stringify({ position_seconds: position, completed: !!completed }),
-                    }).then(r => r.json()).then(data => {
-                        if (data.video_completed) this.videoComplete = true;
-                        if (data.exam_unlocked) window.location.reload();
-                    }).catch(() => {});
-                },
-            }));
-        });
-    </script>
     <style>
         .lesson-content h2, .lesson-content h3, .lesson-content h4 { font-weight: 700; margin: 1rem 0 0.5rem; color: var(--color-ink); }
         .lesson-content p { margin: 0.65rem 0; line-height: 1.75; color: var(--color-text-secondary); }
         .lesson-content ul, .lesson-content ol { margin: 0.65rem 1.25rem; line-height: 1.7; color: var(--color-text-secondary); }
         .lesson-content a { color: var(--color-secondary); text-decoration: underline; }
         .lesson-content strong, .lesson-content b { color: var(--color-ink); }
+        video::-webkit-media-controls-download-button { display: none !important; }
+        video::-internal-media-controls-download-button { display: none !important; }
     </style>
     @endpush
 @endsection
