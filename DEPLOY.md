@@ -51,4 +51,5 @@ Password for all: `password`
 - Rotate the VPS root password after sharing it in chat.
 - Each GitHub deploy **copies** `scripts/deploy-yatmaen.sh` to `/usr/local/bin/deploy-yatmaen.sh`, then runs it (so the server always uses the script from the commit being deployed).
 - The script runs `php artisan optimize:clear` before re-caching so Blade/CSS from the new release always win.
-- The workflow fails if the public homepage does not contain the expected content marker after deploy.
+- The workflow fails if the public homepage does not contain the expected content marker after deploy (`reading-room-hero` / `site-brand`).
+- The “Confirm Blade landed” step greps for `reading-room-hero` in `home.blade.php` (not the old `المقررات المتاحة` label).
