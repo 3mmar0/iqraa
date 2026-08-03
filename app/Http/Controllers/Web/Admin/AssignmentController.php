@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\GradeAssignmentSubmissionRequest;
 use App\Models\Assignment;
+use App\Models\AssignmentSubmission;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Services\AuditLogger;
@@ -99,6 +101,19 @@ class AssignmentController extends Controller
 
     public function destroy(Request $request, Assignment $assignment): RedirectResponse
     {
+        if ($assignment->submissions()->where('status', 'graded')->exists()) {
+            $assignment->update(['status' => 'archived']);
+
+            if (class_exists(AuditLogger::class)) {
+                app(AuditLogger::class)->log($request->user(), 'assignment.archived', 'assignment', $assignment->id);
+            }
+
+            $status = 'لا يمكن حذف واجب له تسليمات مقيّمة؛ تم أرشفته بدلاً من ذلك.';
+
+            return $this->redirectToCourseContext($request, $status, 'assignments')
+                ?? redirect()->route('admin.assignments.show', $assignment)->with('status', $status);
+        }
+
         $id = $assignment->id;
         $assignment->delete();
 
@@ -110,6 +125,55 @@ class AssignmentController extends Controller
 
         return $this->redirectToCourseContext($request, $status, 'assignments')
             ?? redirect()->route('admin.assignments.index')->with('status', $status);
+    }
+
+    public function gradeSubmission(
+        GradeAssignmentSubmissionRequest $request,
+        Assignment $assignment,
+        AssignmentSubmission $submission,
+    ): RedirectResponse {
+        abort_unless($submission->assignment_id === $assignment->id, 404);
+
+        $submission->update([
+            'score' => $request->validated('score'),
+            'status' => 'graded',
+        ]);
+
+        if (class_exists(AuditLogger::class)) {
+            app(AuditLogger::class)->log($request->user(), 'assignment.submission_graded', 'assignment_submission', $submission->id, [
+                'assignment_id' => $assignment->id,
+                'score' => $submission->score,
+            ]);
+        }
+
+        $status = 'تم رصد درجة التسليم.';
+
+        return $this->redirectToCourseContext($request, $status, 'assignments')
+            ?? redirect()->route('admin.assignments.show', $assignment)->with('status', $status);
+    }
+
+    public function requestResubmit(
+        Request $request,
+        Assignment $assignment,
+        AssignmentSubmission $submission,
+    ): RedirectResponse {
+        abort_unless($submission->assignment_id === $assignment->id, 404);
+
+        $submission->update([
+            'status' => 'resubmit_requested',
+            'score' => null,
+        ]);
+
+        if (class_exists(AuditLogger::class)) {
+            app(AuditLogger::class)->log($request->user(), 'assignment.resubmit_requested', 'assignment_submission', $submission->id, [
+                'assignment_id' => $assignment->id,
+            ]);
+        }
+
+        $status = 'تم طلب إعادة التسليم.';
+
+        return $this->redirectToCourseContext($request, $status, 'assignments')
+            ?? redirect()->route('admin.assignments.show', $assignment)->with('status', $status);
     }
 
     /** @return array<string, list<mixed>> */

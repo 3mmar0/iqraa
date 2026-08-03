@@ -5,7 +5,10 @@
 @section('subheading', $assignment->course?->title)
 
 @section('header-actions')
-    <a href="{{ route('admin.assignments.index') }}" class="admin-btn admin-btn-ghost">رجوع</a>
+    @if ($assignment->course_id)
+        <a href="{{ route('admin.courses.show', [$assignment->course_id, 'tab' => 'assignments']) }}" class="admin-btn admin-btn-ghost">رجوع للمقرر</a>
+    @endif
+    <a href="{{ route('admin.assignments.index') }}" class="admin-btn admin-btn-ghost">كل الواجبات</a>
     <a href="{{ route('admin.assignments.edit', $assignment) }}" class="admin-btn admin-btn-primary">تعديل</a>
 @endsection
 
@@ -45,32 +48,10 @@
             <div class="border-b border-slate-100 px-5 py-4">
                 <h2 class="font-semibold text-slate-900">تسليمات الطلاب</h2>
             </div>
-            @if ($assignment->submissions->isEmpty())
-                <div class="p-5">
-                    <x-admin.empty-state title="لا تسليمات بعد" description="عندما يسلّم الطلاب الواجب ستظهر هنا." />
-                </div>
-            @else
-                <x-admin.data-table class="!rounded-none !border-0 !shadow-none">
-                    <thead class="bg-slate-50/90">
-                        <tr>
-                            <th class="px-4 py-3.5 text-right">الطالب</th>
-                            <th class="px-4 py-3.5 text-right">الحالة</th>
-                            <th class="px-4 py-3.5 text-right">الدرجة</th>
-                            <th class="px-4 py-3.5 text-right">تاريخ التسليم</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach ($assignment->submissions as $submission)
-                            <tr>
-                                <td class="px-4 py-3.5 font-medium">{{ $submission->user?->name ?? '—' }}</td>
-                                <td class="px-4 py-3.5">{{ $submission->status }}</td>
-                                <td class="px-4 py-3.5">{{ $submission->score ?? '—' }}</td>
-                                <td class="px-4 py-3.5 text-slate-600">{{ $submission->submitted_at?->format('Y-m-d H:i') ?? '—' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </x-admin.data-table>
-            @endif
+            @include('admin.assignments._submissions', [
+                'assignment' => $assignment,
+                'returnCourse' => $assignment->course,
+            ])
         </section>
 
         <form method="POST" action="{{ route('admin.assignments.destroy', $assignment) }}" onsubmit="return confirm('حذف الواجب؟');">

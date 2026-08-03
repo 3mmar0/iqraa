@@ -1,0 +1,78 @@
+{
+  "title": "Choose the visual world for يَطْمَئِن",
+  "question": "The roll assigned Reading Room Catalog. Keep it, take an alternate, re-roll, or take the category standard.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Reading Room Catalog",
+      "kicker": "THE ROLL",
+      "lineage": "Arabic university libraries, card catalogs, and spine-row stacks under cool daylight",
+      "thesis": "The home page is a quiet reading room: courses sit like labeled spines, and the next step is as clear as a call number.",
+      "palette": ["#E8EEF4", "#1A2B4A", "#C4A574", "#F7F9FC", "#2F5D50"],
+      "materials": ["cool daylight paper", "oak shelf edge", "ink-stamped call labels", "soft shadow between stacks"],
+      "viewport": "Full-bleed stacks atmosphere; brand يَطْمَئِن huge; one headline; one line; browse + register; no cards in the hero.",
+      "risk": "Can read institutional if the wood and labels get fussy instead of generous.",
+      "sketch": ".impeccable/sketches/assigned.webp",
+      "case": "Wins both axes: mixed Arabic visitors know libraries; catalog clarity proves ordered enrollment without SaaS chrome."
+    },
+    {
+      "id": "challenger-bollywood-painted-poster",
+      "label": "Painted Billboard",
+      "kicker": "CHALLENGER",
+      "lineage": "Hand-painted film hoardings — airbrushed faces, montage vignettes, outlined bilingual billing",
+      "thesis": "Learning sold like a city hoarding: one monumental portrait of progress, courses as painted vignettes, yellow outlined CTA as billing.",
+      "palette": ["#B91C1C", "#FBBF24", "#1E1B4B", "#F59E0B", "#FDF2F8"],
+      "materials": ["airbrush glow", "scaffold-scale faces", "outlined display lettering", "wet crimson sky"],
+      "viewport": "Giant aspirational figure anchors; يَطْمَئِن as outlined title; vignette courses orbit; primary action in chrome-yellow billing.",
+      "risk": "Spectacle can overpower reassurance and read as hype, not طمأنينة.",
+      "sketch": ".impeccable/sketches/challenger-bollywood-painted-poster.webp",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-bollywood-painted-poster-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/pop-culture-shelf-bollywood-painted-poster.webp",
+      "case": "Strongest for “make something special”; loses product clarity — montage energy fights calm human-reviewed enrollment."
+    },
+    {
+      "id": "challenger-noir-one-sheet",
+      "label": "Duotone One-Sheet",
+      "kicker": "CHALLENGER",
+      "lineage": "Postwar crime film one-sheets — hard shadow, condensed caps, ruled billing block",
+      "thesis": "Enrollment as a charged poster: one figure, a long cast shadow pointing the path, amber on the active billing line.",
+      "palette": ["#0A0A0A", "#D4A017", "#F3EAD8", "#1C1917"],
+      "materials": ["cream stock", "ink-black shadow shapes", "sour amber accent", "ruled billing lines"],
+      "viewport": "Hard duotone field; brand in condensed display; shadow points to browse CTA; billing block holds secondary actions.",
+      "risk": "Noir tension and crime-poster grammar clash with reassurance.",
+      "sketch": ".impeccable/sketches/challenger-noir-one-sheet.webp",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-noir-one-sheet-duotone-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/posters-covers-sleeves-noir-one-sheet-duotone.webp",
+      "case": "Graphic punch is real; fuses poorly because crime-shadow drama fights the product’s calm contract."
+    },
+    {
+      "id": "challenger-hand-processed-film",
+      "label": "Hand-Processed Film",
+      "kicker": "CHALLENGER",
+      "lineage": "16mm hand-processed strips — scratches, light leaks, emulsion as event",
+      "thesis": "Progress as frames on a strip: each course a sprocketed frame, orange leak marks the active lesson, edge codes as wayfinding.",
+      "palette": ["#1A1A1A", "#A8A29E", "#EA580C", "#78716C", "#F5F5F4"],
+      "materials": ["silver emulsion", "orange light leak", "sprocket margins", "grease-pencil numerals"],
+      "viewport": "Horizontal film strip as hero; يَطْمَئِن stamped in edge code; one frame lit; CTAs as splice marks.",
+      "risk": "Atmospheric craft can hide what the product is and what to do next.",
+      "sketch": ".impeccable/sketches/challenger-hand-processed-film.webp",
+      "hero": "https://impeccable.style/worlds/cards/cinema-cinematography-editing-hand-processed-film-bloom-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/cinema-cinematography-editing-hand-processed-film-bloom.webp",
+      "case": "High craft atmosphere; loses product clarity — emulsion poetry does not explain enrollment review."
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "kicker": "STANDING EXIT",
+    "lineage": "Arabic edtech marketing page, executed at full craft",
+    "thesis": "Familiar hero, course cards, how-it-works steps, FAQ, and closing CTA — polished, not reinvented.",
+    "palette": ["#0F766E", "#4F46E5", "#F8FAFC", "#0F172A", "#F59E0B"],
+    "materials": ["soft gradient hero", "rounded course cards", "numbered step row", "accordion FAQ"],
+    "viewport": "Brand + headline + dual CTAs over gradient; course card grid below the fold.",
+    "risk": "Looks like every other learning SaaS unless craft is exceptional.",
+    "sketch": ".impeccable/sketches/canon.webp"
+  }
+}

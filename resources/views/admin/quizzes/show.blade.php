@@ -5,7 +5,10 @@
 @section('subheading', $quiz->course?->title ?? 'بدون مقرر')
 
 @section('header-actions')
-    <a href="{{ route('admin.quizzes.index') }}" class="admin-btn admin-btn-ghost">رجوع</a>
+    @if ($quiz->course_id)
+        <a href="{{ route('admin.courses.show', [$quiz->course_id, 'tab' => 'quizzes']) }}" class="admin-btn admin-btn-ghost">رجوع للمقرر</a>
+    @endif
+    <a href="{{ route('admin.quizzes.index') }}" class="admin-btn admin-btn-ghost">كل الاختبارات</a>
     <a href="{{ route('admin.quizzes.edit', $quiz) }}" class="admin-btn admin-btn-primary">تعديل</a>
 @endsection
 

@@ -85,16 +85,31 @@ class CourseController extends Controller
             $tab = 'general';
         }
 
-        $course->load([
+        $relations = [
             'instructor',
             'category',
             'academicYear',
             'semester',
             'lessons' => fn ($q) => $q->orderBy('position')->with('mediaAssets'),
-            'quizzes',
-            'assignments.lesson',
             'enrollments.user',
-        ]);
+        ];
+
+        if ($tab === 'quizzes') {
+            $relations[] = 'quizzes.questions.options';
+        } else {
+            $relations[] = 'quizzes';
+        }
+
+        if ($tab === 'assignments') {
+            $relations['assignments'] = fn ($q) => $q->with([
+                'lesson',
+                'submissions' => fn ($sq) => $sq->with('user')->latest('submitted_at')->limit(50),
+            ]);
+        } else {
+            $relations[] = 'assignments.lesson';
+        }
+
+        $course->load($relations);
 
         $course->loadCount(['lessons', 'enrollments']);
 

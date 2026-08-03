@@ -21,6 +21,7 @@ use App\Http\Controllers\Web\Admin\MarketingOverviewController;
 use App\Http\Controllers\Web\Admin\OpsController;
 use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Web\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Web\Admin\QuestionController as AdminQuestionController;
 use App\Http\Controllers\Web\Admin\QuizController as AdminQuizController;
 use App\Http\Controllers\Web\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Web\Admin\RoleController as AdminRoleController;
@@ -341,6 +342,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/quizzes/{quiz}/assign-course', [AdminQuizController::class, 'assignCourse'])->name('quizzes.assign-course');
         Route::post('/quizzes/{quiz}/assign-lesson', [AdminQuizController::class, 'assignLesson'])->name('quizzes.assign-lesson');
         Route::post('/quizzes/{quiz}/randomize', [AdminQuizController::class, 'randomize'])->name('quizzes.randomize');
+        Route::post('/quizzes/{quiz}/questions', [AdminQuestionController::class, 'store'])->name('quizzes.questions.store');
+        Route::post('/quizzes/{quiz}/questions/reorder', [AdminQuestionController::class, 'reorder'])->name('quizzes.questions.reorder');
+        Route::put('/quizzes/{quiz}/questions/{question}', [AdminQuestionController::class, 'update'])->name('quizzes.questions.update');
+        Route::delete('/quizzes/{quiz}/questions/{question}', [AdminQuestionController::class, 'destroy'])->name('quizzes.questions.destroy');
 
         Route::get('/assignments', [AdminAssignmentController::class, 'index'])->name('assignments.index');
         Route::get('/assignments/create', [AdminAssignmentController::class, 'create'])->name('assignments.create');
@@ -349,6 +354,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/assignments/{assignment}/edit', [AdminAssignmentController::class, 'edit'])->name('assignments.edit');
         Route::put('/assignments/{assignment}', [AdminAssignmentController::class, 'update'])->name('assignments.update');
         Route::delete('/assignments/{assignment}', [AdminAssignmentController::class, 'destroy'])->name('assignments.destroy');
+        Route::post('/assignments/{assignment}/submissions/{submission}/grade', [AdminAssignmentController::class, 'gradeSubmission'])->name('assignments.submissions.grade');
+        Route::post('/assignments/{assignment}/submissions/{submission}/resubmit', [AdminAssignmentController::class, 'requestResubmit'])->name('assignments.submissions.resubmit');
 
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/export', [AdminOrderController::class, 'export'])->name('orders.export');

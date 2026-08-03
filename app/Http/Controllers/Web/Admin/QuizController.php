@@ -58,6 +58,10 @@ class QuizController extends Controller
 
         $validated['show_correct_answers'] = $request->boolean('show_correct_answers');
 
+        if (($validated['status'] ?? '') === 'published') {
+            $validated['status'] = 'draft';
+        }
+
         $quiz = Quiz::query()->create($validated);
 
         if (class_exists(AuditLogger::class)) {
@@ -65,6 +69,9 @@ class QuizController extends Controller
         }
 
         $status = 'تم إنشاء الاختبار.';
+        if ($request->input('status') === 'published') {
+            $status = 'تم إنشاء الاختبار كمسودة لأن النشر يتطلب سؤالاً واحداً على الأقل.';
+        }
 
         return $this->redirectToCourseContext($request, $status, 'quizzes')
             ?? redirect()->route('admin.quizzes.show', $quiz)->with('status', $status);
@@ -98,6 +105,10 @@ class QuizController extends Controller
         ]);
 
         $validated['show_correct_answers'] = $request->boolean('show_correct_answers');
+
+        if (($validated['status'] ?? '') === 'published') {
+            $this->quizzes->assertCanPublish($quiz);
+        }
 
         $quiz->update($validated);
 

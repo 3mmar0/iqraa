@@ -5,10 +5,12 @@ namespace Modules\Quizzes\Services;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Question;
+use App\Models\QuestionOption;
 use App\Models\Quiz;
 use App\Models\User;
 use App\Services\AuditLogger;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class QuizAdminService
 {
@@ -44,12 +46,53 @@ class QuizAdminService
         });
     }
 
+    public function assertCanPublish(Quiz $quiz): void
+    {
+        if ($quiz->questions()->count() < 1) {
+            throw ValidationException::withMessages([
+                'quiz' => 'لا يمكن نشر اختبار بدون أسئلة.',
+            ]);
+        }
+    }
+
     public function publish(Quiz $quiz, ?User $actor = null): Quiz
     {
+        $this->assertCanPublish($quiz);
+
         $quiz->update(['status' => 'published']);
         $this->audit->log($actor, 'quiz.published', Quiz::class, $quiz->id);
 
         return $quiz;
+    }
+
+    public function nextQuestionPosition(Quiz $quiz): int
+    {
+        return (int) $quiz->questions()->max('position') + 1;
+    }
+
+    /**
+     * @param  list<array{body?: string, is_correct?: mixed}>  $options
+     */
+    public function syncQuestionOptions(Question $question, string $type, array $options): void
+    {
+        $question->options()->delete();
+
+        if ($type === 'text') {
+            return;
+        }
+
+        foreach ($options as $option) {
+            $body = trim((string) ($option['body'] ?? ''));
+            if ($body === '') {
+                continue;
+            }
+
+            QuestionOption::query()->create([
+                'question_id' => $question->id,
+                'body' => $body,
+                'is_correct' => filter_var($option['is_correct'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            ]);
+        }
     }
 
     public function unpublish(Quiz $quiz, ?User $actor = null): Quiz
