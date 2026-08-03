@@ -23,7 +23,11 @@ class CourseCatalogController extends Controller
     {
         abort_unless($course->status === 'published', 404);
 
-        $course->load(['instructor', 'lessons']);
+        $course->load([
+            'instructor',
+            'category',
+            'lessons' => fn ($q) => $q->where('status', 'published')->orderBy('position'),
+        ]);
 
         return view('public.courses.show', compact('course'));
     }
