@@ -35,17 +35,17 @@
 <body class="min-h-screen bg-[var(--color-sand)] font-sans text-[var(--color-ink)] antialiased" x-data="{ navOpen: false }">
 @if ($isHome)
 <!--
-THESIS: The catalog is the proof — a short brand band then courses in the first viewport; refuses the empty full-bleed gradient hero.
-OWN-WORLD: Light #F4F6F8 ground, Dark Text #2F3A45 type, Primary Teal #2A9D8F actions, Secondary Blue #4F8FBF links, Sage #A8C3A0 highlights; soft rounded tiles; no loud gradients.
-STORY: Visitor sees real courses immediately, trusts the Arabic path, browses or registers.
-FIRST VIEWPORT: Light sticky nav; compact brand + headline + dual CTAs; course grid owns the rest of the first screen.
-FORM: Category standard / Composition C catalog-forward; seed 3a712c27; canon chosen.
+THESIS: Reading-room calm — atmosphere hero then shelf catalog; refuses empty SaaS gradient chrome.
+OWN-WORLD: Official palette Teal #2A9D8F / Blue #4F8FBF / Sage #A8C3A0 / Light #F4F6F8 / Dark Text #2F3A45 / Soft #DDEEEB; soft radii; stack atmosphere imagery.
+STORY: Visitor feels a quiet learning hall, sees courses on the shelf, browses or registers.
+FIRST VIEWPORT: Full-bleed reading-room photo under soft light wash; brand huge; one headline; dual CTAs.
+FORM: Reading Room Catalog + official palette; polish of home; seed 3a712c27 lineage.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
 -->
 @endif
     <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-white/95 text-[var(--color-ink)] backdrop-blur">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-            <a href="{{ url('/') }}" class="site-brand shrink-0 text-2xl tracking-tight text-[var(--color-ink)]">{{ config('app.name') }}</a>
+            <a href="{{ url('/') }}" class="site-brand max-w-[45%] shrink-0 truncate text-xl tracking-tight text-[var(--color-ink)] sm:max-w-none sm:text-2xl">{{ config('app.name') }}</a>
 
             <nav class="hidden items-center gap-1 lg:flex">
                 @foreach ($navLinks as $link)

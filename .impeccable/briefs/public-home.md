@@ -1,16 +1,24 @@
-# Surface: public home
-Mode: Persuade
-Direction: Category standard (canon)
-Composition: Catalog-forward (comp-c approved)
-Craft bar: Coursera, إدراك, نون أكاديمي (assumed peers)
-Approved comp: .impeccable/mocks/comp-c-catalog-first.webp
+# Surface: public home (+ marketing siblings)
 
-Inventory:
+Mode: Persuade  
+Direction: Reading Room Catalog + official palette  
+Composition: Full-bleed reading-room hero → shelf catalog → expanded stations  
+Assets: `public/images/home/reading-room-hero.webp`, `reading-room-wash.webp`, course covers  
+
+## Inventory
+
 | Region | Medium |
-| Compact brand+CTA band | HTML/CSS |
-| Course grid (proof) | HTML + generated cover rasters / CSS fallbacks |
-| Path steps | HTML/CSS (no decorative 01 badges as structure - use clear sequence) |
-| Instructors | HTML list |
-| FAQ accordion | Alpine existing |
+|--------|--------|
+| Reading-room hero | Raster + HTML/CSS wash |
+| Course shelf grid | HTML + covers |
+| Path stations | HTML/CSS |
+| Arabic student + promise | HTML/CSS |
+| After-approval stations | HTML (border-top articles) |
+| Instructors | HTML tiles |
+| FAQ | Alpine accordion |
 | Closing CTA | HTML/CSS |
-| Hero photo | omitted — catalog is the focal proof per approved comp |
+| Sibling pages | Shared header/band language |
+
+## Polish notes
+
+Expanded section depth on home; aligned how-it-works, catalog, about, instructors, FAQ, contact, course show to the same world.

@@ -40,7 +40,7 @@ Public marketing site (home, catalog, instructors, how-it-works, about, FAQ, con
   - Dark Text `#2F3A45` — text (not pure black)
   - Soft Teal / Hover `#DDEEEB` — soft fills and hover grounds
 - Design style: calm, comfortable, educational, professional, minimal, friendly; soft rounded UI; avoid excessive gradients and overly bright colors.
-- Public home visual direction: category standard / catalog-forward (Composition C). Craft bar peers (assumed): Coursera, إدراك, نون أكاديمي — clarity and finish, not their brands.
+- Public visual direction: **Reading Room Catalog** (atmosphere hero + shelf catalog) using the official palette. Sibling marketing pages share the same language.
 
 ## Evidence on Hand
 

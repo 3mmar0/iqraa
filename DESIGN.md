@@ -1,6 +1,6 @@
 ---
 name: يَطْمَئِن
-description: Arabic RTL learning platform — calm catalog-forward marketing
+description: Arabic RTL learning platform — reading-room calm with official palette
 colors:
   primary: "#2A9D8F"
   primary-hover: "#238B7F"
@@ -19,9 +19,9 @@ colors:
 typography:
   display:
     fontFamily: "Tajawal, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.875rem, 4vw, 3rem)"
+    fontSize: "clamp(2.5rem, 7vw, 4.5rem)"
     fontWeight: 800
-    lineHeight: 1.15
+    lineHeight: 1.1
     letterSpacing: "-0.02em"
   body:
     fontFamily: "Tajawal, ui-sans-serif, system-ui, sans-serif"
@@ -31,31 +31,31 @@ typography:
     letterSpacing: "normal"
   title:
     fontFamily: "Tajawal, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.25rem, 2vw, 1.875rem)"
+    fontSize: "clamp(1.5rem, 3vw, 2.25rem)"
     fontWeight: 700
-    lineHeight: 1.35
+    lineHeight: 1.3
 rounded:
   sm: "12px"
   md: "16px"
-  lg: "20px"
+  lg: "24px"
 spacing:
-  band: "24px"
-  section: "56px"
+  band: "32px"
+  section: "80px"
   gutter: "24px"
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "#ffffff"
-    rounded: "{rounded.sm}"
-    padding: "12px 20px"
+    rounded: "{rounded.lg}"
+    padding: "14px 24px"
   button-primary-hover:
     backgroundColor: "{colors.primary-hover}"
     textColor: "#ffffff"
   button-secondary:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.secondary}"
-    rounded: "{rounded.sm}"
-    padding: "12px 20px"
+    rounded: "{rounded.lg}"
+    padding: "14px 24px"
   link:
     textColor: "{colors.secondary}"
   course-tile:
@@ -68,59 +68,49 @@ components:
 
 ## Overview
 
-Calm, comfortable, educational public UI: catalog-forward home, soft rounded controls, and a restrained palette. Arabic RTL throughout. Official brand colors are binding across public and shared tokens.
+**Reading Room** public identity: calm library atmosphere, shelf-like course catalogs, and deep section rhythm — painted only with the official palette. Arabic RTL. Persuade mode on marketing pages; dashboards stay Operate with the same tokens.
 
 ## Colors
 
 | Role | Hex | Use |
 |------|-----|-----|
-| Primary Teal | `#2A9D8F` | Brand actions, primary buttons |
-| Soft Teal | `#DDEEEB` | Hover grounds, soft fills |
-| Secondary Blue | `#4F8FBF` | Secondary buttons, text links |
-| Sage Green | `#A8C3A0` | Supportive highlights, step labels |
-| Light Background | `#F4F6F8` | Page sections / card grounds |
-| Dark Text | `#2F3A45` | Body and headings (never pure black) |
+| Primary Teal | `#2A9D8F` | Primary actions |
+| Soft Teal | `#DDEEEB` | Soft fills, hero wash |
+| Secondary Blue | `#4F8FBF` | Links, secondary buttons |
+| Sage | `#A8C3A0` | Supportive highlights |
+| Light | `#F4F6F8` | Section grounds |
+| Dark Text | `#2F3A45` | Type and dark bands |
 
-Avoid loud gradients and overly bright accents. Prefer flat fills and soft teal/blue washes.
+No purple washes. Gradients only as soft photo overlays for readability.
 
 ## Typography
 
-- **Tajawal** for display and UI (`.site-brand` at weight 800).
-- Body and titles use Dark Text; secondary copy uses `#5A6772`.
+Tajawal exclusively on public chrome. Brand display is large in heroes (up to ~4.5rem). Section titles step clearly above body.
 
 ## Layout
 
-- `max-w-6xl` content width.
-- Home: compact brand band → course grid as proof.
-- Alternate white / light-background sections; instructors as list rows.
+- Home first viewport: full-bleed reading-room photograph, soft light wash, brand + headline + CTAs.
+- Below: shelf catalog, path grid, Arabic-student band, post-approval stations, instructors, FAQ, closing CTA.
+- Sibling public pages share soft page headers (`sand` / `primary-light`) and `rounded-2xl` surfaces.
+- Max width `max-w-6xl`; generous section padding (~80px).
 
 ## Elevation & Depth
 
-- Soft offset shadows on interactive course tiles only.
-- No glow, glass, or neon effects.
+Soft offset shadows on interactive course tiles and the contact form. No glow orbs.
 
 ## Shapes
 
-- Soft rounded UI: ~12–16px on buttons and tiles (`rounded-xl` / `rounded-2xl`).
+Soft radii 12–24px. Sage top border accent on course tiles (spine metaphor).
 
 ## Components
 
-- **Primary button:** teal fill, white label, soft radius.
-- **Secondary button / outline:** blue border and label, light fill on hover.
-- **Text links:** secondary blue.
-- **Supportive chips / step labels:** sage.
-- **Course tile:** light surface card as interaction container with cover image.
+- Primary / secondary buttons as in tokens.
+- Course tile = interaction card with cover + sage spine edge.
+- FAQ = rounded accordion with soft teal expand control.
+- Instructors = soft tiles with blue monogram.
 
 ## Do's and Don'ts
 
-**Do**
+**Do** keep the reading-room calm; use teal for the one main action; expand sections with real product stations.
 
-- Use teal for the main action on each screen.
-- Use blue for secondary actions and links.
-- Keep backgrounds light and text Dark Text.
-
-**Don't**
-
-- Use pure black text or neon accents.
-- Reintroduce purple/indigo marketing washes.
-- Overuse gradients or high-chroma fills.
+**Don't** invent testimonials; use pure black; restore indigo SaaS heroes; stack same-size icon+text cards as the page scaffold.
