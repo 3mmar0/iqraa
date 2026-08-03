@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Assignment;
 use App\Models\CalendarEvent;
 use App\Models\Course;
+use App\Models\CourseAccessRequest;
 use App\Models\Enrollment;
 use App\Models\LessonProgress;
 use App\Models\QuizAttempt;
@@ -21,16 +22,19 @@ class CourseController extends Controller
 
     public function index(Request $request): View
     {
+        $user = $request->user();
+
         $courses = Enrollment::query()
             ->with(['course.instructor', 'course.lessons'])
-            ->where('user_id', $request->user()->id)
+            ->where('user_id', $user->id)
             ->where('status', 'active')
+            ->latest('updated_at')
             ->get()
-            ->map(function (Enrollment $enrollment) use ($request) {
+            ->map(function (Enrollment $enrollment) use ($user) {
                 $course = $enrollment->course;
                 $lessonIds = $course->lessons->pluck('id');
                 $completed = LessonProgress::query()
-                    ->where('user_id', $request->user()->id)
+                    ->where('user_id', $user->id)
                     ->whereIn('lesson_id', $lessonIds)
                     ->where('status', 'completed')
                     ->count();
@@ -38,13 +42,45 @@ class CourseController extends Controller
                 $course->completed_lessons_count = $completed;
                 $course->lessons_count = $lessonIds->count();
                 $course->progress_percent = $course->lessons_count > 0
-                    ? round(($completed / $course->lessons_count) * 100)
+                    ? (int) round(($completed / $course->lessons_count) * 100)
                     : 0;
 
                 return $course;
             });
 
-        return view('student.courses.index', compact('courses'));
+        $overallPercent = $courses->isNotEmpty()
+            ? (int) round($courses->avg('progress_percent'))
+            : 0;
+
+        $inProgress = $courses->filter(fn ($c) => $c->progress_percent > 0 && $c->progress_percent < 100);
+        $completedCourses = $courses->filter(fn ($c) => $c->progress_percent >= 100 && $c->lessons_count > 0);
+        $notStarted = $courses->filter(fn ($c) => $c->progress_percent === 0 || $c->lessons_count === 0);
+
+        $pendingRequests = CourseAccessRequest::query()
+            ->with('course')
+            ->where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        $enrolledIds = $courses->pluck('id')->all();
+        $discoverCourses = Course::query()
+            ->with('instructor')
+            ->where('status', 'published')
+            ->when($enrolledIds !== [], fn ($q) => $q->whereNotIn('id', $enrolledIds))
+            ->latest('updated_at')
+            ->limit(3)
+            ->get();
+
+        return view('student.courses.index', [
+            'courses' => $courses,
+            'overallPercent' => $overallPercent,
+            'inProgress' => $inProgress,
+            'completedCourses' => $completedCourses,
+            'notStarted' => $notStarted,
+            'pendingRequests' => $pendingRequests,
+            'discoverCourses' => $discoverCourses,
+        ]);
     }
 
     public function show(Request $request, Course $course): View
