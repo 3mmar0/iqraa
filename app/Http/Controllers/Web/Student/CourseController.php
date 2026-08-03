@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Web\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Assignment;
+use App\Models\CalendarEvent;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\LessonProgress;
+use App\Models\QuizAttempt;
 use App\Services\EnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -48,11 +51,17 @@ class CourseController extends Controller
     {
         abort_unless($this->enrollments->userHasActiveEnrollment($request->user(), $course->id), 403);
 
-        $course->load(['lessons' => fn ($q) => $q->orderBy('position'), 'quizzes', 'instructor']);
+        $user = $request->user();
+
+        $course->load([
+            'lessons' => fn ($q) => $q->where('status', 'published')->orderBy('position'),
+            'quizzes' => fn ($q) => $q->where('status', 'published')->orderBy('title'),
+            'instructor',
+        ]);
 
         $lessonIds = $course->lessons->pluck('id');
         $completedLessonIds = LessonProgress::query()
-            ->where('user_id', $request->user()->id)
+            ->where('user_id', $user->id)
             ->whereIn('lesson_id', $lessonIds)
             ->where('status', 'completed')
             ->pluck('lesson_id')
@@ -62,12 +71,45 @@ class CourseController extends Controller
         $completedCount = count($completedLessonIds);
         $progressPercent = $lessonsCount > 0 ? (int) round(($completedCount / $lessonsCount) * 100) : 0;
 
+        $continueLesson = $course->lessons->first(
+            fn ($lesson) => ! in_array($lesson->id, $completedLessonIds, true)
+        ) ?? $course->lessons->last();
+
+        $quizIds = $course->quizzes->pluck('id');
+        $quizAttempts = QuizAttempt::query()
+            ->where('user_id', $user->id)
+            ->whereIn('quiz_id', $quizIds)
+            ->where('status', 'submitted')
+            ->latest('submitted_at')
+            ->get()
+            ->groupBy('quiz_id')
+            ->map(fn ($attempts) => $attempts->first());
+
+        $upcomingEvents = CalendarEvent::query()
+            ->where('course_id', $course->id)
+            ->where('starts_at', '>=', now()->subHour())
+            ->orderBy('starts_at')
+            ->limit(5)
+            ->get();
+
+        $assignments = Assignment::query()
+            ->where('course_id', $course->id)
+            ->where('status', 'published')
+            ->orderByRaw('due_at is null')
+            ->orderBy('due_at')
+            ->limit(8)
+            ->get();
+
         return view('student.courses.show', compact(
             'course',
             'completedLessonIds',
             'completedCount',
             'lessonsCount',
             'progressPercent',
+            'continueLesson',
+            'quizAttempts',
+            'upcomingEvents',
+            'assignments',
         ));
     }
 }
