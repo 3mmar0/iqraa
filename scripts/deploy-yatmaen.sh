@@ -46,7 +46,7 @@ sudo systemctl reload php8.4-fpm 2>/dev/null \
   || true
 
 echo "==> On-disk homepage marker check"
-if ! grep -Fq 'المقررات المتاحة' resources/views/public/home.blade.php; then
+if ! grep -Fq 'reading-room-hero' resources/views/public/home.blade.php; then
   echo "ERROR: resources/views/public/home.blade.php on server is missing expected content."
   echo "---- file head ----"
   head -n 40 resources/views/public/home.blade.php || true
