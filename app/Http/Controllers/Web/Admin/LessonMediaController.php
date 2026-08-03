@@ -83,6 +83,7 @@ class LessonMediaController extends Controller
         $validated = $request->validate([
             'file' => ['required', 'file', 'max:204800'],
             'type' => ['nullable', 'string', Rule::in(['video', 'pdf', 'attachment', 'image', 'file'])],
+            'set_as_main' => ['nullable', 'boolean'],
         ], [
             'file.required' => 'الملف مطلوب.',
             'file.max' => 'الحد الأقصى لحجم الملف 200 ميجابايت.',
@@ -114,10 +115,16 @@ class LessonMediaController extends Controller
             'size' => $file->getSize(),
         ]);
 
+        $setAsMain = $request->boolean('set_as_main') || ($type === 'video' && ! $lesson->main_media_asset_id);
+        if ($setAsMain && $type === 'video') {
+            $lesson->forceFill(['main_media_asset_id' => $asset->id])->save();
+        }
+
         if (class_exists(AuditLogger::class)) {
             app(AuditLogger::class)->log($request->user(), 'lesson.media.uploaded', Lesson::class, $lesson->id, [
                 'type' => $type,
                 'name' => $file->getClientOriginalName(),
+                'set_as_main' => $setAsMain && $type === 'video',
             ]);
         }
 
@@ -138,6 +145,7 @@ class LessonMediaController extends Controller
                     'mime' => $asset->mime,
                     'size' => $asset->size,
                     'kind' => $kind,
+                    'is_main' => (int) $lesson->fresh()->main_media_asset_id === (int) $asset->id,
                     'preview_url' => route('admin.lessons.media.show', [$lesson, $asset]),
                     'destroy_url' => route('admin.lessons.media.destroy', [$lesson, $asset]),
                 ],
@@ -151,6 +159,10 @@ class LessonMediaController extends Controller
     {
         if ($media->lesson_id !== $lesson->id) {
             abort(404);
+        }
+
+        if ((int) $lesson->main_media_asset_id === (int) $media->id) {
+            $lesson->forceFill(['main_media_asset_id' => null])->save();
         }
 
         if ($media->path && Storage::disk($media->disk ?: 'local_private')->exists($media->path)) {

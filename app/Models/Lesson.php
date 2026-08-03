@@ -12,8 +12,8 @@ class Lesson extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'course_id', 'title', 'description', 'position', 'status',
-        'is_locked', 'published_at', 'quiz_id',
+        'course_id', 'title', 'description', 'content_html', 'position', 'status',
+        'is_locked', 'published_at', 'quiz_id', 'main_media_asset_id',
     ];
 
     protected function casts(): array
@@ -34,8 +34,18 @@ class Lesson extends Model
         return $this->hasMany(MediaAsset::class);
     }
 
+    public function mainMediaAsset(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'main_media_asset_id');
+    }
+
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class);
+    }
+
+    public function hasMainVideo(): bool
+    {
+        return $this->main_media_asset_id !== null;
     }
 }

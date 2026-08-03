@@ -4,9 +4,12 @@
         'id' => $l->id,
         'title' => $l->title,
         'description' => $l->description ?? '',
+        'content_html' => $l->content_html ?? '',
         'position' => $l->position,
         'status' => $l->status,
         'is_locked' => (bool) $l->is_locked,
+        'main_media_asset_id' => $l->main_media_asset_id,
+        'quiz_id' => $l->quiz_id,
         'media_count' => $l->mediaAssets->count(),
         'update_url' => route('admin.lessons.update', $l),
         'destroy_url' => route('admin.lessons.destroy', $l),
@@ -99,7 +102,7 @@
     <x-admin.modal show="modal === 'form'">
         <x-slot:header>
             <h3 class="text-base font-semibold text-slate-900" x-text="editing ? 'تعديل الدرس' : 'إضافة درس'"></h3>
-            <p class="mt-0.5 text-xs text-slate-500">العنوان، الوصف، وحالة النشر</p>
+            <p class="mt-0.5 text-xs text-slate-500">العنوان، الشرح، وحالة النشر — الفيديو الرئيسي واختبار ما بعد المشاهدة من صفحة تعديل الدرس</p>
         </x-slot:header>
 
         <form
@@ -120,8 +123,12 @@
                 <input name="title" required class="admin-input" placeholder="عنوان الدرس" :value="editing?.title || ''">
             </div>
             <div class="sm:col-span-2">
-                <label class="admin-label">الوصف</label>
-                <textarea name="description" rows="3" class="admin-input" x-effect="$el.value = editing?.description || ''"></textarea>
+                <label class="admin-label">وصف مختصر</label>
+                <textarea name="description" rows="2" class="admin-input" x-effect="$el.value = editing?.description || ''"></textarea>
+            </div>
+            <div class="sm:col-span-2">
+                <label class="admin-label">شرح الدرس (نص منسّق)</label>
+                <textarea name="content_html" rows="5" class="admin-input" placeholder="شرح للطالب يظهر بعد الفيديو" x-effect="$el.value = editing?.content_html || ''"></textarea>
             </div>
             <div x-show="!!editing" x-cloak>
                 <label class="admin-label">الترتيب</label>
@@ -139,6 +146,10 @@
                 <input id="lesson_modal_locked" type="checkbox" name="is_locked" value="1" class="rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]" :checked="!!editing?.is_locked">
                 قفل الدرس
             </label>
+            <p class="sm:col-span-2 text-xs text-slate-500" x-show="!!editing" x-cloak>
+                <a :href="editing?.show_url" class="font-medium text-[var(--color-primary)] hover:underline">فتح صفحة الدرس</a>
+                لتعيين الفيديو الرئيسي واختبار ما بعد المشاهدة ورفع الوسائط.
+            </p>
             <div class="sm:col-span-2 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
                 <button type="submit" class="admin-btn admin-btn-primary" x-text="editing ? 'حفظ التعديلات' : 'إضافة الدرس'"></button>
                 <button type="button" @click="close()" class="admin-btn admin-btn-ghost">إلغاء</button>

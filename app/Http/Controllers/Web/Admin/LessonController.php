@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\MediaAsset;
 use App\Models\Quiz;
 use App\Services\AuditLogger;
+use App\Support\LessonContentSanitizer;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,8 +20,10 @@ class LessonController extends Controller
 {
     use Concerns\ReturnsToCourse;
 
-    public function __construct(private readonly LessonAdminService $lessons)
-    {
+    public function __construct(
+        private readonly LessonAdminService $lessons,
+        private readonly LessonContentSanitizer $sanitizer,
+    ) {
     }
 
     public function index(Request $request): View
@@ -67,6 +71,8 @@ class LessonController extends Controller
         $validated['position'] = $validated['position'] ?? ((int) $course->lessons()->max('position') + 1);
         $validated['is_locked'] = $request->boolean('is_locked');
         $validated['published_at'] = $validated['published_at'] ?? null;
+        $validated['content_html'] = $this->sanitizer->sanitize($validated['content_html'] ?? null);
+        $validated['main_media_asset_id'] = $this->resolveMainMediaId(null, $validated['main_media_asset_id'] ?? null);
 
         $lesson = Lesson::query()->create($validated);
 
@@ -89,7 +95,7 @@ class LessonController extends Controller
             $section = 'general';
         }
 
-        $lesson->load(['course', 'quiz.questions', 'mediaAssets']);
+        $lesson->load(['course', 'quiz.questions', 'mediaAssets', 'mainMediaAsset']);
 
         return view('admin.lessons.show', compact('lesson', 'section'));
     }
@@ -97,19 +103,22 @@ class LessonController extends Controller
     public function edit(Lesson $lesson): View
     {
         $courses = Course::query()->orderBy('title')->get(['id', 'title']);
-        $quizzes = Quiz::query()->orderBy('title')->get(['id', 'title', 'course_id']);
+        $quizzes = Quiz::query()->orderBy('title')->get(['id', 'title', 'course_id', 'status']);
+        $lesson->load('mediaAssets');
 
         return view('admin.lessons.edit', compact('lesson', 'courses', 'quizzes'));
     }
 
     public function update(Request $request, Lesson $lesson): RedirectResponse
     {
-        $validated = $request->validate($this->rules(), [
+        $validated = $request->validate($this->rules($lesson), [
             'required' => 'هذا الحقل مطلوب.',
         ]);
 
         $validated['is_locked'] = $request->boolean('is_locked');
         $validated['published_at'] = $validated['published_at'] ?? null;
+        $validated['content_html'] = $this->sanitizer->sanitize($validated['content_html'] ?? null);
+        $validated['main_media_asset_id'] = $this->resolveMainMediaId($lesson, $validated['main_media_asset_id'] ?? null);
 
         $lesson->update($validated);
 
@@ -207,17 +216,56 @@ class LessonController extends Controller
     }
 
     /** @return array<string, list<mixed>> */
-    private function rules(): array
+    private function rules(?Lesson $lesson = null): array
     {
         return [
             'course_id' => ['required', 'integer', 'exists:courses,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'content_html' => ['nullable', 'string', 'max:200000'],
             'position' => ['nullable', 'integer', 'min:1'],
             'status' => ['required', 'string', Rule::in(['draft', 'published', 'archived', 'scheduled'])],
             'is_locked' => ['nullable', 'boolean'],
             'published_at' => ['nullable', 'date'],
             'quiz_id' => ['nullable', 'integer', 'exists:quizzes,id'],
+            'main_media_asset_id' => [
+                'nullable',
+                'integer',
+                'exists:media_assets,id',
+                function (string $attribute, mixed $value, \Closure $fail) use ($lesson): void {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+                    if (! $lesson) {
+                        $fail('عيّن الفيديو الرئيسي بعد إنشاء الدرس ورفع الفيديو.');
+
+                        return;
+                    }
+                    $asset = MediaAsset::query()->find($value);
+                    if (! $asset || $asset->lesson_id !== $lesson->id || $asset->type !== 'video') {
+                        $fail('الفيديو الرئيسي يجب أن يكون فيديو تابعاً لهذا الدرس.');
+                    }
+                },
+            ],
         ];
+    }
+
+    private function resolveMainMediaId(?Lesson $lesson, mixed $mediaId): ?int
+    {
+        if ($mediaId === null || $mediaId === '') {
+            return null;
+        }
+
+        $id = (int) $mediaId;
+        if (! $lesson) {
+            return null;
+        }
+
+        $asset = MediaAsset::query()->find($id);
+        if (! $asset || $asset->lesson_id !== $lesson->id || $asset->type !== 'video') {
+            return $lesson->main_media_asset_id;
+        }
+
+        return $id;
     }
 }

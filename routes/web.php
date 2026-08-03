@@ -145,6 +145,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/courses', [StudentCourseController::class, 'index'])->name('courses.index');
         Route::get('/courses/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
         Route::get('/lessons/{lesson}', [StudentLessonController::class, 'show'])->name('lessons.show');
+        Route::post('/lessons/{lesson}/progress', [StudentLessonController::class, 'progress'])->name('lessons.progress');
         Route::post('/lessons/{lesson}/complete', [StudentLessonController::class, 'complete'])->name('lessons.complete');
         Route::get('/media/{asset}', [MediaController::class, 'show'])->name('media.show');
         Route::get('/quizzes/{quiz}', [StudentQuizController::class, 'show'])->name('quizzes.show');
