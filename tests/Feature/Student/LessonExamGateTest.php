@@ -120,4 +120,11 @@ class LessonExamGateTest extends TestCase
 
         $this->actingAs($this->student)->post(route('student.quizzes.start', $this->quiz))->assertRedirect();
     }
+
+    public function test_manual_complete_forbidden_when_lesson_has_main_video(): void
+    {
+        $this->actingAs($this->student)
+            ->post(route('student.lessons.complete', $this->lesson))
+            ->assertForbidden();
+    }
 }

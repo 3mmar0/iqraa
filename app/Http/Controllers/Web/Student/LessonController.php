@@ -136,6 +136,15 @@ class LessonController extends Controller
     public function complete(Request $request, Lesson $lesson): RedirectResponse
     {
         abort_unless($this->enrollments->userHasActiveEnrollment($request->user(), $lesson->course_id), 403);
+        abort_if($lesson->is_locked || $lesson->status !== 'published', 404);
+
+        $lesson->loadMissing('mainMediaAsset');
+        abort_if(
+            $lesson->hasMainVideo(),
+            403,
+            'لا يمكن تعليم الدرس يدوياً — أكمل مشاهدة الفيديو الرئيسي أولاً.'
+        );
+
         $this->progress->markCompleted($request->user(), $lesson);
 
         return back()->with('status', 'تم تعليم الدرس كمكتمل.');

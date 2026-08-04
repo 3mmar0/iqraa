@@ -64,7 +64,8 @@
                                 progressUrl: @js(route('student.lessons.progress', $lesson)),
                                 csrf: @js(csrf_token()),
                                 startAt: {{ $resumeAt }},
-                                alreadyComplete: @js((bool) $progressRow?->watchCompleted()),
+                                alreadyComplete: @js((bool) ($progressRow?->watchCompleted() || $isCompleted)),
+                                examUnlocked: @js((bool) $examUnlocked),
                                 src: @js(route('student.media.show', $mainVideo)),
                                 title: @js($mainVideo->original_name ?? 'فيديو الدرس'),
                             })"
@@ -151,9 +152,7 @@
                             </div>
                             <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
                                 <p class="text-xs text-white/65">المشاهدة داخل المنصة فقط — التنزيل غير متاح</p>
-                                <button type="button" @click="markComplete()"
-                                        class="rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/15"
-                                        x-text="videoComplete ? 'تم تسجيل إكمال المشاهدة' : 'تعليم الفيديو كمُشاهد'"></button>
+                                <p class="text-xs font-medium text-white/80" x-text="videoComplete ? 'تم إكمال مشاهدة الفيديو' : 'أكمل مشاهدة الفيديو لتسجيل الدرس'"></p>
                             </div>
                         </div>
                     @else
@@ -320,7 +319,7 @@
                                         @if ($mainVideo)
                                             أكمل مشاهدة الفيديو أولاً قبل بدء الاختبار.
                                         @else
-                                            علّم الدرس كمكتمل لفتح الاختبار.
+                                            أكمل الدرس أولاً لفتح الاختبار.
                                         @endif
                                     </p>
                                 @elseif ($latestAttempt)
@@ -366,23 +365,27 @@
                 <section class="rounded-2xl border border-[var(--color-line)] bg-white px-5 py-6 shadow-[0_14px_36px_-26px_rgba(47,58,69,0.3)] sm:px-6">
                     <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h2 class="text-lg font-bold text-[var(--color-ink)]">هل انتهيت من الدرس؟</h2>
+                            <h2 class="text-lg font-bold text-[var(--color-ink)]">تقدّم الدرس</h2>
                             <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
                                 @if ($isCompleted)
-                                    هذا الدرس معلَّم كمكتمل.
+                                    هذا الدرس مكتمل.
+                                @elseif ($mainVideo)
+                                    يُسجَّل إكمال الدرس تلقائياً بعد إنهاء مشاهدة الفيديو الرئيسي.
                                 @else
-                                    بعد مشاهدة الفيديو ومراجعة الشرح، علّمه كمكتمل ليُحدَّث تقدّمك.
+                                    لا يوجد فيديو رئيسي — يمكنك تعليم الدرس مكتملاً بعد مراجعة المحتوى.
                                 @endif
                             </p>
                         </div>
                         <div class="flex flex-wrap items-center gap-3">
                             @if ($isCompleted)
                                 <span class="inline-flex rounded-2xl bg-[var(--color-primary-light)] px-4 py-3 text-sm font-semibold text-[var(--color-primary-hover)]">مكتمل</span>
-                            @else
+                            @elseif (! $mainVideo)
                                 <form method="POST" action="{{ route('student.lessons.complete', $lesson) }}">
                                     @csrf
-                                    <button type="submit" class="rounded-2xl bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">تعليم كمكتمل</button>
+                                    <button type="submit" class="rounded-2xl bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">علم كمكتمل</button>
                                 </form>
+                            @else
+                                <span class="inline-flex rounded-2xl border border-[var(--color-line)] bg-[var(--color-sand)] px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)]">بانتظار إكمال الفيديو</span>
                             @endif
                             @if ($next)
                                 <a href="{{ route('student.lessons.show', $next) }}" class="rounded-2xl border border-[var(--color-secondary)]/40 bg-[var(--color-secondary-light)] px-5 py-3 text-sm font-semibold text-[var(--color-secondary-hover)]">الدرس التالي</a>

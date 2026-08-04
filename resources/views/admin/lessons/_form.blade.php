@@ -73,7 +73,7 @@
                 </option>
             @endforeach
         </select>
-        <p class="mt-1 text-xs text-slate-500">يظهر للطالب بعد إكمال مشاهدة الفيديو (أو بعد تعليم الدرس مكتملاً إن لم يوجد فيديو).</p>
+        <p class="mt-1 text-xs text-slate-500">يظهر للطالب بعد إكمال مشاهدة الفيديو الرئيسي.</p>
         @php
             $linked = collect($quizzes ?? [])->firstWhere('id', (int) old('quiz_id', $l?->quiz_id));
         @endphp

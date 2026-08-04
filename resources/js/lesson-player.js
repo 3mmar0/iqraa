@@ -7,6 +7,9 @@ export function lessonPlayer(config = {}) {
         csrf: config.csrf,
         startAt: config.startAt || 0,
         videoComplete: !!config.alreadyComplete,
+        alreadyComplete: !!config.alreadyComplete,
+        examWasUnlocked: !!config.examUnlocked,
+        didReloadForUnlock: false,
         src: config.src,
         title: config.title || 'فيديو الدرس',
         playing: false,
@@ -122,9 +125,6 @@ export function lessonPlayer(config = {}) {
             }, 2800);
         },
 
-        markComplete() {
-            this.sendProgress(Math.floor(this.$refs.player?.currentTime || 0), true);
-        },
 
         sendProgress(position, completed) {
             if (completed) this.videoComplete = true;
@@ -142,7 +142,15 @@ export function lessonPlayer(config = {}) {
                 .then((r) => r.json())
                 .then((data) => {
                     if (data.video_completed) this.videoComplete = true;
-                    if (data.lesson_completed || data.exam_unlocked) {
+
+                    // Reload only on the first transition to completed/unlocked.
+                    // Returning flags that are already true would otherwise loop reloads.
+                    const newlyCompleted = !!data.lesson_completed && !this.alreadyComplete;
+                    const newlyUnlocked = !!data.exam_unlocked && !this.examWasUnlocked;
+                    if ((newlyCompleted || newlyUnlocked) && !this.didReloadForUnlock) {
+                        this.didReloadForUnlock = true;
+                        this.alreadyComplete = true;
+                        this.examWasUnlocked = true;
                         window.location.reload();
                     }
                 })
