@@ -1,41 +1,26 @@
 ﻿@extends('layouts.instructor')
 
-@section('title', 'إنشاء مقرر')
+@section('title', 'مقرر جديد')
 @section('heading', 'إنشاء مقرر')
-@section('subheading', 'أضف مقرراً جديداً ثم أكمل الدروس والاختبارات')
+@section('subheading', 'إضافة مقرر وتعيين التصنيف وحالة النشر')
 
 @section('header-actions')
-    <a href="{{ route('instructor.courses.index') }}" class="rounded-2xl border border-[var(--color-line)] bg-white px-3.5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">رجوع</a>
+    <a href="{{ route('instructor.courses.index') }}" class="admin-btn admin-btn-ghost">رجوع</a>
 @endsection
 
 @section('content')
-    <div class="mx-auto max-w-2xl">
-        <form method="POST" action="{{ route('instructor.courses.store') }}" class="space-y-4 rounded-2xl border border-[var(--color-line)] bg-white p-6 shadow-[0_10px_28px_-22px_rgba(47,58,69,0.4)]">
+    <x-admin.form-shell>
+        <x-slot:header>
+            <p class="text-sm font-semibold text-slate-800">بيانات المقرر</p>
+            <p class="mt-0.5 text-xs text-slate-500">العنوان، التصنيف، والسنة الدراسية — سيُسجَّل المقرر باسمك كمحاضر</p>
+        </x-slot:header>
+        <form method="POST" action="{{ route('instructor.courses.store') }}" class="space-y-5">
             @csrf
-            <div>
-                <label class="mb-1 block text-xs font-medium text-slate-500" for="title">العنوان</label>
-                <input id="title" type="text" name="title" value="{{ old('title') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
-                @error('title')<p class="mt-1 text-sm text-rose-600">{{ $message }}</p>@enderror
+            @include('instructor.courses._form', ['course' => null])
+            <div class="flex flex-wrap gap-2 border-t border-slate-100 pt-5">
+                <button type="submit" class="admin-btn admin-btn-primary">حفظ</button>
+                <a href="{{ route('instructor.courses.index') }}" class="admin-btn admin-btn-ghost">إلغاء</a>
             </div>
-            <div>
-                <label class="mb-1 block text-xs font-medium text-slate-500" for="description">الوصف</label>
-                <textarea id="description" name="description" rows="4" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">{{ old('description') }}</textarea>
-            </div>
-            <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-500" for="hours">الساعات</label>
-                    <input id="hours" type="number" step="0.5" name="hours" value="{{ old('hours') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-500" for="term_label">الفصل</label>
-                    <input id="term_label" type="text" name="term_label" value="{{ old('term_label') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
-                </div>
-            </div>
-            <div>
-                <label class="mb-1 block text-xs font-medium text-slate-500" for="schedule_text">الجدول</label>
-                <input id="schedule_text" type="text" name="schedule_text" value="{{ old('schedule_text') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
-            </div>
-            <button type="submit" class="w-full rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">حفظ المقرر</button>
         </form>
-    </div>
+    </x-admin.form-shell>
 @endsection
