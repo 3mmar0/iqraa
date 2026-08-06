@@ -396,6 +396,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/teachers/{teacher}', [AdminTeacherController::class, 'update'])->name('teachers.update');
         Route::delete('/teachers/{teacher}', [AdminTeacherController::class, 'destroy'])->name('teachers.destroy');
         Route::post('/teachers/{teacher}/suspend', [AdminTeacherController::class, 'suspend'])->name('teachers.suspend');
+        Route::post('/teachers/{teacher}/activate', [AdminTeacherController::class, 'activate'])->name('teachers.activate');
         Route::post('/teachers/{teacher}/assign-courses', [AdminTeacherController::class, 'assignCourses'])->name('teachers.assign-courses');
 
         Route::get('/academic-years', [AdminAcademicYearController::class, 'index'])->name('academic-years.index');

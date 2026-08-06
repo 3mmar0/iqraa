@@ -8,6 +8,7 @@
         'hidden' => ['class' => 'admin-chip-hidden', 'label' => 'مخفي'],
         'scheduled' => ['class' => 'admin-chip-scheduled', 'label' => 'مجدول'],
         'active' => ['class' => 'admin-chip-active', 'label' => 'نشط'],
+        'invited' => ['class' => 'admin-chip-invited', 'label' => 'مدعو'],
         'disabled' => ['class' => 'admin-chip-disabled', 'label' => 'معطّل'],
     ];
     $meta = $map[$status] ?? ['class' => 'admin-chip-draft', 'label' => $status];

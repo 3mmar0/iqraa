@@ -66,20 +66,36 @@ class TeacherController extends Controller
         return redirect()->route('admin.teachers.show', $teacher)->with('status', 'تم إضافة المعلم.');
     }
 
-    public function show(User $teacher): View
+    public function show(Request $request, User $teacher): View
     {
         abort_unless($teacher->hasRole('instructor'), 404);
 
-        $teacher->load(['instructedCourses' => fn ($q) => $q->withCount('enrollments')]);
-        $courses = Course::query()->orderBy('title')->get(['id', 'title', 'instructor_user_id']);
+        $teacher->load([
+            'roles',
+            'instructedCourses' => fn ($q) => $q
+                ->withCount(['enrollments', 'lessons'])
+                ->orderBy('title'),
+        ]);
+
+        $courses = Course::query()
+            ->with('instructor:id,name')
+            ->orderBy('title')
+            ->get(['id', 'title', 'status', 'instructor_user_id']);
 
         $analytics = [
             'courses_count' => $teacher->instructedCourses->count(),
             'students_count' => $teacher->instructedCourses->sum('enrollments_count'),
             'published_courses' => $teacher->instructedCourses->where('status', 'published')->count(),
+            'draft_courses' => $teacher->instructedCourses->where('status', 'draft')->count(),
+            'lessons_count' => $teacher->instructedCourses->sum('lessons_count'),
         ];
 
-        return view('admin.teachers.show', compact('teacher', 'courses', 'analytics'));
+        $tab = $request->string('tab')->toString();
+        if (! in_array($tab, ['overview', 'courses', 'assign', 'account'], true)) {
+            $tab = 'overview';
+        }
+
+        return view('admin.teachers.show', compact('teacher', 'courses', 'analytics', 'tab'));
     }
 
     public function edit(User $teacher): View
@@ -141,22 +157,45 @@ class TeacherController extends Controller
         return back()->with('status', 'تم تعليق حساب المعلم.');
     }
 
+    public function activate(Request $request, User $teacher): RedirectResponse
+    {
+        abort_unless($teacher->hasRole('instructor'), 404);
+
+        $teacher->update(['status' => 'active']);
+
+        $this->audit->log($request->user(), 'teacher.activated', User::class, $teacher->id);
+
+        return back()->with('status', 'تم تفعيل حساب المعلم.');
+    }
+
     public function assignCourses(Request $request, User $teacher): RedirectResponse
     {
         abort_unless($teacher->hasRole('instructor'), 404);
 
         $validated = $request->validate([
-            'course_ids' => ['required', 'array', 'min:1'],
+            'course_ids' => ['nullable', 'array'],
             'course_ids.*' => ['integer', 'exists:courses,id'],
         ]);
 
-        $count = $this->teachers->assignCourses($teacher, $validated['course_ids'], $request->user());
+        $courseIds = $validated['course_ids'] ?? [];
 
-        return back()->with('status', "تم تعيين {$count} مقرر للمعلم.");
+        // Unassign courses previously owned by this teacher but unchecked now.
+        Course::query()
+            ->where('instructor_user_id', $teacher->id)
+            ->when($courseIds !== [], fn ($q) => $q->whereNotIn('id', $courseIds))
+            ->update(['instructor_user_id' => null]);
+
+        $count = $courseIds === []
+            ? 0
+            : $this->teachers->assignCourses($teacher, $courseIds, $request->user());
+
+        return back()->with('status', $courseIds === []
+            ? 'تم إلغاء تعيين المقررات عن المعلم.'
+            : "تم تعيين {$count} مقرر للمعلم.");
     }
 
-    public function analytics(User $teacher): View
+    public function analytics(Request $request, User $teacher): RedirectResponse|View
     {
-        return $this->show($teacher);
+        return redirect()->route('admin.teachers.show', $teacher);
     }
 }
