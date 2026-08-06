@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .site-brand { font-family: 'Tajawal', ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
@@ -16,11 +18,8 @@
 </head>
 <body class="guest-shell font-sans text-[var(--color-ink)] antialiased">
     <main class="relative z-10 mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12 sm:px-6">
-        <div class="guest-rise mb-8 text-center">
-            <a href="{{ url('/') }}" class="site-brand inline-block text-3xl tracking-tight text-[var(--color-primary)] sm:text-4xl">
-                {{ config('app.name') }}
-            </a>
-            <p class="mt-2 text-sm text-[var(--color-text-secondary)]">منصة تعليمية عربية</p>
+        <div class="guest-rise mb-8 flex justify-center">
+            <x-brand-logo href="{{ url('/') }}" size="guest" />
         </div>
 
         @if (session('status'))

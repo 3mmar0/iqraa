@@ -5,7 +5,7 @@
 @section('content')
     <section class="border-b border-[var(--color-line)] bg-[var(--color-primary-light)]/60">
         <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-            <p class="site-brand text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl md:text-6xl">{{ config('app.name') }}</p>
+            <x-brand-logo size="xl" />
             <h1 class="mt-4 max-w-2xl text-2xl font-semibold leading-relaxed text-[var(--color-ink)] sm:text-3xl">منصة تعلم تضع الطمأنينة قبل الضجيج.</h1>
             <p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--color-text-secondary)] sm:text-lg">نؤمن أن التعلّم الجاد يحتاج مساراً واضحاً، ومتابعة صادقة، وواجهة لا تُشتت. صممنا المنصة للطالب العربي: مقررات، دروس، تقدم، ودعم — في تجربة واحدة مترابطة.</p>
         </div>

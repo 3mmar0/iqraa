@@ -45,8 +45,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 -->
 @endif
     <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-white text-[var(--color-ink)]">
-        <div class="mx-auto flex h-14 w-full max-w-[90rem] items-center gap-4 px-4 sm:h-16 sm:px-6 lg:px-8">
-            <a href="{{ route('home') }}" class="site-brand shrink-0 text-xl text-[var(--color-primary)] sm:text-2xl">{{ config('app.name') }}</a>
+        <div class="mx-auto flex h-16 w-full max-w-[90rem] items-center gap-4 px-4 sm:h-20 sm:px-6 lg:px-8">
+            <x-brand-logo href="{{ route('home') }}" size="sm" />
 
             <nav class="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="القائمة الرئيسية">
                 @foreach ($navLinks as $link)
@@ -109,7 +109,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <footer class="mt-0 border-t border-[var(--color-line)] bg-[var(--color-ink)] text-white/80">
         <div class="mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-8">
             <div>
-                <a href="{{ route('home') }}" class="site-brand text-2xl text-white hover:text-[var(--color-primary-light)]">{{ config('app.name') }}</a>
+                <x-brand-logo href="{{ route('home') }}" size="footer" />
                 <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/60">منصة تعلم عربية تمنحك مساراً واضحاً من الاكتشاف إلى الإتمام — بطمأنينة وخطوات مرتبة.</p>
             </div>
             <div>

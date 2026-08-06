@@ -16,7 +16,9 @@
         <div class="absolute inset-0 bg-[var(--color-sand)]/78"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-sand)] via-[var(--color-sand)]/55 to-transparent"></div>
         <div class="relative mx-auto flex min-h-[88vh] max-w-6xl flex-col justify-end px-4 pb-14 pt-28 sm:px-6 sm:pb-20">
-            <p class="site-brand home-rise text-4xl font-extrabold tracking-tight text-[var(--color-ink)] sm:text-6xl md:text-7xl">{{ config('app.name') }}</p>
+            <div class="home-rise">
+                <x-brand-logo size="hero" />
+            </div>
             <h1 class="home-rise-delay mt-4 max-w-2xl text-xl font-semibold leading-relaxed text-[var(--color-ink)] sm:text-2xl md:text-3xl">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</h1>
             <p class="home-rise-delay-2 mt-3 max-w-xl text-base leading-relaxed text-[var(--color-text-secondary)] sm:text-lg">منصة عربية للمقررات والدروس والمتابعة — ابدأ من الكتالوج أو أنشئ حسابك اليوم.</p>
             <div class="home-rise-delay-2 mt-8 flex flex-wrap gap-3">

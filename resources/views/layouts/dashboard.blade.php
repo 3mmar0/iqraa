@@ -48,16 +48,13 @@
             :aria-hidden="(!sidebarOpen).toString()"
             @if(session()->has('impersonator_id')) style="top: 2.5rem;" @endif
         >
-            <div class="flex items-center justify-between border-b border-white/10 px-5 py-5">
-                <a href="{{ route($dashboardHome) }}" class="flex items-center gap-3">
-                    <span class="dashboard-brand-badge flex h-10 w-10 items-center justify-center rounded-xl">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
-                    </span>
-                    <span>
-                        <span class="block text-sm font-semibold tracking-wide">{{ config('app.name') }}</span>
-                        <span class="dashboard-brand-sub block text-xs">{{ $dashboardLabel }}</span>
-                    </span>
-                </a>
+            <div class="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-4">
+                <div class="flex min-w-0 flex-1 flex-col gap-2">
+                    <a href="{{ route($dashboardHome) }}" class="inline-flex w-fit max-w-full items-center rounded-xl bg-white/95 px-2.5 py-2">
+                        <x-brand-logo size="sidebar" />
+                    </a>
+                    <span class="dashboard-brand-sub px-1 text-xs text-white/70">{{ $dashboardLabel }}</span>
+                </div>
                 <button type="button" class="rounded-lg p-2 text-teal-100 hover:bg-white/10 lg:hidden" @click="sidebarOpen = false" aria-label="إغلاق القائمة">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>

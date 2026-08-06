@@ -19,8 +19,8 @@ Error shape (API):
 | GET | `/login` | guest | Shared login form (RTL) |
 | POST | `/login` | guest | Authenticate; redirect per roles |
 | POST | `/logout` | user | End session |
-| GET | `/register` | guest | Student self-registration |
-| POST | `/register` | guest | Create self-registered student |
+| GET | `/register` | guest | Student or instructor self-registration |
+| POST | `/register` | guest | Create self-registered student or instructor (`account_type`) |
 | GET | `/email/verify/*` | user | Email verification |
 | GET/POST | `/password/*` | guest | Password reset |
 | GET | `/dashboard-picker` | user | Multi-role chooser |

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\StoreRegisteredUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserSetting;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -20,20 +19,16 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRegisteredUserRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:30', 'unique:users,phone'],
-            'university' => ['nullable', 'string', 'max:255'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ], [
-            'required' => 'هذا الحقل مطلوب.',
-            'email.unique' => 'البريد الإلكتروني مستخدم مسبقاً.',
-            'phone.unique' => 'رقم الهاتف مستخدم مسبقاً.',
-            'password.confirmed' => 'تأكيد كلمة المرور غير متطابق.',
-        ]);
+        $validated = $request->validated();
+
+        $roleSlug = $validated['account_type'];
+        $role = Role::query()->where('slug', $roleSlug)->first();
+
+        if (! $role || ! in_array($roleSlug, ['student', 'instructor'], true)) {
+            abort(500, 'دور الحساب غير متوفر.');
+        }
 
         $user = User::query()->create([
             'name' => $validated['name'],
@@ -45,10 +40,7 @@ class RegisteredUserController extends Controller
             'status' => 'active',
         ]);
 
-        $studentRole = Role::query()->where('slug', 'student')->first();
-        if ($studentRole) {
-            $user->roles()->attach($studentRole);
-        }
+        $user->roles()->attach($role);
 
         UserSetting::query()->create(['user_id' => $user->id]);
 
