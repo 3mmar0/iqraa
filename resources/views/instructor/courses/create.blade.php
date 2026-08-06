@@ -1,34 +1,41 @@
 ﻿@extends('layouts.instructor')
 
 @section('title', 'إنشاء مقرر')
+@section('heading', 'إنشاء مقرر')
+@section('subheading', 'أضف مقرراً جديداً ثم أكمل الدروس والاختبارات')
+
+@section('header-actions')
+    <a href="{{ route('instructor.courses.index') }}" class="rounded-2xl border border-[var(--color-line)] bg-white px-3.5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">رجوع</a>
+@endsection
 
 @section('content')
-    <h1 class="mb-6 text-2xl font-bold text-[var(--color-ink)]">إنشاء مقرر</h1>
-
-    <form method="POST" action="{{ route('instructor.courses.store') }}" class="max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-6">
-        @csrf
-        <div>
-            <label class="mb-1 block text-sm font-medium">العنوان</label>
-            <input type="text" name="title" value="{{ old('title') }}" required class="w-full rounded border border-slate-300 px-3 py-2">
-        </div>
-        <div>
-            <label class="mb-1 block text-sm font-medium">الوصف</label>
-            <textarea name="description" rows="4" class="w-full rounded border border-slate-300 px-3 py-2">{{ old('description') }}</textarea>
-        </div>
-        <div class="grid gap-4 sm:grid-cols-2">
+    <div class="mx-auto max-w-2xl">
+        <form method="POST" action="{{ route('instructor.courses.store') }}" class="space-y-4 rounded-2xl border border-[var(--color-line)] bg-white p-6 shadow-[0_10px_28px_-22px_rgba(47,58,69,0.4)]">
+            @csrf
             <div>
-                <label class="mb-1 block text-sm font-medium">الساعات</label>
-                <input type="number" step="0.5" name="hours" value="{{ old('hours') }}" class="w-full rounded border border-slate-300 px-3 py-2">
+                <label class="mb-1 block text-xs font-medium text-slate-500" for="title">العنوان</label>
+                <input id="title" type="text" name="title" value="{{ old('title') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
+                @error('title')<p class="mt-1 text-sm text-rose-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="mb-1 block text-sm font-medium">الفصل</label>
-                <input type="text" name="term_label" value="{{ old('term_label') }}" class="w-full rounded border border-slate-300 px-3 py-2">
+                <label class="mb-1 block text-xs font-medium text-slate-500" for="description">الوصف</label>
+                <textarea id="description" name="description" rows="4" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">{{ old('description') }}</textarea>
             </div>
-        </div>
-        <div>
-            <label class="mb-1 block text-sm font-medium">الجدول</label>
-            <input type="text" name="schedule_text" value="{{ old('schedule_text') }}" class="w-full rounded border border-slate-300 px-3 py-2">
-        </div>
-        <button type="submit" class="rounded bg-[var(--color-primary)] px-4 py-2 text-white">حفظ</button>
-    </form>
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-slate-500" for="hours">الساعات</label>
+                    <input id="hours" type="number" step="0.5" name="hours" value="{{ old('hours') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-slate-500" for="term_label">الفصل</label>
+                    <input id="term_label" type="text" name="term_label" value="{{ old('term_label') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+                </div>
+            </div>
+            <div>
+                <label class="mb-1 block text-xs font-medium text-slate-500" for="schedule_text">الجدول</label>
+                <input id="schedule_text" type="text" name="schedule_text" value="{{ old('schedule_text') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm">
+            </div>
+            <button type="submit" class="w-full rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">حفظ المقرر</button>
+        </form>
+    </div>
 @endsection

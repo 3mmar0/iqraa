@@ -19,7 +19,7 @@ class CourseController extends Controller
     {
         $courses = Course::query()
             ->where('instructor_user_id', $request->user()->id)
-            ->withCount(['lessons', 'enrollments'])
+            ->withCount(['lessons', 'enrollments', 'quizzes'])
             ->latest()
             ->get();
 
