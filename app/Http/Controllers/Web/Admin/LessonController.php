@@ -97,7 +97,9 @@ class LessonController extends Controller
 
         $lesson->load(['course', 'quiz.questions', 'mediaAssets', 'mainMediaAsset']);
 
-        return view('admin.lessons.show', compact('lesson', 'section'));
+        $coursePanel = \App\Support\CoursePanel::fromRequest($request);
+
+        return view('admin.lessons.show', compact('lesson', 'section', 'coursePanel'));
     }
 
     public function edit(Lesson $lesson): View

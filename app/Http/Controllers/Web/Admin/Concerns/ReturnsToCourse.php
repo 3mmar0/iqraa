@@ -13,8 +13,13 @@ trait ReturnsToCourse
             return null;
         }
 
+        $panel = (string) $request->input('return_panel', 'admin');
+        if (! in_array($panel, ['admin', 'instructor'], true)) {
+            $panel = 'admin';
+        }
+
         return redirect()
-            ->route('admin.courses.show', [
+            ->route($panel.'.courses.show', [
                 'course' => $request->integer('return_course_id'),
                 'tab' => $request->input('return_tab', $defaultTab),
             ])

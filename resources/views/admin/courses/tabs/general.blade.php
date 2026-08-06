@@ -1,11 +1,13 @@
 ﻿@php
+    $panel = $coursePanel ?? 'admin';
     $statusLabels = ['draft' => 'مسودة', 'published' => 'منشور', 'archived' => 'مؤرشف', 'hidden' => 'مخفي'];
     $introExisting = $course->intro_video_path ? [
         'original_name' => $course->intro_video_original_name,
         'size' => $course->intro_video_size,
         'mime' => $course->intro_video_mime,
-        'stream_url' => route('admin.courses.intro-video.stream', $course),
+        'stream_url' => route($panel.'.courses.intro-video.stream', $course),
     ] : null;
+    $introUploadBase = url('/'.$panel.'/courses/'.$course->id.'/intro-video/uploads');
 @endphp
 
 <div class="grid gap-6 lg:grid-cols-3">
@@ -41,11 +43,11 @@
                 csrf: @js(csrf_token()),
                 existing: @js($introExisting),
                 urls: {
-                    init: @js(route('admin.courses.intro-video.init', $course)),
-                    status: (id) => @js(url('/admin/courses/'.$course->id.'/intro-video/uploads')).concat('/', id),
-                    chunk: (id) => @js(url('/admin/courses/'.$course->id.'/intro-video/uploads')).concat('/', id, '/chunk'),
-                    complete: (id) => @js(url('/admin/courses/'.$course->id.'/intro-video/uploads')).concat('/', id, '/complete'),
-                    destroy: @js(route('admin.courses.intro-video.destroy', $course)),
+                    init: @js(route($panel.'.courses.intro-video.init', $course)),
+                    status: (id) => @js($introUploadBase).concat('/', id),
+                    chunk: (id) => @js($introUploadBase).concat('/', id, '/chunk'),
+                    complete: (id) => @js($introUploadBase).concat('/', id, '/complete'),
+                    destroy: @js(route($panel.'.courses.intro-video.destroy', $course)),
                 }
             })"
         >
@@ -183,7 +185,7 @@
             <x-admin.kpi-card label="الدروس" :value="$course->lessons_count" />
             <x-admin.kpi-card label="الطلاب" :value="$course->enrollments_count" />
         </div>
-        @if (Route::has('admin.courses.assign-teacher'))
+        @if (($coursePanel ?? 'admin') === 'admin' && Route::has('admin.courses.assign-teacher'))
             <form method="POST" action="{{ route('admin.courses.assign-teacher', $course) }}" class="rounded-2xl border border-slate-200 bg-white p-4">
                 @csrf
                 <p class="mb-2 text-sm font-semibold text-slate-900">تعيين محاضر</p>

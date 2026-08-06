@@ -146,8 +146,8 @@ class LessonMediaController extends Controller
                     'size' => $asset->size,
                     'kind' => $kind,
                     'is_main' => (int) $lesson->fresh()->main_media_asset_id === (int) $asset->id,
-                    'preview_url' => route('admin.lessons.media.show', [$lesson, $asset]),
-                    'destroy_url' => route('admin.lessons.media.destroy', [$lesson, $asset]),
+                    'preview_url' => route(\App\Support\CoursePanel::fromRequest($request).'.lessons.media.show', [$lesson, $asset]),
+                    'destroy_url' => route(\App\Support\CoursePanel::fromRequest($request).'.lessons.media.destroy', [$lesson, $asset]),
                 ],
             ], 201);
         }

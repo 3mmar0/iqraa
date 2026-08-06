@@ -1,54 +1,125 @@
 ﻿@extends('layouts.instructor')
 
 @section('title', 'مقرراتي')
-@section('heading', 'مقرراتي')
-@section('subheading', 'إدارة محتوى مقرراتك ودروسها واختباراتها')
+@section('heading', 'المقررات')
+@section('subheading', 'إدارة مقرراتك وحالات النشر والمحتوى')
 
 @section('header-actions')
-    <a href="{{ route('instructor.courses.create') }}" class="inline-flex items-center gap-2 rounded-2xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">
+    <a href="{{ route('instructor.courses.create') }}" class="admin-btn admin-btn-primary">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         مقرر جديد
     </a>
 @endsection
 
 @section('content')
-    <div class="mx-auto max-w-6xl">
+    @php
+        $statusLabels = [
+            'draft' => 'مسودة',
+            'published' => 'منشور',
+            'archived' => 'مؤرشف',
+            'hidden' => 'مخفي',
+        ];
+    @endphp
+
+    <div class="admin-content-enter space-y-5">
+        <x-admin.filter-bar>
+            <form method="GET" class="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                <div class="sm:col-span-2">
+                    <label class="admin-label" for="q">بحث</label>
+                    <input id="q" type="search" name="q" value="{{ request('q') }}" placeholder="عنوان المقرر..." class="admin-input">
+                </div>
+                <div>
+                    <label class="admin-label" for="status">الحالة</label>
+                    <select id="status" name="status" class="admin-input">
+                        <option value="">الكل</option>
+                        @foreach ($statusLabels as $value => $label)
+                            <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="admin-label" for="category_id">التصنيف</label>
+                    <select id="category_id" name="category_id" class="admin-input">
+                        <option value="">الكل</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" @selected((string) request('category_id') === (string) $category->id)>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex items-end gap-2">
+                    <button class="admin-btn admin-btn-dark">تصفية</button>
+                    <a href="{{ route('instructor.courses.index') }}" class="admin-btn admin-btn-ghost">مسح</a>
+                </div>
+            </form>
+        </x-admin.filter-bar>
+
         @if ($courses->isEmpty())
-            <div class="rounded-2xl border border-dashed border-[var(--color-line)] bg-white px-6 py-14 text-center">
-                <p class="text-lg font-bold text-[var(--color-ink)]">لا توجد مقررات بعد</p>
-                <p class="mx-auto mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">أنشئ مقررك الأول أو انتظر تعيين الإدارة لك كمعلّم على مقرر قائم.</p>
-                <a href="{{ route('instructor.courses.create') }}" class="mt-6 inline-flex rounded-xl bg-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-white">إنشاء مقرر</a>
-            </div>
+            <x-admin.empty-state title="لا توجد مقررات" description="أنشئ مقرراً جديداً وابدأ بإضافة الدروس والمحتوى.">
+                <x-slot:actions>
+                    <a href="{{ route('instructor.courses.create') }}" class="admin-btn admin-btn-primary">مقرر جديد</a>
+                </x-slot:actions>
+            </x-admin.empty-state>
         @else
-            <ul class="grid gap-4 sm:grid-cols-2">
-                @foreach ($courses as $course)
-                    @php
-                        $cover = $course->image_path
-                            ? asset('storage/'.$course->image_path)
-                            : asset('images/home/course-cover-'.(($loop->index % 2) + 1).'.webp');
-                    @endphp
-                    <li>
-                        <a href="{{ route('instructor.courses.show', $course) }}"
-                           class="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white shadow-[0_14px_36px_-26px_rgba(47,58,69,0.4)] transition hover:-translate-y-0.5 hover:border-[var(--color-primary)]/40">
-                            <div class="relative h-36 overflow-hidden">
-                                <img src="{{ $cover }}" alt="" class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-ink)]/55 to-transparent"></div>
-                                <div class="absolute bottom-3 right-3 left-3 flex items-center justify-between gap-2">
-                                    <x-admin.status-badge :status="$course->status" />
-                                    <span class="rounded-lg bg-white/90 px-2 py-0.5 text-xs font-semibold text-[var(--color-ink)]">{{ $course->enrollments_count }} طالب</span>
+            <x-admin.data-table>
+                <thead class="bg-slate-50/90">
+                    <tr>
+                        <th class="px-4 py-3.5 text-right">المقرر</th>
+                        <th class="px-4 py-3.5 text-right">الترم</th>
+                        <th class="px-4 py-3.5 text-right">السنة</th>
+                        <th class="px-4 py-3.5 text-right">السعر</th>
+                        <th class="px-4 py-3.5 text-right">الطلاب</th>
+                        <th class="px-4 py-3.5 text-right">الدروس</th>
+                        <th class="px-4 py-3.5 text-right">الحالة</th>
+                        <th class="px-4 py-3.5 text-right">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach ($courses as $course)
+                        <tr>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center gap-3">
+                                    <div class="admin-entity-thumb">
+                                        @if ($course->image_path)
+                                            <img src="{{ asset('storage/'.$course->image_path) }}" alt="">
+                                        @else
+                                            {{ mb_substr($course->title, 0, 1) }}
+                                        @endif
+                                    </div>
+                                    <div class="min-w-0">
+                                        <a href="{{ route('instructor.courses.show', $course) }}" class="block truncate font-semibold text-slate-900 hover:text-[var(--color-primary)]">{{ $course->title }}</a>
+                                        @if ($course->category)
+                                            <p class="mt-0.5 truncate text-xs text-slate-500">{{ $course->category->name }}</p>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex flex-1 flex-col p-5">
-                                <h2 class="text-lg font-bold text-[var(--color-ink)] group-hover:text-[var(--color-primary-hover)]">{{ $course->title }}</h2>
-                                <p class="mt-2 text-sm text-[var(--color-text-secondary)]">
-                                    {{ $course->lessons_count }} درس · {{ $course->quizzes_count ?? 0 }} اختبار
-                                </p>
-                                <span class="mt-auto pt-4 text-sm font-semibold text-[var(--color-secondary)]">فتح المقرر ←</span>
-                            </div>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+                            </td>
+                            <td class="px-4 py-3.5 text-slate-600">{{ $course->semester?->name ?? '—' }}</td>
+                            <td class="px-4 py-3.5 text-slate-600">{{ $course->academicYear?->name ?? '—' }}</td>
+                            <td class="px-4 py-3.5 font-medium">{{ $course->price !== null ? number_format((float) $course->price, 2).' ر.س' : '—' }}</td>
+                            <td class="px-4 py-3.5">
+                                <span class="inline-flex min-w-[2rem] justify-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{{ $course->enrollments_count }}</span>
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <span class="inline-flex min-w-[2rem] justify-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{{ $course->lessons_count }}</span>
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <x-admin.status-badge :status="$course->status" :label="$statusLabels[$course->status] ?? $course->status" />
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex flex-wrap gap-1.5">
+                                    <a href="{{ route('instructor.courses.show', $course) }}" class="admin-btn admin-btn-ghost admin-btn-sm">عرض</a>
+                                    <a href="{{ route('instructor.courses.edit', $course) }}" class="admin-btn admin-btn-ghost admin-btn-sm">تعديل</a>
+                                    <a href="{{ route('instructor.courses.show', [$course, 'tab' => 'lessons']) }}" class="admin-btn admin-btn-ghost admin-btn-sm">الدروس</a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </x-admin.data-table>
+
+            @if ($courses->hasPages())
+                <div class="mt-1">{{ $courses->links() }}</div>
+            @endif
         @endif
     </div>
 @endsection

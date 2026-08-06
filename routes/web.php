@@ -175,13 +175,60 @@ Route::middleware('auth')->group(function () {
     Route::middleware('dashboard:instructor')->prefix('instructor')->name('instructor.')->group(function () {
         Route::get('/', [InstructorHomeController::class, 'index'])->name('home');
         Route::get('/dashboard', [InstructorDashboardController::class, 'index'])->name('dashboard');
+
         Route::get('/courses', [InstructorCourseController::class, 'index'])->name('courses.index');
         Route::get('/courses/create', [InstructorCourseController::class, 'create'])->name('courses.create');
         Route::post('/courses', [InstructorCourseController::class, 'store'])->name('courses.store');
-        Route::get('/courses/{course}', [InstructorCourseController::class, 'show'])->name('courses.show');
-        Route::post('/courses/{course}/lessons', [InstructorLessonController::class, 'store'])->name('lessons.store');
-        Route::post('/courses/{course}/quizzes', [InstructorQuizController::class, 'store'])->name('quizzes.store');
-        Route::post('/lessons/{lesson}/media', [MediaUploadController::class, 'store'])->name('media.store');
+        Route::middleware('owns.course')->group(function () {
+            Route::get('/courses/{course}', [InstructorCourseController::class, 'show'])->name('courses.show');
+            Route::get('/courses/{course}/edit', [InstructorCourseController::class, 'edit'])->name('courses.edit');
+            Route::put('/courses/{course}', [InstructorCourseController::class, 'update'])->name('courses.update');
+            Route::delete('/courses/{course}', [InstructorCourseController::class, 'destroy'])->name('courses.destroy');
+            Route::post('/courses/{course}/archive', [InstructorCourseController::class, 'archive'])->name('courses.archive');
+            Route::post('/courses/{course}/duplicate', [InstructorCourseController::class, 'duplicate'])->name('courses.duplicate');
+            Route::post('/courses/{course}/publish', [InstructorCourseController::class, 'publish'])->name('courses.publish');
+            Route::post('/courses/{course}/hide', [InstructorCourseController::class, 'hide'])->name('courses.hide');
+            Route::post('/courses/{course}/assign-semester', [InstructorCourseController::class, 'assignSemester'])->name('courses.assign-semester');
+            Route::post('/courses/{course}/enroll-student', [InstructorCourseController::class, 'enrollStudent'])->name('courses.enroll-student');
+            Route::post('/courses/{course}/unenroll-student', [InstructorCourseController::class, 'unenrollStudent'])->name('courses.unenroll-student');
+
+            Route::post('/courses/{course}/intro-video/init', [CourseIntroVideoController::class, 'init'])->name('courses.intro-video.init');
+            Route::get('/courses/{course}/intro-video/uploads/{upload}', [CourseIntroVideoController::class, 'status'])->name('courses.intro-video.status');
+            Route::post('/courses/{course}/intro-video/uploads/{upload}/chunk', [CourseIntroVideoController::class, 'chunk'])->name('courses.intro-video.chunk');
+            Route::post('/courses/{course}/intro-video/uploads/{upload}/complete', [CourseIntroVideoController::class, 'complete'])->name('courses.intro-video.complete');
+            Route::get('/courses/{course}/intro-video/stream', [CourseIntroVideoController::class, 'stream'])->name('courses.intro-video.stream');
+            Route::delete('/courses/{course}/intro-video', [CourseIntroVideoController::class, 'destroy'])->name('courses.intro-video.destroy');
+
+            Route::post('/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');
+            Route::post('/lessons/reorder', [AdminLessonController::class, 'reorder'])->name('lessons.reorder');
+            Route::get('/lessons/{lesson}', [AdminLessonController::class, 'show'])->name('lessons.show');
+            Route::put('/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('lessons.update');
+            Route::delete('/lessons/{lesson}', [AdminLessonController::class, 'destroy'])->name('lessons.destroy');
+            Route::post('/lessons/{lesson}/lock', [AdminLessonController::class, 'lock'])->name('lessons.lock');
+            Route::post('/lessons/{lesson}/unlock', [AdminLessonController::class, 'unlock'])->name('lessons.unlock');
+            Route::post('/lessons/{lesson}/media', [AdminLessonMediaController::class, 'store'])->name('lessons.media.store');
+            Route::get('/lessons/{lesson}/media/{media}', [AdminLessonMediaController::class, 'show'])->name('lessons.media.show');
+            Route::delete('/lessons/{lesson}/media/{media}', [AdminLessonMediaController::class, 'destroy'])->name('lessons.media.destroy');
+
+            Route::post('/quizzes', [AdminQuizController::class, 'store'])->name('quizzes.store');
+            Route::get('/quizzes/{quiz}', [AdminQuizController::class, 'show'])->name('quizzes.show');
+            Route::put('/quizzes/{quiz}', [AdminQuizController::class, 'update'])->name('quizzes.update');
+            Route::delete('/quizzes/{quiz}', [AdminQuizController::class, 'destroy'])->name('quizzes.destroy');
+            Route::post('/quizzes/{quiz}/publish', [AdminQuizController::class, 'publish'])->name('quizzes.publish');
+            Route::post('/quizzes/{quiz}/unpublish', [AdminQuizController::class, 'unpublish'])->name('quizzes.unpublish');
+            Route::post('/quizzes/{quiz}/questions', [AdminQuestionController::class, 'store'])->name('quizzes.questions.store');
+            Route::post('/quizzes/{quiz}/questions/reorder', [AdminQuestionController::class, 'reorder'])->name('quizzes.questions.reorder');
+            Route::put('/quizzes/{quiz}/questions/{question}', [AdminQuestionController::class, 'update'])->name('quizzes.questions.update');
+            Route::delete('/quizzes/{quiz}/questions/{question}', [AdminQuestionController::class, 'destroy'])->name('quizzes.questions.destroy');
+
+            Route::post('/assignments', [AdminAssignmentController::class, 'store'])->name('assignments.store');
+            Route::get('/assignments/{assignment}', [AdminAssignmentController::class, 'show'])->name('assignments.show');
+            Route::put('/assignments/{assignment}', [AdminAssignmentController::class, 'update'])->name('assignments.update');
+            Route::delete('/assignments/{assignment}', [AdminAssignmentController::class, 'destroy'])->name('assignments.destroy');
+            Route::post('/assignments/{assignment}/submissions/{submission}/grade', [AdminAssignmentController::class, 'gradeSubmission'])->name('assignments.submissions.grade');
+            Route::post('/assignments/{assignment}/submissions/{submission}/resubmit', [AdminAssignmentController::class, 'requestResubmit'])->name('assignments.submissions.resubmit');
+        });
+
         Route::get('/students', [StudentRosterController::class, 'index'])->name('students.index');
         Route::get('/announcements', [InstructorAnnouncementController::class, 'index'])->name('announcements.index');
         Route::post('/announcements', [InstructorAnnouncementController::class, 'store'])->name('announcements.store');

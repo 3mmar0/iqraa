@@ -7,21 +7,21 @@
         'duration_minutes' => $q->duration_minutes,
         'status' => $q->status,
         'show_correct_answers' => (bool) $q->show_correct_answers,
-        'update_url' => route('admin.quizzes.update', $q),
-        'destroy_url' => route('admin.quizzes.destroy', $q),
-        'show_url' => route('admin.quizzes.show', $q),
-        'publish_url' => route('admin.quizzes.publish', $q),
-        'unpublish_url' => route('admin.quizzes.unpublish', $q),
-        'questions_store_url' => route('admin.quizzes.questions.store', $q),
-        'questions_reorder_url' => route('admin.quizzes.questions.reorder', $q),
+        'update_url' => route(($coursePanel ?? 'admin').'.quizzes.update', $q),
+        'destroy_url' => route(($coursePanel ?? 'admin').'.quizzes.destroy', $q),
+        'show_url' => route(($coursePanel ?? 'admin').'.quizzes.show', $q),
+        'publish_url' => route(($coursePanel ?? 'admin').'.quizzes.publish', $q),
+        'unpublish_url' => route(($coursePanel ?? 'admin').'.quizzes.unpublish', $q),
+        'questions_store_url' => route(($coursePanel ?? 'admin').'.quizzes.questions.store', $q),
+        'questions_reorder_url' => route(($coursePanel ?? 'admin').'.quizzes.questions.reorder', $q),
         'questions' => $q->questions->map(fn ($question) => [
             'id' => $question->id,
             'type' => $question->type === 'short_text' ? 'text' : $question->type,
             'body' => $question->body,
             'points' => $question->points,
             'position' => $question->position,
-            'update_url' => route('admin.quizzes.questions.update', [$q, $question]),
-            'destroy_url' => route('admin.quizzes.questions.destroy', [$q, $question]),
+            'update_url' => route(($coursePanel ?? 'admin').'.quizzes.questions.update', [$q, $question]),
+            'destroy_url' => route(($coursePanel ?? 'admin').'.quizzes.questions.destroy', [$q, $question]),
             'options' => $question->options->map(fn ($opt) => [
                 'body' => $opt->body,
                 'is_correct' => (bool) $opt->is_correct,
@@ -125,7 +125,7 @@
             <p class="mt-0.5 text-xs text-slate-500">العنوان، المدة، وحالة النشر</p>
         </x-slot:header>
 
-        <form method="POST" :action="editing ? editing.update_url : '{{ route('admin.quizzes.store') }}'" class="grid gap-4 sm:grid-cols-2" :key="editing ? ('q-'+editing.id) : 'q-new'">
+        <form method="POST" :action="editing ? editing.update_url : '{{ route(($coursePanel ?? 'admin').'.quizzes.store') }}'" class="grid gap-4 sm:grid-cols-2" :key="editing ? ('q-'+editing.id) : 'q-new'">
             @csrf
             <template x-if="editing"><input type="hidden" name="_method" value="PUT"></template>
             @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'quizzes'])

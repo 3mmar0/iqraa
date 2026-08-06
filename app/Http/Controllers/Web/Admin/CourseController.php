@@ -125,7 +125,10 @@ class CourseController extends Controller
                 ->get(['id', 'name', 'email']);
         }
 
-        return view('admin.courses.show', compact('course', 'tab', 'availableStudents'));
+        return view('admin.courses.show', array_merge(
+            compact('course', 'tab', 'availableStudents'),
+            ['coursePanel' => 'admin']
+        ));
     }
 
     public function edit(Course $course): View

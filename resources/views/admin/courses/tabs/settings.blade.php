@@ -1,6 +1,6 @@
 ﻿<div class="space-y-5">
-    @if (Route::has('admin.courses.assign-semester'))
-        <form method="POST" action="{{ route('admin.courses.assign-semester', $course) }}" class="rounded-2xl border border-slate-200 bg-gradient-to-l from-slate-50/80 to-white p-5"
+    @if (Route::has(($coursePanel ?? 'admin').'.courses.assign-semester'))
+        <form method="POST" action="{{ route(($coursePanel ?? 'admin').'.courses.assign-semester', $course) }}" class="rounded-2xl border border-slate-200 bg-gradient-to-l from-slate-50/80 to-white p-5"
               x-data="{
                   yearId: '{{ $course->academic_year_id }}',
                   semesterId: '{{ $course->semester_id }}',
@@ -33,7 +33,7 @@
         </form>
     @endif
 
-    <form method="POST" action="{{ route('admin.courses.destroy', $course) }}" class="rounded-2xl border border-rose-200 bg-gradient-to-l from-rose-50 to-white p-5" onsubmit="return confirm('حذف المقرر؟');">
+    <form method="POST" action="{{ route(($coursePanel ?? 'admin').'.courses.destroy', $course) }}" class="rounded-2xl border border-rose-200 bg-gradient-to-l from-rose-50 to-white p-5" onsubmit="return confirm('حذف المقرر؟');">
         @csrf
         @method('DELETE')
         <p class="mb-1 text-sm font-semibold text-rose-900">منطقة الخطر</p>

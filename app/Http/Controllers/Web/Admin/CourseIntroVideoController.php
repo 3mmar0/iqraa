@@ -96,7 +96,7 @@ class CourseIntroVideoController extends Controller
                 'original_name' => $course->intro_video_original_name,
                 'size' => $course->intro_video_size,
                 'mime' => $course->intro_video_mime,
-                'stream_url' => route('admin.courses.intro-video.stream', $course),
+                'stream_url' => route(\App\Support\CoursePanel::fromRequest($request).'.courses.intro-video.stream', $course),
             ],
             'message' => 'تم رفع الفيديو التوضيحي بنجاح.',
         ]);
@@ -114,8 +114,10 @@ class CourseIntroVideoController extends Controller
             return response()->json(['message' => 'تم حذف الفيديو التوضيحي.']);
         }
 
+        $panel = \App\Support\CoursePanel::fromRequest($request);
+
         return redirect()
-            ->route('admin.courses.show', ['course' => $course, 'tab' => 'general'])
+            ->route($panel.'.courses.show', ['course' => $course, 'tab' => 'general'])
             ->with('status', 'تم حذف الفيديو التوضيحي.');
     }
 

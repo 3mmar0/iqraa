@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureDashboardAccess;
+use App\Http\Middleware\EnsureOwnsCourseContent;
 use App\Http\Middleware\EnsurePermission;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'dashboard' => EnsureDashboardAccess::class,
             'permission' => EnsurePermission::class,
+            'owns.course' => EnsureOwnsCourseContent::class,
         ]);
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->throttleApi();

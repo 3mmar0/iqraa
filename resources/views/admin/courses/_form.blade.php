@@ -1,5 +1,7 @@
 @php
     $c = $course;
+    $panel = $coursePanel ?? 'admin';
+    $lockInstructor = $lockInstructor ?? ($panel === 'instructor');
     $selectedYear = (string) old('academic_year_id', $c?->academic_year_id ?? '');
     $selectedSemester = (string) old('semester_id', $c?->semester_id ?? '');
     $semestersPayload = $semesters->map(fn ($s) => [
@@ -34,15 +36,23 @@
         }
     }"
 >
-    <div>
-        <label class="admin-label" for="instructor_user_id">المحاضر</label>
-        <select id="instructor_user_id" name="instructor_user_id" required class="admin-input">
-            <option value="">اختر محاضراً</option>
-            @foreach ($instructors as $instructor)
-                <option value="{{ $instructor->id }}" @selected((string) old('instructor_user_id', $c?->instructor_user_id) === (string) $instructor->id)>{{ $instructor->name }}</option>
-            @endforeach
-        </select>
-    </div>
+    @if ($lockInstructor)
+        <div>
+            <label class="admin-label" for="instructor_display">المحاضر</label>
+            <input id="instructor_display" type="text" value="{{ auth()->user()->name }}" disabled class="admin-input">
+            <p class="mt-1 text-xs text-slate-500">سيُسجَّل المقرر باسمك تلقائياً.</p>
+        </div>
+    @else
+        <div>
+            <label class="admin-label" for="instructor_user_id">المحاضر</label>
+            <select id="instructor_user_id" name="instructor_user_id" required class="admin-input">
+                <option value="">اختر محاضراً</option>
+                @foreach ($instructors as $instructor)
+                    <option value="{{ $instructor->id }}" @selected((string) old('instructor_user_id', $c?->instructor_user_id) === (string) $instructor->id)>{{ $instructor->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
     <div>
         <label class="admin-label" for="category_id">التصنيف</label>
         <select id="category_id" name="category_id" class="admin-input">

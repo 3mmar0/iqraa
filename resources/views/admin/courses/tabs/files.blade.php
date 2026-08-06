@@ -32,7 +32,7 @@
                             <p class="font-semibold text-slate-900">{{ $row['asset']->original_name ?? basename($row['asset']->path) }}</p>
                             <p class="text-xs text-slate-500">{{ $row['lesson']->title }} · {{ $row['asset']->type }}</p>
                         </div>
-                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$row['lesson'], $row['asset']]) }}" onsubmit="return confirm('حذف الملف؟');">
+                        <form method="POST" action="{{ route(($coursePanel ?? 'admin').'.lessons.media.destroy', [$row['lesson'], $row['asset']]) }}" onsubmit="return confirm('حذف الملف؟');">
                             @csrf
                             @method('DELETE')
                             <button class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>

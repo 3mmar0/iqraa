@@ -11,19 +11,19 @@
         'main_media_asset_id' => $l->main_media_asset_id,
         'quiz_id' => $l->quiz_id,
         'media_count' => $l->mediaAssets->count(),
-        'update_url' => route('admin.lessons.update', $l),
-        'destroy_url' => route('admin.lessons.destroy', $l),
-        'lock_url' => route('admin.lessons.lock', $l),
-        'unlock_url' => route('admin.lessons.unlock', $l),
-        'show_url' => route('admin.lessons.show', $l),
-        'media_store_url' => route('admin.lessons.media.store', $l),
+        'update_url' => route(($coursePanel ?? 'admin').'.lessons.update', $l),
+        'destroy_url' => route(($coursePanel ?? 'admin').'.lessons.destroy', $l),
+        'lock_url' => route(($coursePanel ?? 'admin').'.lessons.lock', $l),
+        'unlock_url' => route(($coursePanel ?? 'admin').'.lessons.unlock', $l),
+        'show_url' => route(($coursePanel ?? 'admin').'.lessons.show', $l),
+        'media_store_url' => route(($coursePanel ?? 'admin').'.lessons.media.store', $l),
         'media' => $l->mediaAssets->map(fn ($a) => [
             'id' => $a->id,
             'name' => $a->original_name ?? basename($a->path),
             'type' => $a->type,
             'mime' => $a->mime,
-            'preview_url' => route('admin.lessons.media.show', [$l, $a]),
-            'destroy_url' => route('admin.lessons.media.destroy', [$l, $a]),
+            'preview_url' => route(($coursePanel ?? 'admin').'.lessons.media.show', [$l, $a]),
+            'destroy_url' => route(($coursePanel ?? 'admin').'.lessons.media.destroy', [$l, $a]),
             'kind' => match (true) {
                 $a->type === 'video' || str_starts_with((string) $a->mime, 'video/') => 'video',
                 $a->type === 'image' || str_starts_with((string) $a->mime, 'image/') => 'image',
@@ -107,7 +107,7 @@
 
         <form
             method="POST"
-            :action="editing ? editing.update_url : '{{ route('admin.lessons.store') }}'"
+            :action="editing ? editing.update_url : '{{ route(($coursePanel ?? 'admin').'.lessons.store') }}'"
             class="grid gap-4 sm:grid-cols-2"
             :key="editing ? ('edit-' + editing.id) : 'create'"
         >

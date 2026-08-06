@@ -37,7 +37,7 @@
                                 · {{ number_format(($row['asset']->size ?? 0) / 1048576, 1) }} MB
                             </p>
                         </div>
-                        <form method="POST" action="{{ route('admin.lessons.media.destroy', [$row['lesson'], $row['asset']]) }}" onsubmit="return confirm('حذف الفيديو؟');">
+                        <form method="POST" action="{{ route(($coursePanel ?? 'admin').'.lessons.media.destroy', [$row['lesson'], $row['asset']]) }}" onsubmit="return confirm('حذف الفيديو؟');">
                             @csrf
                             @method('DELETE')
                             <button class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>

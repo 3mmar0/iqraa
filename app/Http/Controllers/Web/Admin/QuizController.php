@@ -88,7 +88,9 @@ class QuizController extends Controller
 
         $quiz->load(['course', 'questions.options']);
 
-        return view('admin.quizzes.show', compact('quiz', 'tab'));
+        $coursePanel = \App\Support\CoursePanel::fromRequest($request);
+
+        return view('admin.quizzes.show', compact('quiz', 'tab', 'coursePanel'));
     }
 
     public function edit(Quiz $quiz): View

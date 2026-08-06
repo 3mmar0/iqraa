@@ -1,26 +1,27 @@
-﻿@extends('layouts.admin')
+﻿@extends(($coursePanel ?? 'admin') === 'instructor' ? 'layouts.instructor' : 'layouts.admin')
 
 @section('title', $lesson->title)
 @section('heading', $lesson->title)
 @section('subheading', $lesson->course?->title)
 
 @section('header-actions')
-    <a href="{{ route('admin.lessons.index', ['course_id' => $lesson->course_id]) }}" class="admin-btn admin-btn-ghost">رجوع</a>
-    <a href="{{ route('admin.lessons.edit', $lesson) }}" class="admin-btn admin-btn-primary">تعديل</a>
+    @php($panel = $coursePanel ?? 'admin')
+    <a href="{{ route($panel.'.courses.show', [$lesson->course, 'tab' => 'lessons']) }}" class="admin-btn admin-btn-ghost">رجوع للمقرر</a>
 @endsection
 
 @section('content')
     @php
+        $panel = $coursePanel ?? 'admin';
         $statusLabels = ['draft' => 'مسودة', 'published' => 'منشور', 'scheduled' => 'مجدول', 'archived' => 'مؤرشف'];
         $sections = [
-            ['label' => 'عام', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'general']), 'active' => $section === 'general'],
-            ['label' => 'الفيديو', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'video']), 'active' => $section === 'video'],
-            ['label' => 'الملفات', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'files']), 'active' => $section === 'files'],
-            ['label' => 'الموارد', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'resources']), 'active' => $section === 'resources'],
-            ['label' => 'الاختبار', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'quiz']), 'active' => $section === 'quiz'],
-            ['label' => 'الملاحظات', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'notes']), 'active' => $section === 'notes'],
-            ['label' => 'التعليقات', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'comments']), 'active' => $section === 'comments'],
-            ['label' => 'الإعدادات', 'href' => route('admin.lessons.show', [$lesson, 'section' => 'settings']), 'active' => $section === 'settings'],
+            ['label' => 'عام', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'general']), 'active' => $section === 'general'],
+            ['label' => 'الفيديو', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'video']), 'active' => $section === 'video'],
+            ['label' => 'الملفات', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'files']), 'active' => $section === 'files'],
+            ['label' => 'الموارد', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'resources']), 'active' => $section === 'resources'],
+            ['label' => 'الاختبار', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'quiz']), 'active' => $section === 'quiz'],
+            ['label' => 'الملاحظات', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'notes']), 'active' => $section === 'notes'],
+            ['label' => 'التعليقات', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'comments']), 'active' => $section === 'comments'],
+            ['label' => 'الإعدادات', 'href' => route($panel.'.lessons.show', [$lesson, 'section' => 'settings']), 'active' => $section === 'settings'],
         ];
         $videos = $lesson->mediaAssets->where('type', 'video');
         $files = $lesson->mediaAssets->where('type', '!=', 'video');
@@ -32,14 +33,14 @@
             @if ($lesson->is_locked)
                 <span class="admin-chip admin-chip-warning">مقفل</span>
             @endif
-            @if (Route::has('admin.lessons.lock') && ! $lesson->is_locked)
-                <form method="POST" action="{{ route('admin.lessons.lock', $lesson) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">قفل</button></form>
+            @if (Route::has($panel.'.lessons.lock') && ! $lesson->is_locked)
+                <form method="POST" action="{{ route($panel.'.lessons.lock', $lesson) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">قفل</button></form>
             @endif
-            @if (Route::has('admin.lessons.unlock') && $lesson->is_locked)
-                <form method="POST" action="{{ route('admin.lessons.unlock', $lesson) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">فتح</button></form>
+            @if (Route::has($panel.'.lessons.unlock') && $lesson->is_locked)
+                <form method="POST" action="{{ route($panel.'.lessons.unlock', $lesson) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">فتح</button></form>
             @endif
-            @if (Route::has('admin.lessons.duplicate'))
-                <form method="POST" action="{{ route('admin.lessons.duplicate', $lesson) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">نسخ</button></form>
+            @if (Route::has($panel.'.lessons.duplicate'))
+                <form method="POST" action="{{ route($panel.'.lessons.duplicate', $lesson) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">نسخ</button></form>
             @endif
         </x-admin.action-toolbar>
 
@@ -68,7 +69,7 @@
             @elseif ($section === 'video')
                 <x-admin.media-uploader
                     class="mb-6"
-                    :upload-url="route('admin.lessons.media.store', $lesson)"
+                    :upload-url="route($panel.'.lessons.media.store', $lesson)"
                     default-type="video"
                     :show-type-select="false"
                     accept="video/*,.mp4,.webm,.mov,.mkv,.m4v"
@@ -80,7 +81,7 @@
                         <li class="rounded-2xl border border-slate-200 p-4">
                             <div class="mb-3 flex items-center justify-between gap-3">
                                 <span class="font-semibold text-slate-900">{{ $asset->original_name ?? basename($asset->path) }}</span>
-                                <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
+                                <form method="POST" action="{{ route($panel.'.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
                                     @csrf
                                     @method('DELETE')
                                     <button class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>
@@ -97,7 +98,7 @@
             @elseif ($section === 'files')
                 <x-admin.media-uploader
                     class="mb-6"
-                    :upload-url="route('admin.lessons.media.store', $lesson)"
+                    :upload-url="route($panel.'.lessons.media.store', $lesson)"
                     accept=".pdf,image/*,.doc,.docx,.zip,application/pdf"
                     button-label="رفع الملف"
                     hint="اسحب الملف هنا أو انقر للاختيار"
@@ -107,7 +108,7 @@
                         <li class="rounded-2xl border border-slate-200 p-4">
                             <div class="mb-3 flex items-center justify-between gap-3">
                                 <span class="font-semibold text-slate-900">{{ $asset->original_name ?? basename($asset->path) }} <span class="text-xs font-normal text-slate-500">({{ $asset->type }})</span></span>
-                                <form method="POST" action="{{ route('admin.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
+                                <form method="POST" action="{{ route($panel.'.lessons.media.destroy', [$lesson, $asset]) }}" onsubmit="return confirm('حذف الملف؟');">
                                     @csrf
                                     @method('DELETE')
                                     <button class="admin-btn admin-btn-danger admin-btn-sm">حذف</button>
@@ -128,13 +129,13 @@
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-5">
                         <p class="text-base font-semibold text-slate-900">{{ $lesson->quiz->title }}</p>
                         <p class="mt-1 text-sm text-slate-500">{{ $lesson->quiz->questions->count() }} سؤال · {{ $lesson->quiz->duration_minutes ?? '—' }} دقيقة</p>
-                        <a href="{{ route('admin.quizzes.show', $lesson->quiz) }}" class="admin-btn admin-btn-ghost admin-btn-sm mt-4">عرض الاختبار</a>
+                        <a href="{{ route($panel.'.quizzes.show', $lesson->quiz) }}" class="admin-btn admin-btn-ghost admin-btn-sm mt-4">عرض الاختبار</a>
                     </div>
                 @else
                     <x-admin.empty-state title="لا اختبار مرتبط" description="اربط اختباراً بهذا الدرس.">
-                        @if (Route::has('admin.lessons.attach-quiz'))
+                        @if (Route::has($panel.'.lessons.attach-quiz'))
                             <x-slot:actions>
-                                <form method="POST" action="{{ route('admin.lessons.attach-quiz', $lesson) }}" class="flex flex-wrap items-end gap-2">
+                                <form method="POST" action="{{ route($panel.'.lessons.attach-quiz', $lesson) }}" class="flex flex-wrap items-end gap-2">
                                     @csrf
                                     <select name="quiz_id" class="admin-input min-w-[14rem]">
                                         @foreach (\App\Models\Quiz::orderBy('title')->get() as $quiz)
@@ -152,15 +153,15 @@
             @elseif ($section === 'comments')
                 <x-admin.empty-state title="التعليقات" description="تعليقات الطلاب على الدرس ستظهر هنا." />
             @elseif ($section === 'settings')
-                @if (Route::has('admin.lessons.schedule-publish'))
-                    <form method="POST" action="{{ route('admin.lessons.schedule-publish', $lesson) }}" class="mb-5 rounded-2xl border border-slate-200 p-5">
+                @if (Route::has($panel.'.lessons.schedule-publish'))
+                    <form method="POST" action="{{ route($panel.'.lessons.schedule-publish', $lesson) }}" class="mb-5 rounded-2xl border border-slate-200 p-5">
                         @csrf
                         <p class="mb-3 text-sm font-semibold text-slate-900">جدولة النشر</p>
                         <input type="datetime-local" name="published_at" value="{{ $lesson->published_at?->format('Y-m-d\TH:i') }}" class="admin-input mb-3 max-w-xs">
                         <button class="admin-btn admin-btn-primary">حفظ</button>
                     </form>
                 @endif
-                <form method="POST" action="{{ route('admin.lessons.destroy', $lesson) }}" onsubmit="return confirm('حذف الدرس؟');">
+                <form method="POST" action="{{ route($panel.'.lessons.destroy', $lesson) }}" onsubmit="return confirm('حذف الدرس؟');">
                     @csrf
                     @method('DELETE')
                     <button class="admin-btn admin-btn-danger">حذف الدرس</button>

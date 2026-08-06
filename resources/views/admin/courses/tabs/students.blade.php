@@ -1,7 +1,7 @@
 <div class="space-y-6">
     <section class="rounded-2xl border border-slate-200 bg-gradient-to-l from-[var(--color-teal-50)]/50 to-white p-5">
         <h3 class="mb-3 text-sm font-semibold text-slate-900">إلحاق طالب</h3>
-        <form method="POST" action="{{ route('admin.courses.enroll-student', $course) }}" class="flex flex-wrap items-end gap-3">
+        <form method="POST" action="{{ route(($coursePanel ?? 'admin').'.courses.enroll-student', $course) }}" class="flex flex-wrap items-end gap-3">
             @csrf
             <div class="min-w-[16rem] flex-1">
                 <label class="admin-label" for="enroll_user_id">الطالب</label>
@@ -38,11 +38,11 @@
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        @if ($enrollment->user)
+                        @if ($enrollment->user && ($coursePanel ?? 'admin') === 'admin' && Route::has('admin.students.show'))
                             <a href="{{ route('admin.students.show', $enrollment->user) }}" class="admin-btn admin-btn-ghost admin-btn-sm">الملف</a>
                         @endif
                         @if ($enrollment->status === 'active' && $enrollment->user)
-                            <form method="POST" action="{{ route('admin.courses.unenroll-student', $course) }}" onsubmit="return confirm('إزالة الطالب من المقرر؟');">
+                            <form method="POST" action="{{ route(($coursePanel ?? 'admin').'.courses.unenroll-student', $course) }}" onsubmit="return confirm('إزالة الطالب من المقرر؟');">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ $enrollment->user_id }}">
                                 <button class="admin-btn admin-btn-danger admin-btn-sm">إزالة</button>

@@ -14,9 +14,9 @@
         'due_at' => $a->due_at?->format('Y-m-d\TH:i'),
         'due_label' => $a->due_at?->format('Y-m-d H:i'),
         'status' => $a->status,
-        'update_url' => route('admin.assignments.update', $a),
-        'destroy_url' => route('admin.assignments.destroy', $a),
-        'show_url' => route('admin.assignments.show', $a),
+        'update_url' => route(($coursePanel ?? 'admin').'.assignments.update', $a),
+        'destroy_url' => route(($coursePanel ?? 'admin').'.assignments.destroy', $a),
+        'show_url' => route(($coursePanel ?? 'admin').'.assignments.show', $a),
         'submissions' => $a->relationLoaded('submissions')
             ? $a->submissions->map(fn ($s) => [
                 'id' => $s->id,
@@ -26,8 +26,8 @@
                 'submitted_at' => $s->submitted_at?->format('Y-m-d H:i'),
                 'is_late' => $a->due_at && $s->submitted_at && $s->submitted_at->gt($a->due_at),
                 'body' => $s->body ?? '',
-                'grade_url' => route('admin.assignments.submissions.grade', [$a, $s]),
-                'resubmit_url' => route('admin.assignments.submissions.resubmit', [$a, $s]),
+                'grade_url' => route(($coursePanel ?? 'admin').'.assignments.submissions.grade', [$a, $s]),
+                'resubmit_url' => route(($coursePanel ?? 'admin').'.assignments.submissions.resubmit', [$a, $s]),
             ])->values()
             : [],
     ])->values();
@@ -96,7 +96,7 @@
             <p class="mt-0.5 text-xs text-slate-500">أدخل بيانات الواجب ثم احفظ</p>
         </x-slot:header>
 
-        <form method="POST" :action="editing ? editing.update_url : '{{ route('admin.assignments.store') }}'" class="grid gap-4 sm:grid-cols-2" :key="editing ? ('a-'+editing.id) : 'a-new'">
+        <form method="POST" :action="editing ? editing.update_url : '{{ route(($coursePanel ?? 'admin').'.assignments.store') }}'" class="grid gap-4 sm:grid-cols-2" :key="editing ? ('a-'+editing.id) : 'a-new'">
             @csrf
             <template x-if="editing"><input type="hidden" name="_method" value="PUT"></template>
             @include('admin.courses._return_fields', ['course' => $course, 'tab' => 'assignments'])

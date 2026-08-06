@@ -1,32 +1,33 @@
-﻿@extends('layouts.admin')
+﻿@php
+    $panel = $coursePanel ?? 'admin';
+    $statusLabels = ['draft' => 'مسودة', 'published' => 'منشور', 'archived' => 'مؤرشف', 'hidden' => 'مخفي'];
+    $tabs = [
+        ['label' => 'عام', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'general']), 'active' => $tab === 'general'],
+        ['label' => 'الدروس', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'lessons']), 'active' => $tab === 'lessons'],
+        ['label' => 'الملفات', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'files']), 'active' => $tab === 'files'],
+        ['label' => 'الفيديو', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'videos']), 'active' => $tab === 'videos'],
+        ['label' => 'الاختبارات', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'quizzes']), 'active' => $tab === 'quizzes'],
+        ['label' => 'الواجبات', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'assignments']), 'active' => $tab === 'assignments'],
+        ['label' => 'الطلاب', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'students']), 'active' => $tab === 'students'],
+        ['label' => 'التحليلات', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'analytics']), 'active' => $tab === 'analytics'],
+        ['label' => 'التقييمات', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'reviews']), 'active' => $tab === 'reviews'],
+        ['label' => 'الإعدادات', 'href' => route($panel.'.courses.show', [$course, 'tab' => 'settings']), 'active' => $tab === 'settings'],
+    ];
+@endphp
+
+@extends($panel === 'instructor' ? 'layouts.instructor' : 'layouts.admin')
 
 @section('title', $course->title)
 @section('heading', $course->title)
 @section('subheading', 'تفاصيل المقرر وإدارته')
 
 @section('header-actions')
-    <a href="{{ route('admin.courses.index') }}" class="admin-btn admin-btn-ghost">رجوع</a>
-    <a href="{{ route('admin.courses.edit', $course) }}" class="admin-btn admin-btn-primary">تعديل المقرر</a>
+    <a href="{{ route($panel.'.courses.index') }}" class="admin-btn admin-btn-ghost">رجوع</a>
+    <a href="{{ route($panel.'.courses.edit', $course) }}" class="admin-btn admin-btn-primary">تعديل المقرر</a>
 @endsection
 
 @section('content')
     @include('components.alert')
-
-    @php
-        $statusLabels = ['draft' => 'مسودة', 'published' => 'منشور', 'archived' => 'مؤرشف', 'hidden' => 'مخفي'];
-        $tabs = [
-            ['label' => 'عام', 'href' => route('admin.courses.show', [$course, 'tab' => 'general']), 'active' => $tab === 'general'],
-            ['label' => 'الدروس', 'href' => route('admin.courses.show', [$course, 'tab' => 'lessons']), 'active' => $tab === 'lessons'],
-            ['label' => 'الملفات', 'href' => route('admin.courses.show', [$course, 'tab' => 'files']), 'active' => $tab === 'files'],
-            ['label' => 'الفيديو', 'href' => route('admin.courses.show', [$course, 'tab' => 'videos']), 'active' => $tab === 'videos'],
-            ['label' => 'الاختبارات', 'href' => route('admin.courses.show', [$course, 'tab' => 'quizzes']), 'active' => $tab === 'quizzes'],
-            ['label' => 'الواجبات', 'href' => route('admin.courses.show', [$course, 'tab' => 'assignments']), 'active' => $tab === 'assignments'],
-            ['label' => 'الطلاب', 'href' => route('admin.courses.show', [$course, 'tab' => 'students']), 'active' => $tab === 'students'],
-            ['label' => 'التحليلات', 'href' => route('admin.courses.show', [$course, 'tab' => 'analytics']), 'active' => $tab === 'analytics'],
-            ['label' => 'التقييمات', 'href' => route('admin.courses.show', [$course, 'tab' => 'reviews']), 'active' => $tab === 'reviews'],
-            ['label' => 'الإعدادات', 'href' => route('admin.courses.show', [$course, 'tab' => 'settings']), 'active' => $tab === 'settings'],
-        ];
-    @endphp
 
     <div class="admin-content-enter space-y-5">
         <div class="admin-panel overflow-hidden">
@@ -52,17 +53,17 @@
                         </div>
                     </div>
                     <x-admin.action-toolbar class="!mb-0 !border-0 !bg-transparent !p-0">
-                        @if (Route::has('admin.courses.publish'))
-                            <form method="POST" action="{{ route('admin.courses.publish', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">نشر</button></form>
+                        @if (Route::has($panel.'.courses.publish'))
+                            <form method="POST" action="{{ route($panel.'.courses.publish', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">نشر</button></form>
                         @endif
-                        @if (Route::has('admin.courses.hide'))
-                            <form method="POST" action="{{ route('admin.courses.hide', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">إخفاء</button></form>
+                        @if (Route::has($panel.'.courses.hide'))
+                            <form method="POST" action="{{ route($panel.'.courses.hide', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">إخفاء</button></form>
                         @endif
-                        @if (Route::has('admin.courses.archive'))
-                            <form method="POST" action="{{ route('admin.courses.archive', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">أرشفة</button></form>
+                        @if (Route::has($panel.'.courses.archive'))
+                            <form method="POST" action="{{ route($panel.'.courses.archive', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">أرشفة</button></form>
                         @endif
-                        @if (Route::has('admin.courses.duplicate'))
-                            <form method="POST" action="{{ route('admin.courses.duplicate', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">نسخ</button></form>
+                        @if (Route::has($panel.'.courses.duplicate'))
+                            <form method="POST" action="{{ route($panel.'.courses.duplicate', $course) }}">@csrf<button class="admin-btn admin-btn-ghost admin-btn-sm">نسخ</button></form>
                         @endif
                     </x-admin.action-toolbar>
                 </div>
