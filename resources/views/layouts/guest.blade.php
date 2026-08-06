@@ -11,32 +11,53 @@
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        .site-brand { font-family: 'Tajawal', ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
-        .guest-shell { --guest-wash: url('{{ asset('images/home/reading-room-wash.webp') }}'); }
-    </style>
 </head>
 <body class="guest-shell font-sans text-[var(--color-ink)] antialiased">
-    <main class="relative z-10 mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12 sm:px-6">
-        <div class="guest-rise mb-8 flex justify-center">
-            <x-brand-logo href="{{ url('/') }}" size="guest" />
-        </div>
-
-        @if (session('status'))
-            <div class="mb-4 rounded-2xl border border-[var(--color-primary)]/25 bg-[var(--color-primary-light)] px-4 py-3 text-sm text-[var(--color-primary-hover)]" role="status">
-                {{ session('status') }}
+    <div class="guest-frame">
+        <aside class="guest-aside" aria-hidden="true">
+            <img
+                src="{{ asset('images/home/reading-room-hero.webp') }}"
+                alt=""
+                class="guest-aside-photo"
+                width="1200"
+                height="1600"
+                decoding="async"
+            >
+            <div class="guest-aside-veil"></div>
+            <div class="guest-aside-content">
+                <x-brand-logo href="{{ url('/') }}" size="xl" />
+                <p class="guest-aside-line">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</p>
+                <p class="guest-aside-sub">مسار عربي مرتّب للمقررات والدروس والمتابعة — من أول خطوة حتى الإتمام.</p>
             </div>
-        @endif
+        </aside>
 
-        @if (session('error'))
-            <div class="mb-4 rounded-2xl border border-[var(--color-danger)]/30 bg-[var(--color-sand)] px-4 py-3 text-sm text-[var(--color-danger)]" role="alert">
-                {{ session('error') }}
+        <div class="guest-stage">
+            <div class="guest-stage-inner guest-rise">
+                <div class="guest-mobile-brand lg:hidden">
+                    <x-brand-logo href="{{ url('/') }}" size="lg" />
+                </div>
+
+                @if (session('status'))
+                    <div class="guest-alert guest-alert-ok" role="status">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="guest-alert guest-alert-err" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <div class="guest-panel guest-rise-delay">
+                    @yield('content')
+                </div>
+
+                <p class="guest-home-link">
+                    <a href="{{ url('/') }}">العودة إلى الرئيسية</a>
+                </p>
             </div>
-        @endif
-
-        <div class="guest-panel guest-rise-delay p-6 sm:p-8">
-            @yield('content')
         </div>
-    </main>
+    </div>
 </body>
 </html>

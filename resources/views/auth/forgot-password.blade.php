@@ -3,25 +3,28 @@
 @section('title', 'استعادة كلمة المرور')
 
 @section('content')
-    <h1 class="text-2xl font-bold tracking-tight text-[var(--color-ink)]">نسيت كلمة المرور؟</h1>
-    <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">أدخل بريدك وسنرسل رابط الاستعادة.</p>
+    <header class="guest-head">
+        <h1 class="guest-title">استعادة كلمة المرور</h1>
+        <p class="guest-lead">أدخل بريدك وسنرسل رابطاً آمناً لتعيين كلمة مرور جديدة.</p>
+    </header>
 
-    <form method="POST" action="{{ route('password.email') }}" class="mt-6 space-y-5">
+    <form method="POST" action="{{ route('password.email') }}" class="guest-form">
         @csrf
-        <div>
+        <div class="guest-field">
             <label class="guest-label" for="email">البريد الإلكتروني</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
                    autocomplete="email"
+                   placeholder="name@example.com"
                    aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
                    class="guest-input">
             @error('email')
-                <p class="mt-1.5 text-sm text-[var(--color-danger)]">{{ $message }}</p>
+                <p class="guest-error">{{ $message }}</p>
             @enderror
         </div>
-        <button type="submit" class="guest-submit">إرسال الرابط</button>
+        <button type="submit" class="guest-submit">إرسال رابط الاستعادة</button>
     </form>
 
-    <p class="mt-6 text-center text-sm text-[var(--color-text-secondary)]">
-        <a href="{{ route('login') }}" class="font-medium text-[var(--color-secondary)] hover:text-[var(--color-secondary-hover)] hover:underline">العودة لتسجيل الدخول</a>
+    <p class="guest-switch">
+        <a href="{{ route('login') }}" class="guest-text-link">العودة لتسجيل الدخول</a>
     </p>
 @endsection
