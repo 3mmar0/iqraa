@@ -1,0 +1,92 @@
+name: Deploy Iqraa
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-iqraa
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.IQRAA_SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.IQRAA_SSH_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Rsync application
+        env:
+          SSH_HOST: ${{ secrets.IQRAA_SSH_HOST }}
+          SSH_USER: ${{ secrets.IQRAA_SSH_USER }}
+        run: |
+          rsync -az --delete --checksum \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.cursor/' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='vendor/' \
+            --exclude='node_modules/' \
+            --exclude='storage/logs/' \
+            --exclude='storage/framework/cache/' \
+            --exclude='storage/framework/sessions/' \
+            --exclude='storage/framework/views/' \
+            --exclude='storage/app/private/' \
+            --exclude='database/*.sqlite' \
+            --exclude='tests/' \
+            --exclude='specs/' \
+            --exclude='.specify/' \
+            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes" \
+            ./ "${SSH_USER}@${SSH_HOST}:/var/www/clients/iqraa.ammarelgndy.cloud/"
+
+      - name: Confirm Blade landed on server
+        env:
+          SSH_HOST: ${{ secrets.IQRAA_SSH_HOST }}
+          SSH_USER: ${{ secrets.IQRAA_SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+            "${SSH_USER}@${SSH_HOST}" \
+            'grep -Fq "reading-room-hero" /var/www/clients/iqraa.ammarelgndy.cloud/resources/views/public/home.blade.php && grep -Fq "site-brand" /var/www/clients/iqraa.ammarelgndy.cloud/resources/views/layouts/dashboard.blade.php && echo OK_FILES_ON_DISK'
+
+      - name: Install & run deploy script from synced repo
+        env:
+          SSH_HOST: ${{ secrets.IQRAA_SSH_HOST }}
+          SSH_USER: ${{ secrets.IQRAA_SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+            "${SSH_USER}@${SSH_HOST}" \
+            'sudo cp /var/www/clients/iqraa.ammarelgndy.cloud/scripts/deploy-iqraa.sh /usr/local/bin/deploy-iqraa.sh && sudo chmod 755 /usr/local/bin/deploy-iqraa.sh && sudo /usr/local/bin/deploy-iqraa.sh'
+
+      - name: Verify homepage HTML is the new release
+        run: |
+          for i in 1 2 3 4 5 6 7 8; do
+            stamp=$(date +%s)
+            body=$(curl -sS -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "https://iqraa.ammarelgndy.cloud/?v=${stamp}")
+            code=$(curl -sS -o /dev/null -w "%{http_code}" -H 'Cache-Control: no-cache' "https://iqraa.ammarelgndy.cloud/?v=${stamp}" || true)
+            echo "Attempt $i: HTTP $code, bytes=${#body}"
+            if echo "$body" | grep -Fq 'reading-room-hero'; then
+              echo "Reading-room homepage marker found — deploy is live."
+              exit 0
+            fi
+            if echo "$body" | grep -Fq 'site-brand'; then
+              echo "Homepage redesign marker found — deploy is live."
+              exit 0
+            fi
+            sleep 4
+          done
+          echo "Homepage still stale after deploy. Snippet:"
+          printf '%s' "$body" | head -c 1000
+          echo
+          exit 1

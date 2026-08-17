@@ -1,38 +1,48 @@
-# Deployment — yatmaen.ammarelgndy.cloud
+# Deployment — iqraa.ammarelgndy.cloud
 
 ## Production URL
 
-https://yatmaen.ammarelgndy.cloud
+https://iqraa.ammarelgndy.cloud
 
 ## Server layout
 
 | Item | Value |
 |------|--------|
-| App path | `/var/www/clients/yatmaen.ammarelgndy.cloud` |
+| App path | `/var/www/clients/iqraa.ammarelgndy.cloud` |
 | Web server | nginx + PHP 8.4-FPM |
-| Database | MySQL `yatmaen` (user `yatmaen`) |
+| Database | MySQL `iqraa` (user `iqraa`) |
 | Cache / queue / session | Redis |
-| Deploy script | `/usr/local/bin/deploy-yatmaen.sh` |
-| Queue worker | Supervisor `yatmaen-queue` |
+| Deploy script | `/usr/local/bin/deploy-iqraa.sh` |
+| Queue worker | Supervisor `iqraa-queue` |
 
 ## GitHub Actions CI/CD
 
-Workflow: `.github/workflows/deploy-yatmaen.yml`
+Workflow: `.github/workflows/deploy-iqraa.yml`
 
 Required repository secrets:
 
 | Secret | Description |
 |--------|-------------|
-| `YATMAEN_SSH_PRIVATE_KEY` | CI deploy private key (`yatmaen_ci`) |
-| `YATMAEN_SSH_HOST` | `187.127.71.130` |
-| `YATMAEN_SSH_USER` | `deploy` |
+| `IQRAA_SSH_PRIVATE_KEY` | CI deploy private key |
+| `IQRAA_SSH_HOST` | `187.127.71.130` |
+| `IQRAA_SSH_USER` | `deploy` |
 
-Push to `main` (or `master`) triggers rsync + remote `deploy-yatmaen.sh`.
+Push to `main` (or `master`) triggers rsync + remote `deploy-iqraa.sh`.
+
+## First-time server setup
+
+Run on the VPS as a user with sudo:
+
+```bash
+sudo bash scripts/server-setup-iqraa.sh
+```
+
+This creates the app directory, MySQL database/user, nginx vhost, SSL cert, supervisor worker, and `.env` from `.env.example`.
 
 ## Manual deploy
 
 ```bash
-sudo /usr/local/bin/deploy-yatmaen.sh
+sudo /usr/local/bin/deploy-iqraa.sh
 ```
 
 ## Demo logins (seeded)
@@ -46,10 +56,6 @@ Password for all: `password`
 
 ## Notes
 
-- Domain on this VPS is **ammarelgndy.cloud** (not `ammarelgendy`).
+- Domain on this VPS is **ammarelgndy.cloud**.
 - Never commit `.env` or DB/Redis passwords.
-- Rotate the VPS root password after sharing it in chat.
-- Each GitHub deploy **copies** `scripts/deploy-yatmaen.sh` to `/usr/local/bin/deploy-yatmaen.sh`, then runs it (so the server always uses the script from the commit being deployed).
-- The script runs `php artisan optimize:clear` before re-caching so Blade/CSS from the new release always win.
-- The workflow fails if the public homepage does not contain the expected content marker after deploy (`reading-room-hero` / `site-brand`).
-- The “Confirm Blade landed” step greps for `reading-room-hero` in `home.blade.php` (not the old `المقررات المتاحة` label).
+- Each GitHub deploy **copies** `scripts/deploy-iqraa.sh` to `/usr/local/bin/deploy-iqraa.sh`, then runs it.

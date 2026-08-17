@@ -34,6 +34,7 @@ _laravel_new/
 
 # Deploy / CI secrets (do not commit)
 .ci-yatmaen-key.pem
+.ci-iqraa-key.pem
 .ci-yatmaen-key.README.txt
 _ssh_inspect_out.txt
 deploy_yatmaen*.py

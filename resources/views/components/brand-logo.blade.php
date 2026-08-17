@@ -4,40 +4,28 @@
 ])
 
 @php
-    $heights = [
-        'xs' => 'h-8',
-        'sm' => 'h-10 sm:h-11',
-        'md' => 'h-12',
-        'lg' => 'h-20',
-        'xl' => 'h-28 sm:h-32',
-        'hero' => 'h-40 sm:h-52 md:h-60',
-        'sidebar' => 'h-16',
-        'footer' => 'h-20',
-        'guest' => 'h-28 sm:h-36',
+    $sizes = [
+        'xs' => 'text-xl',
+        'sm' => 'text-2xl sm:text-3xl',
+        'md' => 'text-3xl',
+        'lg' => 'text-4xl sm:text-5xl',
+        'xl' => 'text-5xl sm:text-6xl',
+        'hero' => 'text-6xl sm:text-7xl md:text-8xl',
+        'sidebar' => 'text-3xl',
+        'footer' => 'text-4xl sm:text-5xl',
+        'guest' => 'text-5xl sm:text-6xl',
     ];
-    $heightClass = $heights[$size] ?? $heights['md'];
-    $alt = config('app.name').' — تعلم ما يطمئنك';
-    $imgClass = trim($heightClass.' w-auto max-w-full object-contain '.$attributes->get('class'));
+    $sizeClass = $sizes[$size] ?? $sizes['md'];
+    $name = config('app.name');
+    $tagClass = trim('site-brand inline-flex shrink-0 items-center font-display font-bold leading-none tracking-tight text-[var(--color-primary)] '.$sizeClass.' '.$attributes->get('class'));
 @endphp
 
 @if ($href)
-    <a href="{{ $href }}" class="inline-flex shrink-0 items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">
-        <img
-            src="{{ asset('images/logo.png') }}"
-            alt="{{ $alt }}"
-            class="{{ $imgClass }}"
-            width="320"
-            height="320"
-            decoding="async"
-        >
+    <a href="{{ $href }}" class="{{ $tagClass }} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]" aria-label="{{ $name }}">
+        {{ $name }}
     </a>
 @else
-    <img
-        src="{{ asset('images/logo.png') }}"
-        alt="{{ $alt }}"
-        {{ $attributes->except('class')->merge(['class' => $imgClass]) }}
-        width="320"
-        height="320"
-        decoding="async"
-    >
+    <span {{ $attributes->except('class')->merge(['class' => $tagClass]) }} aria-label="{{ $name }}">
+        {{ $name }}
+    </span>
 @endif
