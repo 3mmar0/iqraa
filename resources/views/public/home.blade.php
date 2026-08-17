@@ -3,27 +3,32 @@
 @section('title', 'الرئيسية')
 
 @section('content')
-    {{-- Academy intro hero --}}
-    <section class="academy-hero min-h-[78vh]">
-        <div class="relative mx-auto flex min-h-[78vh] max-w-[90rem] flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
-            <div class="academy-rise grid gap-10 lg:grid-cols-2 lg:items-center">
-                <div>
-                    <x-brand-logo size="hero" />
-                    <h1 class="academy-display mt-6 text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</h1>
-                    <p class="mt-4 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">منصة عربية للمقررات والدروس والمتابعة — ابدأ من الكتالوج أو أنشئ حسابك اليوم.</p>
-                    <div class="mt-8 flex flex-wrap gap-3">
-                        <a href="{{ route('public.courses.index') }}" class="academy-btn-primary">تصفّح المقررات</a>
-                        @guest
-                            <a href="{{ route('register') }}" class="academy-btn-secondary !text-white !border-white/30 hover:!bg-white/10">إنشاء حساب</a>
-                        @else
-                            <a href="{{ route('dashboard.redirect') }}" class="academy-btn-secondary !text-white !border-white/30 hover:!bg-white/10">الذهاب إلى لوحتي</a>
-                        @endguest
-                    </div>
-                </div>
-                <div class="relative hidden overflow-hidden rounded-2xl border border-white/10 lg:block">
-                    <img src="{{ asset('images/home/reading-room-hero.webp') }}" alt="" class="aspect-[4/3] h-full w-full object-cover opacity-90" width="800" height="600" fetchpriority="high">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-ink)]/80 to-transparent"></div>
-                </div>
+    {{-- Academy intro hero — flush under header, full-bleed atmosphere --}}
+    <section class="academy-hero academy-hero-home">
+        <div class="academy-hero-bg" aria-hidden="true">
+            <img
+                src="{{ asset('images/home/reading-room-hero.webp') }}"
+                alt=""
+                width="1920"
+                height="1080"
+                fetchpriority="high"
+                decoding="async"
+            >
+        </div>
+        <div class="academy-hero-overlay" aria-hidden="true"></div>
+        <div class="academy-hero-glow" aria-hidden="true"></div>
+
+        <div class="academy-hero-inner academy-rise">
+            <x-brand-logo size="hero" />
+            <h1 class="academy-display mt-6 max-w-3xl text-3xl font-bold leading-tight text-white sm:text-4xl md:text-[2.75rem] md:leading-[1.2] lg:text-5xl">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</h1>
+            <p class="mt-4 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">منصة عربية للمقررات والدروس والمتابعة — ابدأ من الكتالوج أو أنشئ حسابك اليوم.</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+                <a href="{{ route('public.courses.index') }}" class="academy-btn-primary">تصفّح المقررات</a>
+                @guest
+                    <a href="{{ route('register') }}" class="academy-btn-secondary !border-white/35 !text-white hover:!bg-white/10">إنشاء حساب</a>
+                @else
+                    <a href="{{ route('dashboard.redirect') }}" class="academy-btn-secondary !border-white/35 !text-white hover:!bg-white/10">الذهاب إلى لوحتي</a>
+                @endguest
             </div>
         </div>
     </section>

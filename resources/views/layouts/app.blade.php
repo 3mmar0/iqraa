@@ -23,7 +23,7 @@
         .site-brand { font-family: var(--font-display); font-weight: 700; }
     </style>
 </head>
-<body class="min-h-screen bg-[var(--color-sand)] font-sans text-[var(--color-text)] antialiased" x-data="{ navOpen: false }">
+<body class="min-h-screen bg-[var(--color-sand)] font-sans text-[var(--color-text)] antialiased {{ $isHome ? 'home-page' : '' }}" x-data="{ navOpen: false }">
 @if ($isHome)
 <!--
 THESIS: Academy night court — ceremonial header, program tracks, rich course cards; refuses Moodle clutter.
@@ -34,7 +34,7 @@ FORM: Al-Borhan IA + Night Court brass; academy redesign plan.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
 -->
 @endif
-    <header class="academy-header">
+    <header class="academy-header {{ $isHome ? 'academy-header-home' : '' }}">
         <div class="mx-auto flex h-16 w-full max-w-[90rem] items-center gap-4 px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
             <x-brand-logo href="{{ route('home') }}" size="sm" />
 
@@ -87,10 +87,20 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         </div>
     </header>
 
-    <main>
-        <div class="mx-auto w-full max-w-[90rem] px-4 pt-4 sm:px-6 lg:px-8 empty:hidden">
-            @include('components.alert')
-        </div>
+    <main class="{{ $isHome ? 'home-main' : '' }}">
+        @if ($isHome)
+            @if (session('status') || session('error') || $errors->any())
+                <div class="home-alert-band">
+                    <div class="mx-auto w-full max-w-[90rem] px-4 sm:px-6 lg:px-8">
+                        @include('components.alert')
+                    </div>
+                </div>
+            @endif
+        @else
+            <div class="mx-auto w-full max-w-[90rem] px-4 pt-4 sm:px-6 lg:px-8">
+                @include('components.alert')
+            </div>
+        @endif
         @yield('content')
     </main>
 

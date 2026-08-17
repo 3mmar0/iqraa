@@ -1111,6 +1111,96 @@ body {
         radial-gradient(ellipse 70% 60% at 0% 100%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 55%),
         radial-gradient(ellipse 50% 40% at 100% 0%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 50%);
     pointer-events: none;
+    z-index: 1;
+}
+
+/* Home: hero flush under header, cinematic full-bleed background */
+.home-page {
+    background: var(--color-ink);
+}
+
+.home-main {
+    margin: 0;
+    padding: 0;
+}
+
+.home-page .academy-header-home {
+    position: relative;
+    z-index: 50;
+    border-bottom-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+.home-alert-band {
+    position: relative;
+    z-index: 40;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 92%, var(--color-primary) 8%);
+    padding: 0.75rem 0;
+}
+
+.academy-hero-home {
+    margin-top: 0;
+    min-height: min(88vh, 52rem);
+    display: flex;
+    align-items: center;
+}
+
+.academy-hero-home::before {
+    display: none;
+}
+
+.academy-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.academy-hero-bg img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    transform: scale(1.02);
+}
+
+.academy-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        linear-gradient(105deg, rgb(22 26 30 / 0.94) 0%, rgb(22 26 30 / 0.78) 42%, rgb(22 26 30 / 0.55) 100%),
+        linear-gradient(to top, rgb(22 26 30 / 0.98) 0%, transparent 38%);
+}
+
+.academy-hero-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+        radial-gradient(ellipse 55% 45% at 85% 75%, color-mix(in srgb, var(--color-primary) 28%, transparent), transparent 62%),
+        radial-gradient(ellipse 40% 35% at 10% 20%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 55%);
+    pointer-events: none;
+}
+
+.academy-hero-inner {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding: 2.5rem 1rem 4rem;
+}
+
+@media (min-width: 640px) {
+    .academy-hero-inner {
+        padding: 3rem 1.5rem 5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .academy-hero-inner {
+        padding: 3.5rem 2rem 5.5rem;
+    }
 }
 
 .academy-section {
