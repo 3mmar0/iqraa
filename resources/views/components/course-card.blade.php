@@ -7,7 +7,7 @@
 @php
     $cover = $course->image_path
         ? asset('storage/'.$course->image_path)
-        : asset('images/home/course-cover-'.(($index % 2) + 1).'.webp');
+        : asset('images/home/'.(($index % 2) === 0 ? 'islamic-studies-cover' : 'tajweed-cover').'.webp');
     $lessonCount = $course->lessons_count ?? $course->lessons?->count() ?? 0;
     $enrollmentCount = $course->enrollments_count ?? null;
 @endphp

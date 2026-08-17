@@ -6,49 +6,48 @@
 @source '../**/*.js';
 
 /*
- * هوية اقرأ — Academy Night Court
- * Night ink #161A1E | Limestone #EDE7DC | Parchment #F7F3EA
- * Brass #C4A35A | Brass deep #8C6E2F | Success teal for status only
+ * هوية جامعة اقرأ — Quranic University
+ * Deep emerald #0A2E1F | Parchment #F4F0E6 | Gold #C9A227 | Forest #1B5E3B
  */
 @theme {
     --font-sans: 'Tajawal', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Amiri', 'Tajawal', ui-serif, serif;
 
-    /* Brand — brass metal */
-    --color-primary: #C4A35A;
-    --color-primary-hover: #8C6E2F;
-    --color-primary-light: #F0E6CE;
-    --color-secondary: #8C6E2F;
-    --color-secondary-hover: #6B5424;
-    --color-secondary-light: #EDE7DC;
-    --color-accent: #C4A35A;
-    --color-accent-light: #F5EDD8;
+    /* Brand — academic gold + emerald */
+    --color-primary: #C9A227;
+    --color-primary-hover: #A8871A;
+    --color-primary-light: #F5EFD4;
+    --color-secondary: #1B5E3B;
+    --color-secondary-hover: #134D2E;
+    --color-secondary-light: #E8F2EC;
+    --color-accent: #C9A227;
+    --color-accent-light: #F5EFD4;
 
     /* Surfaces */
-    --color-ink: #161A1E;
-    --color-ink-soft: #1E2428;
-    --color-sea: #2A7A6E;
-    --color-sea-bright: #C4A35A;
-    --color-sand: #EDE7DC;
-    --color-line: #D4CBB8;
-    --color-surface: #F7F3EA;
-    --color-divider: #C9BFA8;
-    --color-text: #1E2428;
-    --color-text-secondary: #4A4540;
-    --color-muted: #6B6458;
+    --color-ink: #0A2E1F;
+    --color-ink-soft: #0F3D28;
+    --color-sea: #1B5E3B;
+    --color-sea-bright: #C9A227;
+    --color-sand: #F4F0E6;
+    --color-line: #D4CFC0;
+    --color-surface: #FAF8F3;
+    --color-divider: #C5BEB0;
+    --color-text: #1A2E24;
+    --color-text-secondary: #4A5C52;
+    --color-muted: #6B7A72;
 
     /* Status */
-    --color-success: #2A7A6E;
+    --color-success: #1B5E3B;
     --color-warning: #B8860B;
     --color-danger: #B54A4A;
-    --color-info: #8C6E2F;
+    --color-info: #1B5E3B;
 
     /* Charts */
-    --color-chart-revenue: #C4A35A;
-    --color-chart-students: #2A7A6E;
-    --color-chart-courses: #8C6E2F;
+    --color-chart-revenue: #C9A227;
+    --color-chart-students: #1B5E3B;
+    --color-chart-courses: #A8871A;
     --color-chart-quizzes: #B8860B;
-    --color-chart-payments: #6B5424;
+    --color-chart-payments: #134D2E;
 
     /* Legacy scale keys → academy tints */
     --color-teal-50: #E8F2F0;
@@ -98,10 +97,10 @@ body {
 [data-dashboard='support'],
 [data-dashboard='team'],
 [data-dashboard='admin'] {
-    --dash-accent: #C4A35A;
-    --dash-accent-soft: #E5D4A8;
-    --dash-accent-ring: rgb(196 163 90 / 0.35);
-    --dash-sidebar: #161A1E;
+    --dash-accent: #C9A227;
+    --dash-accent-soft: #E5D89A;
+    --dash-accent-ring: rgb(201 162 39 / 0.35);
+    --dash-sidebar: #0A2E1F;
 }
 
 [x-cloak] {
@@ -1168,8 +1167,8 @@ body {
     inset: 0;
     z-index: 1;
     background:
-        linear-gradient(105deg, rgb(22 26 30 / 0.94) 0%, rgb(22 26 30 / 0.78) 42%, rgb(22 26 30 / 0.55) 100%),
-        linear-gradient(to top, rgb(22 26 30 / 0.98) 0%, transparent 38%);
+        linear-gradient(105deg, rgb(10 46 31 / 0.94) 0%, rgb(10 46 31 / 0.78) 42%, rgb(10 46 31 / 0.55) 100%),
+        linear-gradient(to top, rgb(10 46 31 / 0.98) 0%, transparent 38%);
 }
 
 .academy-hero-glow {

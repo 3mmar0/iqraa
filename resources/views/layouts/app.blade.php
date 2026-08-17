@@ -1,11 +1,10 @@
 @php
     $navLinks = [
         ['label' => 'الرئيسية', 'route' => 'home', 'match' => 'home'],
-        ['label' => 'المقررات', 'route' => 'public.courses.index', 'match' => 'public.courses.*'],
-        ['label' => 'المحاضرون', 'route' => 'public.instructors', 'match' => 'public.instructors'],
-        ['label' => 'كيف تعمل', 'route' => 'public.how-it-works', 'match' => 'public.how-it-works'],
+        ['label' => 'البرامج', 'route' => 'home', 'match' => 'home', 'hash' => '#programs'],
+        ['label' => 'التسجيل', 'route' => 'home', 'match' => 'home', 'hash' => '#registration'],
         ['label' => 'من نحن', 'route' => 'public.about', 'match' => 'public.about'],
-        ['label' => 'الأسئلة', 'route' => 'public.faq', 'match' => 'public.faq'],
+        ['label' => 'كيف تعمل', 'route' => 'public.how-it-works', 'match' => 'public.how-it-works'],
         ['label' => 'تواصل', 'route' => 'public.contact', 'match' => 'public.contact'],
     ];
     $isHome = request()->routeIs('home');
@@ -41,7 +40,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
             <nav class="hidden flex-1 items-center justify-center gap-0.5 lg:flex" aria-label="القائمة الرئيسية">
                 @foreach ($navLinks as $link)
                     @php $active = request()->routeIs($link['match']); @endphp
-                    <a href="{{ route($link['route']) }}"
+                    <a href="{{ route($link['route']) }}{{ $link['hash'] ?? '' }}"
                        @if ($active) aria-current="page" @endif
                        class="academy-header-link {{ $active ? 'is-active' : '' }}">
                         {{ $link['label'] }}
@@ -75,7 +74,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
             <nav class="mx-auto flex w-full max-w-[90rem] flex-col gap-0.5 px-4 py-2 sm:px-6 lg:px-8" aria-label="قائمة الجوال">
                 @foreach ($navLinks as $link)
                     @php $active = request()->routeIs($link['match']); @endphp
-                    <a href="{{ route($link['route']) }}"
+                    <a href="{{ route($link['route']) }}{{ $link['hash'] ?? '' }}"
                        @if ($active) aria-current="page" @endif
                        class="rounded-xl px-3 py-2.5 text-sm {{ $active ? 'bg-white/10 font-semibold text-[var(--color-primary)]' : 'text-white/90 hover:bg-white/5' }}"
                        @click="navOpen = false">{{ $link['label'] }}</a>
@@ -108,7 +107,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <div class="mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
             <div class="md:col-span-2 lg:col-span-1">
                 <x-brand-logo href="{{ route('home') }}" size="footer" />
-                <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/55">منصة تعلم عربية تمنحك مساراً واضحاً من الاكتشاف إلى الإتمام — بطمأنينة وخطوات مرتبة.</p>
+                <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/55">جامعة اقرأ العالمية للأبحاث العلمية والدراسات القرآنية — كندا 🇨🇦. تعليم قرآني وعلمي عن بُعد، مجاني ومعتمد.</p>
             </div>
             <div>
                 <p class="mb-3 text-sm font-semibold text-[var(--color-primary)]">استكشف</p>
