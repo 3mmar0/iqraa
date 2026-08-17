@@ -33,14 +33,17 @@ Public marketing site (home, catalog, instructors, how-it-works, about, FAQ, con
 
 - Product name: يَطْمَئِن (and Latin slug/domain forms such as yatmaen).
 - Official palette (binding):
-  - Primary Teal `#2A9D8F` — main brand and primary actions
-  - Secondary Blue `#4F8FBF` — secondary buttons and links
-  - Sage Green `#A8C3A0` — supportive highlights
-  - Light Background `#F4F6F8` — page sections and cards ground
-  - Dark Text `#2F3A45` — text (not pure black)
-  - Soft Teal / Hover `#DDEEEB` — soft fills and hover grounds
-- Design style: calm, comfortable, educational, professional, minimal, friendly; soft rounded UI; avoid excessive gradients and overly bright colors.
-- Public visual direction: **Reading Room Catalog** (atmosphere hero + shelf catalog) using the official palette. Sibling marketing pages share the same language.
+  - Night Ink `#161A1E` — header, footer, dashboard sidebar
+  - Limestone `#EDE7DC` — page ground
+  - Parchment `#F7F3EA` — cards and panels
+  - Brass `#C4A35A` — primary actions, active nav, metal accents
+  - Brass Deep `#8C6E2F` — hover and secondary emphasis
+  - Ink Text `#1E2428` — body copy
+  - Muted `#6B6458` — secondary text
+  - Success Teal `#2A7A6E` — status chips only, not brand primary
+- Typography: Tajawal for UI; Amiri for ceremonial display titles on public surfaces.
+- Design style: academy night court — ceremonial header, program tracks, rich course cards; calm educational tone without Moodle clutter.
+- Public visual direction: **Academy Night Court** (Al-Borhan IA + brass/ink craft). Sibling marketing pages and all dashboards share the same token system.
 
 ## Evidence on Hand
 

@@ -22,7 +22,7 @@
             @csrf
             <input type="hidden" name="from" value="{{ $from ?? '' }}">
             <input type="hidden" name="to" value="{{ $to ?? '' }}">
-            <button type="submit" class="rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)]">Excel</button>
+            <button type="submit" class="admin-btn admin-btn-primary">Excel</button>
         </form>
     @endif
 @endsection
@@ -39,8 +39,8 @@
             <input id="to" type="date" name="to" value="{{ $to ?? '' }}"
                    class="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20">
         </div>
-        <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800">تطبيق</button>
-        <a href="{{ route('admin.home') }}" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">مسح</a>
+        <button type="submit" class="admin-btn admin-btn-primary">تطبيق</button>
+        <a href="{{ route('admin.home') }}" class="admin-btn admin-btn-ghost">مسح</a>
     </form>
 
     @php

@@ -7,26 +7,19 @@
     <title>@yield('title', config('app.name')) — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="guest-shell font-sans text-[var(--color-ink)] antialiased">
+<body class="guest-shell font-sans text-[var(--color-text)] antialiased">
     <div class="guest-frame">
         <aside class="guest-aside" aria-hidden="true">
-            <img
-                src="{{ asset('images/home/reading-room-hero.webp') }}"
-                alt=""
-                class="guest-aside-photo"
-                width="1200"
-                height="1600"
-                decoding="async"
-            >
+            <div class="absolute inset-0 bg-[var(--color-ink)]"></div>
             <div class="guest-aside-veil"></div>
             <div class="guest-aside-content">
                 <x-brand-logo href="{{ url('/') }}" size="xl" />
-                <p class="guest-aside-line">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</p>
+                <p class="guest-aside-line academy-display">تعلّم بطمأنينة، وتقدّم بخطوات واضحة.</p>
                 <p class="guest-aside-sub">مسار عربي مرتّب للمقررات والدروس والمتابعة — من أول خطوة حتى الإتمام.</p>
             </div>
         </aside>

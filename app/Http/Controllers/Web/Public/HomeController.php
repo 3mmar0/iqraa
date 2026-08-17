@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Course;
 use App\Models\FaqArticle;
 use App\Models\User;
@@ -13,14 +14,22 @@ class HomeController extends Controller
     public function index(): View
     {
         $courses = Course::query()
-            ->with('instructor')
-            ->withCount('lessons')
+            ->with(['instructor', 'category'])
+            ->withCount(['lessons', 'enrollments'])
             ->where('status', 'published')
-            ->orderBy('title')
+            ->orderByDesc('created_at')
             ->limit(6)
             ->get();
 
         $courseCount = Course::query()->where('status', 'published')->count();
+
+        $categories = Category::query()
+            ->where('status', 'active')
+            ->withCount(['courses' => fn ($q) => $q->where('status', 'published')])
+            ->orderBy('position')
+            ->orderBy('name')
+            ->limit(4)
+            ->get();
 
         $instructors = User::query()
             ->whereHas('roles', fn ($q) => $q->where('slug', 'instructor'))
@@ -46,6 +55,6 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('public.home', compact('courses', 'courseCount', 'instructors', 'faqs'));
+        return view('public.home', compact('courses', 'courseCount', 'categories', 'instructors', 'faqs'));
     }
 }

@@ -5,10 +5,10 @@
     <title>@yield('title', $dashboardLabel ?? 'لوحة التحكم') — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        .site-brand { font-family: 'Tajawal', ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
+        .site-brand { font-family: 'Amiri', 'Tajawal', ui-serif, serif; font-weight: 700; }
         @keyframes student-home-rise {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -55,7 +55,7 @@
                     </a>
                     <span class="dashboard-brand-sub px-1 text-xs text-white/70">{{ $dashboardLabel }}</span>
                 </div>
-                <button type="button" class="rounded-lg p-2 text-teal-100 hover:bg-white/10 lg:hidden" @click="sidebarOpen = false" aria-label="إغلاق القائمة">
+                <button type="button" class="rounded-lg p-2 text-white/70 hover:bg-white/10 lg:hidden" @click="sidebarOpen = false" aria-label="إغلاق القائمة">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -102,23 +102,23 @@
                 <div class="mt-3 flex items-center justify-between gap-2 rounded-xl bg-white/5 px-3 py-2.5">
                     <div class="min-w-0">
                         <p class="truncate text-sm font-medium text-white">{{ auth()->user()->name }}</p>
-                        <p class="truncate text-xs text-teal-200/60">{{ auth()->user()->email }}</p>
+                        <p class="truncate text-xs text-white/45">{{ auth()->user()->email }}</p>
                     </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="rounded-lg bg-white/10 px-2.5 py-1.5 text-xs text-teal-50 hover:bg-white/15">خروج</button>
+                        <button type="submit" class="rounded-lg bg-white/10 px-2.5 py-1.5 text-xs text-white/90 hover:bg-white/15">خروج</button>
                     </form>
                 </div>
             </div>
         </aside>
 
         <div class="flex min-w-0 flex-1 flex-col">
-            <header class="sticky top-0 z-30 border-b border-[var(--color-line)] bg-white/90 backdrop-blur">
+            <header class="sticky top-0 z-30 border-b border-[var(--color-line)] bg-[var(--color-surface)]/95 backdrop-blur">
                 <div class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
                     <div class="flex items-center gap-3">
                         <button
                             type="button"
-                            class="relative z-50 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-line)] bg-white text-slate-700 shadow-sm lg:hidden"
+                            class="relative z-50 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-text)] shadow-sm lg:hidden"
                             @click="sidebarOpen = !sidebarOpen"
                             :aria-expanded="sidebarOpen.toString()"
                             aria-controls="dashboard-sidebar"

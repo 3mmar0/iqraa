@@ -12,11 +12,11 @@
 
 @section('header-actions')
     <a href="{{ route('student.course-requests.index') }}"
-       class="rounded-2xl border border-[var(--color-line)] bg-white px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]">
+       class="rounded-xl border border-[var(--color-line)] bg-[var(--color-surface)] px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-secondary-hover)]">
         طلب مقرر
     </a>
     <a href="{{ route('student.courses.index') }}"
-       class="rounded-2xl bg-[var(--color-primary)] px-3.5 py-2 text-sm font-semibold text-white shadow-[0_14px_28px_-18px_rgba(42,157,143,0.55)] transition hover:bg-[var(--color-primary-hover)]">
+       class="academy-btn-primary !py-2 !text-sm">
         مقرراتي
     </a>
 @endsection
@@ -25,21 +25,18 @@
     <div class="mx-auto max-w-6xl space-y-10">
         {{-- Continue learning --}}
         @if ($lastProgress?->lesson)
-            <section class="student-home-rise overflow-hidden rounded-2xl bg-[var(--color-ink)] text-white shadow-[0_22px_48px_-28px_rgba(47,58,69,0.55)]">
+            <section class="student-home-rise overflow-hidden rounded-xl academy-hero">
                 <div class="relative px-6 py-8 sm:px-8 sm:py-9">
-                    <div class="pointer-events-none absolute inset-0" style="background:
-                        radial-gradient(ellipse 60% 80% at 100% 0%, color-mix(in srgb, var(--color-primary) 55%, transparent), transparent 58%),
-                        radial-gradient(ellipse 45% 55% at 0% 100%, color-mix(in srgb, var(--color-secondary) 40%, transparent), transparent 52%);"></div>
                     <div class="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                         <div class="min-w-0">
-                            <h2 class="text-xl font-bold leading-snug sm:text-2xl">{{ $lastProgress->lesson->title }}</h2>
+                            <h2 class="text-xl font-bold leading-snug text-white sm:text-2xl">{{ $lastProgress->lesson->title }}</h2>
                             @if ($lastProgress->lesson->course)
                                 <p class="mt-2 text-sm text-white/65">{{ $lastProgress->lesson->course->title }}</p>
                             @endif
                             <p class="mt-3 max-w-xl text-sm leading-relaxed text-white/55">تابع من حيث توقفت — خطوة هادئة تعيدك إلى الدرس مباشرة.</p>
                         </div>
                         <a href="{{ route('student.lessons.show', $lastProgress->lesson) }}"
-                           class="inline-flex shrink-0 items-center justify-center rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-[var(--color-primary)] transition hover:bg-[var(--color-primary-light)]">
+                           class="inline-flex shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary)] px-6 py-3.5 text-sm font-bold text-[var(--color-ink)] transition hover:bg-[color-mix(in_srgb,var(--color-primary)_88%,white)]">
                             متابعة الدرس
                         </a>
                     </div>
