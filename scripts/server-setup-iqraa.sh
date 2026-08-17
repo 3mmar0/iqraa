@@ -34,7 +34,9 @@ else
   DB_PASS="$(openssl rand -base64 24 | tr -d '/+=' | head -c 24)"
   mysql -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
   mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+  mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';"
   mysql -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost';"
+  mysql -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'127.0.0.1';"
   mysql -e "FLUSH PRIVILEGES;"
   umask 077
   cat > "$CREDS_FILE" <<EOF
@@ -61,6 +63,9 @@ sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|" "$APP/.env"
 sed -i "s|^MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=\"noreply@${DOMAIN}\"|" "$APP/.env"
 
 cd "$APP"
+echo "==> Composer (needed before artisan key:generate)"
+sudo -u deploy composer install --no-dev --optimize-autoloader --no-interaction
+
 sudo -u deploy php artisan key:generate --force
 
 echo "==> nginx vhost"
